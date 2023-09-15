@@ -17,3 +17,5 @@ db.connect()
 	.catch((error) => {
 		console.error("Failed to connect to database: ", error);
 	})
+
+module.exports = db;
