@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const userRoute = express.Router();
-const userRepository = require('./users');
-const db = require('../dbconnect');
-const jwtStrategy = require('../Auth/jwt.strategy');
+const userRepository = require("./users");
+const db = require("../dbconnect");
+const jwtStrategy = require("../Auth/jwt.strategy");
 
 // const { body, validationResult } = require('express-validator');
 
@@ -28,19 +28,18 @@ const jwtStrategy = require('../Auth/jwt.strategy');
 //   }
 // }
 
-
 function validateIdParam(req, res, next) {
-	const id = req.params.id;
-	const parsedId = parseInt(id, 10);
-  
-	if (isNaN(parsedId) || parsedId.toString() !== id) {
-	  // If the parsed result is NaN or the parsed result doesn't match the original string,
-	  // it's not a valid integer.
-	  return res.status(400).send('Invalid ID parameter. Must be an integer.');
-	}
-	next();
+  const id = req.params.id;
+  const parsedId = parseInt(id, 10);
+
+  if (isNaN(parsedId) || parsedId.toString() !== id) {
+    // If the parsed result is NaN or the parsed result doesn't match the original string,
+    // it's not a valid integer.
+    return res.status(400).send("Invalid ID parameter. Must be an integer.");
   }
-  
+  next();
+}
+
 const userRepo = new userRepository(db);
 
 // userRoute.post('/user', (req, res) => {
@@ -50,19 +49,21 @@ const userRepo = new userRepository(db);
 // 	res.send(user);
 // })
 
-userRoute.get('/user/liked', jwtStrategy, async (req, res) => {
-	const users = await userRepo.get_likers(req.user.id);
-	res.send(users);
+userRoute.get("/user/liked", jwtStrategy, async (req, res) => {
+  const users = await userRepo.get_likers(req.user.id);
+  res.send(users);
 });
 
-userRoute.get('/user/:id', validateIdParam, async (req, res) => {
-	const user = await userRepo.get_by_id(req.params.id);
-	if (!user) {
-		res.status(404).send("User not found");
-	}
-	else {
-		res.send(user);
-	}
-})
+userRoute.get("/user/:id", validateIdParam, jwtStrategy, async (req, res) => {
+  console.log("user/:id params", req.params.id);
+  const id = Number(req.params.id);
+  const user = await userRepo.get_by_id(id);
+  if (!user) {
+    res.status(404).send("User not found");
+  } else {
+    console.log("user found", user);
+    res.send(user);
+  }
+});
 
 module.exports = userRoute;
