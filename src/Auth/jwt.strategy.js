@@ -1,17 +1,15 @@
 const jwt = require("jsonwebtoken");
 
 function jwtStrategy(req, res, next) {
-  const token = req.cookies.token;
-  console.log("token in strat", req.cookies.token);
+  const access_token = req.cookies.access_token;
   try {
-    const user = jwt.verify(token, process.env.TOKEN_SECRET);
+    const user = jwt.verify(access_token, process.env.TOKEN_SECRET);
     req.user = user;
-    // console.log(user);
     next();
   } catch (err) {
-    //TODO status code etc
-    res.clearCookie("token");
-    res.send("Token expired");
+    console.log("access token expired");
+    res.clearCookie("access_token");
+    res.status(403).send("Token expired");
   }
 }
 

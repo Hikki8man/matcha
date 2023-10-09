@@ -1,0 +1,3 @@
+init-scripts/*
+init-scripts/init.sql
+*.sql
