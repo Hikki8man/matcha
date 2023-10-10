@@ -1,6 +1,9 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
+import {UserAccount} from "../Types/UserAccount";
 
-class EmailService {
+class EmailerService {
+  private transporter;
+
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: "smtp.office365.com", // Outlook SMTP server host
@@ -23,7 +26,7 @@ class EmailService {
     }
   }
 
-  async sendMail(mailOptions) {
+  async sendMail(mailOptions: any) {
     try {
       const info = await this.transporter.sendMail(mailOptions);
       console.log("Email sent:", info.response);
@@ -32,10 +35,10 @@ class EmailService {
     }
   }
 
-  async sendValidationMail(user, token) {
+  async sendValidationMail(user: UserAccount) {
     console.log("user in send valid", user);
     try {
-      const message = `http://localhost:3000/verify-account/${user.id}/?token=${token}`;
+      const message = `http://localhost:3000/verify-account/${user.id}/?token=${user.token_validation}`;
       const info = await this.transporter.sendMail({
         from: process.env.EMAIL,
         to: user.email,
@@ -49,4 +52,4 @@ class EmailService {
   }
 }
 
-module.exports = new EmailService(); // Export an instance
+export default new EmailerService();

@@ -1,8 +1,8 @@
-const {body} = require("express-validator");
-const userRepo = require("../UserAccount/userAccount");
+import {body} from "express-validator";
+import userService from "../../UserAccount/UserAccount.service";
 
-const emailNotTaken = async (email) => {
-  const userfound = await userRepo.get_by_email(email);
+const emailNotTaken = async (email: string) => {
+  const userfound = await userService.get_by_email(email);
 
   if (userfound) {
     throw new Error("User already exist");
@@ -10,15 +10,14 @@ const emailNotTaken = async (email) => {
   return true;
 };
 
-//TODO uncomment
-const isOverEighteen = (birth_date) => {
-  // const birthDate = new Date(birth_date);
-  // const today = new Date();
-  // const age = today.getFullYear() - birthDate.getFullYear();
+const isOverEighteen = (birth_date: Date) => {
+  const birthDate = new Date(birth_date);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
 
-  // if (age < 18) {
-  //   throw new Error("You must be at least 18 years old.");
-  // }
+  if (age < 18) {
+    throw new Error("You must be at least 18 years old.");
+  }
   return true;
 };
 
@@ -39,4 +38,4 @@ const signupValidation = [
     .withMessage("You must be at least 18 years old."),
 ];
 
-module.exports = signupValidation;
+export default signupValidation;

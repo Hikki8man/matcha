@@ -1,7 +1,7 @@
-const db = require("../dbconnect");
+import db from "../database";
 
-class photoRepository {
-  async insert(user_id, file) {
+class PhotoService {
+  async insert(user_id: number, file: Express.Multer.File) {
     const {filename, path, size} = file;
     console.log("userid", user_id);
     try {
@@ -14,7 +14,7 @@ class photoRepository {
     }
   }
 
-  async getByProfileId(id) {
+  async getByProfileId(id: number) {
     try {
       return await db.one(`SELECT * FROM photo WHERE user_id = $1`, id);
     } catch (err) {
@@ -22,4 +22,5 @@ class photoRepository {
     }
   }
 }
-module.exports = new photoRepository();
+
+export default new PhotoService();

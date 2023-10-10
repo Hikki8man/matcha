@@ -1,7 +1,7 @@
-const db = require("../dbconnect");
+import db from "../database";
 
-class ProfileRepository {
-  async get_by_id(id) {
+class ProfileService {
+  async get_by_id(id: number) {
     try {
       // return await db.manyOrNone(
       //   `SELECT profile.* FROM profile RIGHT JOIN photo ON profile.user_id = photo.user_id WHERE profile.user_id = $1`,
@@ -11,25 +11,23 @@ class ProfileRepository {
         `SELECT profile.*, json_agg(photo.*) AS photos FROM profile LEFT JOIN photo ON profile.user_id = photo.user_id WHERE profile.user_id = $1 GROUP BY profile.user_id`,
         id
       );
-
-      console.log(result);
-    } catch (e) {
+    } catch (e: any) {
       console.log("Error", e.message);
       return undefined;
     }
   }
 
-  async get_all(id) {
+  async get_all(id: number) {
     try {
       return await db.manyOrNone(
         `SELECT * FROM profile WHERE user_id != $1`,
         id
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log("error in getting all profile", e.message);
       return undefined;
     }
   }
 }
 
-module.exports = new ProfileRepository();
+export default new ProfileService();

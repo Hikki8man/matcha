@@ -1,67 +1,71 @@
-const bcrypt = require("bcrypt");
-const db = require("../dbconnect");
-const saltRounds = 10;
+import bcrypt from "bcrypt";
+import db from "../database";
+import {UserAccount} from "../Types/UserAccount";
 
-class UserAccountRepository {
-  async get_by_id(id) {
+class UserAccountService {
+  private saltRounds = 10;
+  constructor() {
+    console.log("user acc construct");
+  }
+  async get_by_id(id: number) {
     try {
       return await db.one(
         `SELECT id, email, verified FROM user_account WHERE id = $1`,
         id
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log("Error", e.message);
       return undefined;
     }
   }
 
-  async get_with_token(id) {
+  async get_with_token(id: number) {
     try {
       return await db.one(
         `SELECT id, email, token_validation, verified FROM user_account WHERE id = $1`,
         id
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log("Error", e.message);
       return undefined;
     }
   }
 
-  async get_by_email(email) {
+  async get_by_email(email: string) {
     try {
       return await db.one(
         `SELECT id, email, verified FROM user_account WHERE email = $1`,
         email
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log("Error in get by email", e.message);
       return undefined;
     }
   }
 
-  async validate_login(body) {
+  async validate_login(body: any): Promise<UserAccount | undefined> {
     try {
-      const user = await db.one(
+      const user: UserAccount = await db.one(
         `SELECT id, email, verified, password FROM user_account WHERE email = $1`,
         body.email
       );
-      const res = await bcrypt.compare(body.password, user.password);
+      const res = await bcrypt.compare(body.password, user.password!);
       if (res === true) {
         delete user.password;
         return user;
       } else {
         return undefined;
       }
-    } catch (err) {
+    } catch (e: any) {
       // console.log(err.message);
       return undefined;
     }
   }
 
   //TODO validator
-  async create(body) {
+  async create(body: any) {
     const {name, birth_date, gender, email, password} = body;
-    const hash = await bcrypt.hash(password, saltRounds);
+    const hash = await bcrypt.hash(password, this.saltRounds);
     try {
       const user_account = await db.one(
         `INSERT INTO user_account (email, password) VALUES ($1, $2) RETURNING *`,
@@ -75,51 +79,51 @@ class UserAccountRepository {
       // console.log("profile", profile);
       delete user_account.password;
       return user_account;
-    } catch (e) {
+    } catch (e: any) {
       console.log(e.message);
       return undefined;
     }
   }
 
-  async insert_validation_token(user_id, token) {
+  async insert_validation_token(user: UserAccount) {
     try {
       await db.none(
         `UPDATE user_account SET token_validation = $1 WHERE id = $2`,
-        [token, user_id]
+        [user.token_validation, user.id]
       );
-    } catch (e) {
+    } catch (e: any) {
       console.log("error in update: ", e.message);
     }
   }
 
-  async set_verified(user_id) {
+  async set_verified(user_id: number) {
     try {
       const user_account = await db.one(
         `UPDATE user_account SET token_validation = NULL, verified = TRUE  WHERE id = $1 RETURNING email, verified`,
         [user_id]
       );
       return user_account;
-    } catch (e) {
+    } catch (e: any) {
       console.log("error in update: ", e.message);
     }
   }
 
-  async get_likers(user_id) {
+  async get_likers(user_id: number) {
     try {
       const likers = await db.any(
         `SELECT u.*
-			   FROM profile u
-			   LEFT JOIN likes l ON u.id = l.liked_id
-			   WHERE l.liker_id = $1`,
+				   FROM profile u
+				   LEFT JOIN likes l ON u.id = l.liked_id
+				   WHERE l.liker_id = $1`,
         [user_id]
       );
 
       return likers;
-    } catch (error) {
-      console.error(error);
+    } catch (e: any) {
+      console.error(e);
       return undefined;
     }
   }
 }
 
-module.exports = new UserAccountRepository();
+export default new UserAccountService();
