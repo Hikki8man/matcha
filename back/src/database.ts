@@ -2,7 +2,7 @@ import pgPromise from "pg-promise";
 
 const pgp = pgPromise();
 const dbConfig = {
-  host: "localhost",
+  host: "postgres",
   port: 5432,
   database: "matcha_db",
   user: "chak",

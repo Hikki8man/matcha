@@ -3,12 +3,10 @@ import UserAccountController from "./UserAccount/UserAccount.controller";
 import App from "./app";
 import db from "./database";
 import dotenv from "dotenv";
-// import {env} from "./config";
 import AuthController from "./Auth/Auth.controller";
 
 dotenv.config({path: "./env"});
-// console.log(env);
-
+// console.log("tests");
 db.connect()
   .then(() => {
     console.log("Connected to database");

@@ -1,5 +1,5 @@
 declare global {
-  declare namespace NodeJS {
+  namespace NodeJS {
     export interface ProcessEnv {
       TOKEN_SECRET: string;
       EMAIL: string;
