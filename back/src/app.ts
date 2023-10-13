@@ -8,14 +8,14 @@ import {Server} from "socket.io";
 class App {
   public app: express.Application;
   public port: number;
-  public io: Server;
   private server: http.Server;
+  private static _io: Server;
 
   constructor(controllers: any, port: number) {
     this.app = express();
     this.port = port;
     this.server = http.createServer(this.app);
-    this.io = new Server(this.server);
+    App._io = new Server(this.server);
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -46,9 +46,8 @@ class App {
   }
 
   private initializeWebSocket() {
-    this.io.use;
     console.log("initializeWebSocket");
-    this.io.on("connection", (socket) => {
+    App._io.on("connection", (socket) => {
       console.log("user " + socket.id + " connected");
       socket.send("hello");
       socket.on("message", function message(data) {
@@ -60,8 +59,8 @@ class App {
     });
   }
 
-  public getIO(): Server {
-    return this.io;
+  public static get getIO(): Server {
+    return App._io;
   }
 
   public listen() {

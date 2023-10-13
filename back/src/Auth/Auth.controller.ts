@@ -8,6 +8,7 @@ import jwtRefreshStrategy from "./jwtRefresh.strategy";
 import profileService from "../Profile/Profile.service";
 import {MyRequest} from "../Types/request";
 import asyncWrapper from "../Utils/asyncWrapper";
+import hasFailedValidation from "../Utils/validations/checkValidationResult";
 
 class AuthController {
   public path = "/auth";
@@ -30,11 +31,8 @@ class AuthController {
   }
 
   register = async (req: Request, res: Response) => {
-    // console.log("body", req.body);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log("errors: ", errors);
-      return res.status(400).send(errors);
+    if (hasFailedValidation(req, res)) {
+      return;
     }
     const user = await userAccountService.create(req.body);
     console.log("user", user);

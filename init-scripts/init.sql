@@ -28,6 +28,24 @@ CREATE TABLE IF NOT EXISTS photo (
     FOREIGN KEY (user_id) REFERENCES user_account (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS conversation (
+    id SERIAL PRIMARY KEY,
+    user_1 INT NOT NULL,
+    user_2 INT NOT NULL,
+    FOREIGN KEY (user_1) REFERENCES profile (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_2) REFERENCES profile (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS message (
+    id SERIAL PRIMARY KEY,
+    sender_id INT NOT NULL,
+    conv_id INT NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (sender_id) REFERENCES profile (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (conv_id) REFERENCES conversation (id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS likes (
     id SERIAL PRIMARY KEY,
     liker_id INT NOT NULL,

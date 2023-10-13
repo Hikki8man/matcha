@@ -4,6 +4,7 @@ import App from "./app";
 import db from "./database";
 import dotenv from "dotenv";
 import AuthController from "./Auth/Auth.controller";
+import ChatController from "./Chat/Chat.controller";
 
 dotenv.config({path: "./env"});
 // console.log("tests");
@@ -15,6 +16,7 @@ db.connect()
         new UserAccountController(),
         new ProfileController(),
         new AuthController(),
+        new ChatController(),
       ],
       8080
     );
