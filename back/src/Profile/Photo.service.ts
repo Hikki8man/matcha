@@ -1,5 +1,5 @@
 import {Photo} from "../Types/Photo";
-import db from "../database";
+import db from "../Database/database";
 
 class PhotoService {
   async insert(user_id: number, file: Express.Multer.File) {

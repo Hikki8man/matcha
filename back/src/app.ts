@@ -5,7 +5,6 @@ import errorHandler from "./Utils/errorHandler";
 import http from "http";
 import {Server, Socket} from "socket.io";
 import authService from "./Auth/Auth.service";
-import {AuthSocket} from "./Types/AuthSocket";
 
 class App {
   public app: express.Application;

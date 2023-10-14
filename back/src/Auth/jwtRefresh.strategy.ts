@@ -6,7 +6,8 @@ function jwtRefreshStrategy(req: MyRequest, res: Response, next: NextFunction) {
   const refresh_token: string = req.cookies.refresh_token;
   const payload = authService.verifyToken(refresh_token);
   if (payload) {
-    req.user = payload;
+    req.user_id = payload.id;
+    next();
   } else {
     console.log("refresh token expired");
     res.clearCookie("access_token");

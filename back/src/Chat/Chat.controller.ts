@@ -45,7 +45,7 @@ class ChatController {
     if (hasFailedValidation(req, res)) {
       return;
     }
-    const user_1: number = req.user.id;
+    const user_1: number = req.user_id!;
     const user_2: number = req.body.id;
     const conv = await convService.createConv(user_1, user_2);
     console.log("conv", conv);
@@ -61,7 +61,7 @@ class ChatController {
   /* MESSAGE */
   createMessage = async (req: MyRequest, res: Response) => {
     const msg: Message = await messageService.create(
-      req.user.id,
+      req.user_id!,
       req.body.conv_id,
       req.body.content
     );

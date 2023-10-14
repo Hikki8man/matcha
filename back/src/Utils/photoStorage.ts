@@ -6,8 +6,8 @@ import {MyRequest} from "../Types/request";
 
 const storage = multer.diskStorage({
   destination: (req: MyRequest, file, cb) => {
-    console.log("req user", req.user);
-    const userId = req.user ? req.user.id : 1;
+    console.log("req user", req.user_id!);
+    const userId = req.user_id!;
     const dest = `./uploads/${userId}`;
     fs.mkdirSync(dest, {recursive: true});
     cb(null, dest);

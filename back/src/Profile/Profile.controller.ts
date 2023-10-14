@@ -10,6 +10,8 @@ import photoStorage from "../Utils/photoStorage";
 import asyncWrapper from "../Utils/asyncWrapper";
 import ParseParamId from "../Utils/validations/parseIdParam";
 import {MyRequest} from "../Types/request";
+import {body} from "express-validator";
+import hasFailedValidation from "../Utils/validations/checkValidationResult";
 
 class ProfileController {
   public path = "/profile";
@@ -36,8 +38,14 @@ class ProfileController {
     this.router.get(
       this.path + "/:id/photo",
       jwtStrategy,
-      ParseParamId,
+      ParseParamId, //TODO change
       this.sendPhoto
+    );
+    this.router.post(
+      this.path + "/like",
+      jwtStrategy,
+      body("id").isNumeric(),
+      this.like
     );
   }
 
@@ -56,7 +64,7 @@ class ProfileController {
   };
 
   getAll = async (req: MyRequest, res: Response) => {
-    const user = await profileService.get_all(req.user.id);
+    const user = await profileService.get_all(req.user_id!);
     res.send(user);
   };
 
@@ -75,7 +83,7 @@ class ProfileController {
       await fs.unlink(file.path);
       throw new HttpError(400, "Invalid file type");
     }
-    await photoService.insert(req.user.id, file);
+    await photoService.insert(req.user_id!, file);
     console.log("result: ", result);
     res.send(file);
   };
@@ -97,6 +105,15 @@ class ProfileController {
         message: "File sent successfully",
       });
     }
+  };
+
+  like = async (req: MyRequest, res: Response) => {
+    console.log("allo");
+    if (hasFailedValidation(req, res)) {
+      return;
+    }
+    const like = await profileService.like(req.user_id!, req.body.id);
+    res.send(like);
   };
 }
 

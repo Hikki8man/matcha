@@ -1,7 +1,7 @@
 import {Message} from "../Types/Chat";
 import HttpError from "../Utils/HttpError";
 import App from "../app";
-import db from "../database";
+import db from "../Database/database";
 import convService from "./Conversation.service";
 
 class MessageService {

@@ -1,6 +1,6 @@
 import {Conversation} from "../Types/Chat";
 import HttpError from "../Utils/HttpError";
-import db from "../database";
+import db from "../Database/database";
 
 class ConversationService {
   async isInConversation(user_id: number, conv_id: number) {
@@ -33,9 +33,9 @@ class ConversationService {
       const conv_exist = await this.conversationExist(user_1, user_2);
       console.log("conv_exiist:", conv_exist);
       if (conv_exist) {
-        throw new HttpError(400, "Conversation already exist");
+        return conv_exist;
       }
-      const conv = await db<Conversation>("conversation")
+      const [conv] = await db<Conversation>("conversation")
         .insert({
           user_1,
           user_2,

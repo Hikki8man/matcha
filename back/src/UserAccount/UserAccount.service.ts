@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import db from "../database";
+import db from "../Database/database";
 import {UserAccount} from "../Types/UserAccount";
 import HttpError from "../Utils/HttpError";
 import {Profile} from "../Types/Profile";
@@ -13,7 +13,8 @@ class UserAccountService {
     try {
       return await db<UserAccount>("user_account")
         .select("id", "email", "verified")
-        .where("id", id);
+        .where("id", id)
+        .first();
     } catch (e: any) {
       console.log("Error", e.message);
       return undefined;

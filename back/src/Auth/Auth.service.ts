@@ -4,23 +4,23 @@ import userAccountService from "../UserAccount/UserAccount.service";
 import emailerService from "../Emailer/Emailer.service";
 import HttpError from "../Utils/HttpError";
 import {env} from "../config";
-import {MyJwtPayload} from "../Types/MyJwtPayload";
+import {MyJwtPayload} from "../Types/JwtPayload";
 
 class AuthService {
-  public signToken(payload: any, option?: jwt.SignOptions) {
+  public signToken(payload: MyJwtPayload, option?: jwt.SignOptions) {
     return jwt.sign(payload, env.TOKEN_SECRET, option);
   }
 
-  public verifyToken(token: string) {
+  public verifyToken(token: string): MyJwtPayload | undefined {
     try {
-      return jwt.verify(token, env.TOKEN_SECRET);
+      return jwt.verify(token, env.TOKEN_SECRET) as MyJwtPayload;
     } catch (e) {
       return undefined;
     }
   }
 
   public async sendValidationMail(user: UserAccount) {
-    user.token_validation = this.signToken({sub: user.id}, {expiresIn: "3d"});
+    user.token_validation = this.signToken({id: user.id}, {expiresIn: "3d"});
     await userAccountService.insert_validation_token(user);
     await emailerService.sendValidationMail(user);
   }
@@ -42,11 +42,11 @@ class AuthService {
 
   public generateAccessAndRefreshToken(user_account: UserAccount) {
     const access_token = this.signToken(
-      {sub: user_account.id},
+      {id: user_account.id},
       {expiresIn: "4h"}
     );
     const refresh_token = this.signToken(
-      {sub: user_account.id},
+      {id: user_account.id},
       {expiresIn: "1d"}
     );
     return {access_token, refresh_token};

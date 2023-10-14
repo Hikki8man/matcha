@@ -94,9 +94,12 @@ class AuthController {
 
   refresh = async (req: MyRequest, res: Response) => {
     // console.log("token refreshed");
-    const user_acc = await userAccountService.get_by_id(req.user.id);
+    const user_acc = await userAccountService.get_by_id(req.user_id!);
+    if (!user_acc) {
+      throw new HttpError(400, "User not found");
+    }
     const access_token = authService.signToken(
-      {id: req.user.id, name: req.user.name},
+      {id: user_acc?.id},
       {expiresIn: "15m"}
     );
     res.cookie("access_token", access_token);

@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS message (
 
 CREATE TABLE IF NOT EXISTS likes (
     id SERIAL PRIMARY KEY,
-    liker_id INT NOT NULL,
-    liked_id INT NOT NULL,
+    liker_id INT DEFAULT NULL,
+    liked_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (liker_id) REFERENCES user_account (id),
     FOREIGN KEY (liked_id) REFERENCES user_account (id)
