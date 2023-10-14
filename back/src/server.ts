@@ -7,21 +7,30 @@ import AuthController from "./Auth/Auth.controller";
 import ChatController from "./Chat/Chat.controller";
 
 dotenv.config({path: "./env"});
-// console.log("tests");
-db.connect()
-  .then(() => {
-    console.log("Connected to database");
-    const app = new App(
-      [
-        new UserAccountController(),
-        new ProfileController(),
-        new AuthController(),
-        new ChatController(),
-      ],
-      8080
-    );
-    app.listen();
-  })
-  .catch((error) => {
-    console.error("Failed to connect to database: ", error);
-  });
+
+async function checkDatabaseConnection(): Promise<boolean> {
+  try {
+    await db.raw("SELECT 1+1 as result");
+    return true;
+  } catch (error: any) {
+    return false;
+  }
+}
+
+// checkDatabaseConnection().then((connected: boolean) => {
+//   if (connected) {
+//     console.log("Database connection successful.");
+const app = new App(
+  [
+    new UserAccountController(),
+    new ProfileController(),
+    new AuthController(),
+    new ChatController(),
+  ],
+  8080
+);
+app.listen();
+// } else {
+//   console.error("Unable to connect to the database");
+// }
+// });

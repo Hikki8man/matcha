@@ -1,16 +1,15 @@
-import jwt from "jsonwebtoken";
-import {Request, Response, NextFunction} from "express";
+import {Response, NextFunction} from "express";
 import {MyRequest} from "../Types/request";
-import {env} from "../config";
+import authService from "./Auth.service";
 
 function jwtRefreshStrategy(req: MyRequest, res: Response, next: NextFunction) {
-  const refresh_token = req.cookies.refresh_token;
-  try {
-    const user = jwt.verify(refresh_token, env.TOKEN_SECRET);
-    req.user = user;
-    next();
-  } catch (err) {
-    res.clearCookie("refresh_token");
+  const refresh_token: string = req.cookies.refresh_token;
+  const payload = authService.verifyToken(refresh_token);
+  if (payload) {
+    req.user = payload;
+  } else {
+    console.log("refresh token expired");
+    res.clearCookie("access_token");
     res.status(403).send("Token expired");
   }
 }

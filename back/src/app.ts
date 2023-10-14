@@ -3,7 +3,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import errorHandler from "./Utils/errorHandler";
 import http from "http";
-import {Server} from "socket.io";
+import {Server, Socket} from "socket.io";
+import authService from "./Auth/Auth.service";
+import {AuthSocket} from "./Types/AuthSocket";
 
 class App {
   public app: express.Application;
@@ -47,7 +49,16 @@ class App {
 
   private initializeWebSocket() {
     console.log("initializeWebSocket");
-    App._io.on("connection", (socket) => {
+    App._io.on("connection", (socket: Socket) => {
+      if (socket.handshake.headers.authorization) {
+        const token = socket.handshake.headers.authorization.split(" ")[1];
+        const payload = authService.verifyToken(token);
+        if (!payload) {
+          console.log("Token in socket expired");
+          return socket.disconnect();
+        }
+        socket.join(`user-${payload.sub!}`);
+      }
       console.log("user " + socket.id + " connected");
       socket.send("hello");
       socket.on("message", function message(data) {

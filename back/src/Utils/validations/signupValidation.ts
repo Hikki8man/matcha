@@ -3,7 +3,7 @@ import userService from "../../UserAccount/UserAccount.service";
 
 const emailNotTaken = async (email: string) => {
   const userfound = await userService.get_by_email(email);
-
+  console.log("user found", userfound);
   if (userfound) {
     throw new Error("User already exist");
   }

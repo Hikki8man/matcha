@@ -1,13 +1,15 @@
+import {Conversation} from "../Types/Chat";
 import HttpError from "../Utils/HttpError";
 import db from "../database";
 
 class ConversationService {
   async isInConversation(user_id: number, conv_id: number) {
     try {
-      return await db.oneOrNone(
-        `SELECT * FROM conversation WHERE (user_1 = $1 AND id = $2) OR (user_2 = $1 AND id = $2)`,
-        [user_id, conv_id]
-      );
+      return await db<Conversation>("conversation")
+        .select("*")
+        .where({user_1: user_id, id: conv_id})
+        .orWhere({user_2: user_id, id: conv_id})
+        .first();
     } catch (err) {
       return null;
     }
@@ -15,10 +17,11 @@ class ConversationService {
 
   async conversationExist(user_1: number, user_2: number) {
     try {
-      return await db.oneOrNone(
-        `SELECT * FROM conversation WHERE (user_1 = $1 AND user_2 = $2) OR (user_1 = $2 AND user_2 = $1)`,
-        [user_1, user_2]
-      );
+      return await db<Conversation>("conversation")
+        .select("*")
+        .where({user_1: user_1, user_2: user_2})
+        .orWhere({user_1: user_2, user_2: user_1})
+        .first();
     } catch (err) {
       return null;
     }
@@ -32,42 +35,53 @@ class ConversationService {
       if (conv_exist) {
         throw new HttpError(400, "Conversation already exist");
       }
-      return await db.one(
-        `INSERT INTO conversation (user_1, user_2) VALUES ($1, $2) RETURNING *`,
-        [user_1, user_2]
-      );
+      const conv = await db<Conversation>("conversation")
+        .insert({
+          user_1,
+          user_2,
+        })
+        .returning("*");
+      return conv;
     } catch (err: any) {
       console.log(err.message);
     }
   }
 
   async getBydId(id: string) {
-    return await db.oneOrNone(
-      `
-      SELECT id,
-        (
-          SELECT
-            row_to_json(profile)
-          FROM
-            profile
-          WHERE
-            user_id = conv.user_1
-        ) as user_1,
-        (
-          SELECT
-            row_to_json(profile)
-          FROM
-            profile
-          WHERE
-            user_id = conv.user_2
-        ) as user_2
-      FROM
-        conversation conv
-      WHERE
-        conv.id = $1
-      `,
-      [id]
-    );
+    try {
+      return await db<Conversation>("conversation")
+        .select(
+          "conversation.id",
+          db.raw(
+            "jsonb_build_object('user_id', profile1.user_id, 'name', profile1.name, 'birth_date', profile1.birth_date, 'gender', profile1.gender) as user_1"
+          ),
+          db.raw(
+            "jsonb_build_object('user_id', profile2.user_id, 'name', profile2.name, 'birth_date', profile2.birth_date, 'gender', profile2.gender) as user_2"
+          ),
+          db.raw(`
+            CASE
+                WHEN COUNT(msg.sender_id) > 0
+                THEN jsonb_agg(jsonb_build_object('sender_id', msg.sender_id, 'conv_id', msg.conv_id, 'content', msg.content))
+                ELSE '[]'::jsonb
+            END as messages
+        `)
+        )
+        .leftJoin(
+          "profile as profile1",
+          "conversation.user_1",
+          "profile1.user_id"
+        )
+        .leftJoin(
+          "profile as profile2",
+          "conversation.user_2",
+          "profile2.user_id"
+        )
+        .leftJoin("message as msg", "conversation.id", "msg.conv_id")
+        .where("conversation.id", id)
+        .groupBy("conversation.id", "profile1.user_id", "profile2.user_id");
+    } catch (err) {
+      console.log("errror", err);
+    }
   }
 }
 // Conversation {

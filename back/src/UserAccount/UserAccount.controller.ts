@@ -16,7 +16,7 @@ class UserAccountController {
   getUserById = async (req: Request, res: Response) => {
     console.log("getting user");
     const user = await userAccountService.get_by_id(1);
-    console.log(user);
+    console.log("user", user);
     res.send(user);
   };
 }

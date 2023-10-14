@@ -65,9 +65,13 @@ class AuthController {
     const {id, token} = req.body;
     try {
       const user_account = await authService.validateAccount(id, token);
+      if (!user_account) {
+        throw new HttpError(404, "User not found");
+      }
+
       console.log("user validated", user_account);
       const signed_token = authService.signToken(
-        {id: user_account.id, name: user_account.name},
+        {id: user_account.id},
         {expiresIn: "30m"}
       );
       console.log("signed token", signed_token);
