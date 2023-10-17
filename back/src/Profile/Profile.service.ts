@@ -1,30 +1,27 @@
-import e from "express";
-import {Like, Profile} from "../Types/Profile";
-import HttpError from "../Utils/HttpError";
-import db from "../Database/database";
+import e from 'express';
+import { Like, Profile } from '../Types/Profile';
+import HttpError from '../Utils/HttpError';
+import db from '../Database/database';
 
 class ProfileService {
   async get_by_id(id: number) {
     try {
-      return await db<Profile>("profile")
-        .select("*")
-        .where("user_id", id)
-        .first();
+      return await db<Profile>('profile').select('*').where('id', id).first();
       // return await db.oneOrNone(
       //   `SELECT profile.*, json_agg(photo.*) AS photos FROM profile LEFT JOIN photo ON profile.user_id = photo.user_id WHERE profile.user_id = $1 GROUP BY profile.user_id`,
       //   id
       // );
     } catch (e: any) {
-      console.log("Error", e.message);
+      console.log('Error', e.message);
       return undefined;
     }
   }
 
   async get_all(id: number) {
     try {
-      return await db<Profile>("profile").select("*").whereNot("user_id", id);
+      return await db<Profile>('profile').select('*').whereNot('id', id);
     } catch (e: any) {
-      console.log("error in getting all profile", e.message);
+      console.log('error in getting all profile', e.message);
       return undefined;
     }
   }
@@ -33,10 +30,10 @@ class ProfileService {
     var liker: Like | undefined = undefined;
     var liked: Like | undefined = undefined;
 
-    const existingLike: Like[] = await db<Like>("likes")
-      .select("*")
-      .where({liker_id, liked_id})
-      .orWhere({liker_id: liked_id, liked_id: liker_id});
+    const existingLike: Like[] = await db<Like>('likes')
+      .select('*')
+      .where({ liker_id, liked_id })
+      .orWhere({ liker_id: liked_id, liked_id: liker_id });
 
     if (existingLike.length === 1) {
       if (existingLike[0].liker_id === liker_id) {
@@ -56,18 +53,18 @@ class ProfileService {
 
     // if liker didnt like already
     if (!liker) {
-      const [like] = await db<Like>("likes")
+      const [like] = await db<Like>('likes')
         .insert({
           liker_id,
           liked_id,
         })
-        .returning("*");
+        .returning('*');
       // if liked then Match
       return like;
     }
     // else unlike
     else {
-      await db<Like>("likes").del().where("id", liker.id);
+      await db<Like>('likes').del().where('id', liker.id);
       // if liked then Unmatch
       return; //SUCCES unlike
     }

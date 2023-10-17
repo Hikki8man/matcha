@@ -10,8 +10,8 @@ import photoStorage from "../Utils/photoStorage";
 import asyncWrapper from "../Utils/asyncWrapper";
 import ParseParamId from "../Utils/validations/parseIdParam";
 import {MyRequest} from "../Types/request";
-import {body} from "express-validator";
-import hasFailedValidation from "../Utils/validations/checkValidationResult";
+import {body, param} from "express-validator";
+import CheckValidation from "../Utils/validations/checkValidationResult";
 
 class ProfileController {
   public path = "/profile";
@@ -22,13 +22,14 @@ class ProfileController {
   }
 
   public initializeRoutes() {
+    this.router.get(this.path, jwtStrategy, this.getAll);
     this.router.get(
       this.path + "/:id",
       jwtStrategy,
-      ParseParamId,
+      param("id").isInt(),
+      CheckValidation,
       asyncWrapper(this.getById)
     );
-    this.router.get(this.path, jwtStrategy, this.getAll);
     this.router.post(
       this.path + "/upload",
       jwtStrategy,
@@ -38,23 +39,22 @@ class ProfileController {
     this.router.get(
       this.path + "/:id/photo",
       jwtStrategy,
-      ParseParamId, //TODO change
+      param("id").isInt(),
+      CheckValidation,
       this.sendPhoto
     );
     this.router.post(
       this.path + "/like",
       jwtStrategy,
-      body("id").isNumeric(),
+      body("id").isInt(),
+      CheckValidation,
       this.like
     );
   }
 
   getById = async (req: MyRequest, res: Response) => {
-    //TODO test throw
-    if (!req.id_parsed) {
-      throw new HttpError(400, "Param id undefined");
-    }
-    const user = await profileService.get_by_id(req.id_parsed);
+    console.log("param", req.params);
+    const user = await profileService.get_by_id(req.params.id!);
     if (!user) {
       res.status(404).send("User not found");
     } else {
@@ -64,7 +64,7 @@ class ProfileController {
   };
 
   getAll = async (req: MyRequest, res: Response) => {
-    const user = await profileService.get_all(req.user_id!);
+    const user = await profileService.get_all(req.user_id || 1);
     res.send(user);
   };
 
@@ -89,29 +89,25 @@ class ProfileController {
   };
 
   sendPhoto = async (req: MyRequest, res: Response) => {
-    if (req.id_parsed) {
-      const photo = await photoService.getByProfileId(req.id_parsed);
-      if (!photo) {
-        return res.send(undefined);
-      }
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=${photo.filename}`
-      );
-      const dirname = path.resolve() + "/";
-      res.sendFile(dirname + photo.path);
-      res.send({
-        status: "success",
-        message: "File sent successfully",
-      });
+    // if (req.id_parsed) {
+    const photo = await photoService.getByProfileId(req.params.id!);
+    if (!photo) {
+      return res.send(undefined);
     }
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${photo.filename}`
+    );
+    const dirname = path.resolve() + "/";
+    res.sendFile(dirname + photo.path);
+    res.send({
+      status: "success",
+      message: "File sent successfully",
+    });
+    // }
   };
 
   like = async (req: MyRequest, res: Response) => {
-    console.log("allo");
-    if (hasFailedValidation(req, res)) {
-      return;
-    }
     const like = await profileService.like(req.user_id!, req.body.id);
     res.send(like);
   };

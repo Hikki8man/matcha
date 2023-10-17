@@ -8,6 +8,7 @@ import messageService from "./Message.service";
 import asyncWrapper from "../Utils/asyncWrapper";
 import {Message} from "../Types/Chat";
 import App from "../app";
+import CheckValidation from "../Utils/validations/checkValidationResult";
 
 class ChatController {
   public path = "/chat";
@@ -20,14 +21,16 @@ class ChatController {
   public initializeRoutes() {
     this.router.post(
       this.path + "/conversation/create",
-      body("id").isNumeric(),
+      body("id").isInt(),
+      CheckValidation,
       jwtStrategy,
       asyncWrapper(this.createConversation)
     );
 
     this.router.get(
       this.path + "/conversation/:id",
-      param("id").isNumeric(),
+      param("id").isInt(),
+      CheckValidation,
       jwtStrategy,
       this.getConvById
     );
@@ -42,9 +45,6 @@ class ChatController {
   }
   /* CONVERSATION */
   createConversation = async (req: MyRequest, res: Response) => {
-    if (hasFailedValidation(req, res)) {
-      return;
-    }
     const user_1: number = req.user_id!;
     const user_2: number = req.body.id;
     const conv = await convService.createConv(user_1, user_2);
@@ -53,7 +53,7 @@ class ChatController {
   };
 
   getConvById = async (req: MyRequest, res: Response) => {
-    const conv = await convService.getBydId(req.params.id);
+    const conv = await convService.getBydId(req.params.id!);
     console.log(conv);
     res.send(conv);
   };

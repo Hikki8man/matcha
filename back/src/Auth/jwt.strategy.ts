@@ -1,7 +1,6 @@
 import {Response, NextFunction} from "express";
 import {MyRequest} from "../Types/request";
 import authService from "./Auth.service";
-import profileService from "../Profile/Profile.service";
 
 function jwtStrategy(req: MyRequest, res: Response, next: NextFunction) {
   const access_token: string = req.cookies.access_token;

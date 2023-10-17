@@ -8,7 +8,7 @@ import jwtRefreshStrategy from "./jwtRefresh.strategy";
 import profileService from "../Profile/Profile.service";
 import {MyRequest} from "../Types/request";
 import asyncWrapper from "../Utils/asyncWrapper";
-import hasFailedValidation from "../Utils/validations/checkValidationResult";
+import CheckValidation from "../Utils/validations/checkValidationResult";
 
 class AuthController {
   public path = "/auth";
@@ -19,11 +19,12 @@ class AuthController {
   }
 
   public initializeRoutes() {
-    this.router.get(this.path, (req: Request, res: Response) => {
-      console.log("twest");
-      res.end();
-    });
-    this.router.post(this.path + "/register", signupValidation, this.register);
+    this.router.post(
+      this.path + "/register",
+      signupValidation,
+      CheckValidation,
+      this.register
+    );
     this.router.post(this.path + "/login", asyncWrapper(this.login));
     this.router.post(this.path + "/validate-account", this.validateAccount);
     this.router.get(this.path + "/refresh", jwtRefreshStrategy, this.refresh);
@@ -31,9 +32,6 @@ class AuthController {
   }
 
   register = async (req: Request, res: Response) => {
-    if (hasFailedValidation(req, res)) {
-      return;
-    }
     const user = await userAccountService.create(req.body);
     console.log("user", user);
     if (user) {
