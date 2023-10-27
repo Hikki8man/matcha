@@ -1,8 +1,7 @@
-import {Message} from "../Types/Chat";
-import HttpError from "../Utils/HttpError";
-import App from "../app";
-import db from "../Database/database";
-import convService from "./Conversation.service";
+import { Message } from '../Types/Chat';
+import HttpError from '../Utils/HttpError';
+import db from '../Database/database';
+import convService from './Conversation.service';
 
 class MessageService {
   async create(sender_id: number, conv_id: number, content: string) {
@@ -10,17 +9,16 @@ class MessageService {
     if (!in_conv) {
       throw new HttpError(
         400,
-        `user ${sender_id} is not in conversation ${conv_id}`
+        `user ${sender_id} is not in conversation ${conv_id}`,
       );
     }
-    const [msg] = await db<Message>("message")
+    const [msg] = await db<Message>('message')
       .insert({
         sender_id,
         conv_id,
         content,
       })
-      .returning("*");
-    // App.getIO.to(`user-${msg.}`).emit('NewMessage')
+      .returning('*');
     return msg;
   }
 }

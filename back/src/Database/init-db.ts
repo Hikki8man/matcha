@@ -17,6 +17,9 @@ export const initDb = async () => {
   // Create user_account table
   await createTableIfNotExists('user_account', (table) => {
     table.increments('id').primary();
+    table.string('username').unique();
+    table.string('firstname');
+    table.string('lastname');
     table.string('email').unique();
     table.string('password');
     table.string('token_validation');
@@ -32,8 +35,9 @@ export const initDb = async () => {
       .inTable('user_account')
       .onDelete('CASCADE');
     table.string('name').notNullable();
+    table.string('bio');
     table.date('birth_date');
-    table.enum('gender', ['male', 'female']).notNullable();
+    table.enum('gender', ['male', 'female', 'other']).default('male');
     table.enum('completed_steps', [
       'name',
       'gender',

@@ -1,7 +1,7 @@
-import e from 'express';
-import { Like, Profile } from '../Types/Profile';
+import { CompletedSteps, Gender, Like, Profile } from '../Types/Profile';
 import HttpError from '../Utils/HttpError';
 import db from '../Database/database';
+import conversationService from '../Chat/Conversation.service';
 
 class ProfileService {
   async get_by_id(id: number) {
@@ -22,6 +22,39 @@ class ProfileService {
       return await db<Profile>('profile').select('*').whereNot('id', id);
     } catch (e: any) {
       console.log('error in getting all profile', e.message);
+      return undefined;
+    }
+  }
+
+  async editName(id: number, name: string) {
+    try {
+      return await db<Profile>('profile')
+        .update({ name: name })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating name', e.message);
+      return undefined;
+    }
+  }
+
+  async editGender(id: number, gender: Gender) {
+    try {
+      return await db<Profile>('profile')
+        .update({ gender: gender })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating name', e.message);
+      return undefined;
+    }
+  }
+
+  async updateCompteteSteps(id: number, step: CompletedSteps) {
+    try {
+      return await db<Profile>('profile')
+        .update({ completed_steps: step })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating steps', e.message);
       return undefined;
     }
   }
@@ -60,6 +93,9 @@ class ProfileService {
         })
         .returning('*');
       // if liked then Match
+      if (liked) {
+        await conversationService.createConv(liker_id, liked_id);
+      }
       return like;
     }
     // else unlike

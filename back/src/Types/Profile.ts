@@ -1,7 +1,7 @@
 export enum Gender {
-  Male = 'Male',
-  Female = 'Female',
-  Other = 'Other',
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
 export enum CompletedSteps {
@@ -16,6 +16,7 @@ export interface Profile {
   id: number;
   name: string;
   birth_date: Date;
+  bio: string;
   gender: Gender;
   completed_steps: CompletedSteps;
 }

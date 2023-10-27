@@ -8,6 +8,7 @@ import ChatController from './Chat/Chat.controller';
 import { initDb } from './Database/init-db';
 import { insertTestData } from './Database/insert-data';
 import { dropTable } from './Database/drop-tables';
+import EditProfileController from './Profile/EditProfile.controller';
 
 dotenv.config({ path: './env' });
 
@@ -22,7 +23,7 @@ async function checkDatabaseConnection(): Promise<boolean> {
 
 const main = async () => {
   const connected = await checkDatabaseConnection();
-  // await dropTable();
+  await dropTable();
   if (connected) {
     console.log('Connected to database');
     try {
@@ -35,6 +36,7 @@ const main = async () => {
       [
         new UserAccountController(),
         new ProfileController(),
+        new EditProfileController(),
         new AuthController(),
         new ChatController(),
       ],

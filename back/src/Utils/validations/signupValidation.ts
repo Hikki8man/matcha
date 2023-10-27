@@ -4,10 +4,11 @@ import userService from '../../UserAccount/UserAccount.service';
 const emailNotTaken = async (email: string) => {
   const userfound = await userService.get_by_email(email);
   return userfound ? false : true;
-  // if (userfound) {
-  //   throw new Error('User already exist');
-  // }
-  // return true;
+};
+
+const usernameNotTaken = async (username: string) => {
+  const userfound = await userService.get_by_username(username);
+  return userfound ? false : true;
 };
 
 const isOverEighteen = (birth_date: Date) => {
@@ -21,7 +22,15 @@ const isOverEighteen = (birth_date: Date) => {
   return true;
 };
 
-const signupValidation = [
+const registerValidation = [
+  body('username')
+    .isString()
+    .isLength({ min: 1 })
+    .withMessage('User must be at least 1 char long')
+    .custom(usernameNotTaken)
+    .withMessage('Username already taken'),
+  body('firstname').isString(),
+  body('lastname').isString(),
   body('email')
     .isEmail()
     .withMessage('Enter a valid email')
@@ -38,4 +47,4 @@ const signupValidation = [
     .withMessage('You must be at least 18 years old.'),
 ];
 
-export default signupValidation;
+export default registerValidation;

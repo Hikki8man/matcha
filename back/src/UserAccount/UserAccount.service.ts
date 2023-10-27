@@ -2,7 +2,19 @@ import bcrypt from 'bcrypt';
 import db from '../Database/database';
 import { UserAccount } from '../Types/UserAccount';
 import HttpError from '../Utils/HttpError';
-import { Profile } from '../Types/Profile';
+import { CompletedSteps, Gender, Profile } from '../Types/Profile';
+import { RegisterBody } from '../Types/RegisterBody';
+
+interface testUser {
+  email: string;
+  username: string;
+  firstname: string;
+  lastname: string;
+  password: string;
+  birth_date: string;
+  gender: Gender;
+  bio: string;
+}
 
 class UserAccountService {
   private saltRounds = 10;
@@ -33,16 +45,24 @@ class UserAccountService {
     }
   }
 
-  async get_by_email(email: string): Promise<UserAccount | undefined> {
+  async get_by_email(email: string) {
     try {
       return await db<UserAccount>('user_account')
         .select('id', 'email', 'verified')
         .where('email', email)
         .first();
-      // return await db.one(
-      //   `SELECT id, email, verified FROM user_account WHERE email = $1`,
-      //   email
-      // );
+    } catch (e: any) {
+      console.log('Error in get by email', e.message);
+      return undefined;
+    }
+  }
+
+  async get_by_username(username: string) {
+    try {
+      return await db<UserAccount>('user_account')
+        .select('id', 'email', 'verified')
+        .where('username', username)
+        .first();
     } catch (e: any) {
       console.log('Error in get by email', e.message);
       return undefined;
@@ -50,12 +70,18 @@ class UserAccountService {
   }
 
   //TODO move to authservice
-  async validate_login(body: any): Promise<UserAccount | undefined> {
+  async validate_login(body: any) {
     try {
-      const user: UserAccount | undefined = await db<UserAccount>(
-        'user_account',
-      )
-        .select('id', 'email', 'verified', 'password')
+      const user = await db<UserAccount>('user_account')
+        .select(
+          'id',
+          'username',
+          'firstname',
+          'lastname',
+          'email',
+          'verified',
+          'password',
+        )
         .where('email', body.email)
         .first();
       if (!user) {
@@ -79,13 +105,15 @@ class UserAccountService {
   }
 
   //TODO validator
-  async create(body: any) {
-    const { name, birth_date, gender, email, password } = body;
-    const hash = await bcrypt.hash(password, this.saltRounds);
+  async create(body: RegisterBody) {
+    const hash = await bcrypt.hash(body.password, this.saltRounds);
     try {
       const [user_account] = await db<UserAccount>('user_account').insert(
         {
-          email: email,
+          username: body.username,
+          firstname: body.firstname,
+          lastname: body.lastname,
+          email: body.email,
           password: hash,
         },
         ['*'],
@@ -93,9 +121,9 @@ class UserAccountService {
       // Insert user's profile information into the 'PROFILE' table
       const profile = await db<Profile>('profile').insert({
         id: user_account.id,
-        name: name,
-        birth_date: birth_date,
-        gender: gender,
+        name: body.firstname,
+        birth_date: body.birth_date,
+        completed_steps: CompletedSteps.Name,
       });
       delete user_account.password;
       return user_account;
@@ -144,6 +172,37 @@ class UserAccountService {
   //     return undefined;
   //   }
   // }
+
+  async createTest(bodys: testUser[]) {
+    for (const body of bodys) {
+      console.log('inserting ' + body.firstname);
+
+      const hash = await bcrypt.hash(body.password, this.saltRounds);
+      try {
+        const [user_account] = await db<UserAccount>('user_account').insert(
+          {
+            email: body.email,
+            username: body.username,
+            firstname: body.firstname,
+            lastname: body.lastname,
+            password: hash,
+          },
+          ['*'],
+        );
+        // Insert user's profile information into the 'PROFILE' table
+        await db<Profile>('profile').insert({
+          id: user_account.id,
+          name: body.firstname,
+          birth_date: new Date(body.birth_date),
+          gender: body.gender,
+          completed_steps: CompletedSteps.Name,
+          bio: body.bio,
+        });
+      } catch (e: any) {
+        console.log(e.message);
+      }
+    }
+  }
 }
 
 export default new UserAccountService();
