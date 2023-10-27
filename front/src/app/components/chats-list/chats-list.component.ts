@@ -26,7 +26,7 @@ export class ChatsListComponent implements OnInit {
         private _socket: Socket,
     ) {
         _httpClient
-            .get<ConversationList[]>('http://localhost:8080/chat/conversation', {
+            .get<ConversationList[]>('http://10.11.9.2:8080/chat/conversation', {
                 withCredentials: true,
             })
             .subscribe({

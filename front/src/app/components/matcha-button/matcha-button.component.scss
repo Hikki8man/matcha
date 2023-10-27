@@ -1,0 +1,22 @@
+.matcha-button {
+    padding: 7px 15px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+
+    border-radius: 20px;
+    background-color: var(--color-pink-accent);
+
+    &:hover {
+        transition: all 0.2s ease-in-out;
+        background-color: var(--title-color);
+        scale: 1.05;
+    }
+
+    .button-label {
+        color: white;
+        font-weight: 550;
+        font-size: 14px;
+    }
+}

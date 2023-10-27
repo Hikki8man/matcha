@@ -3,6 +3,7 @@ import { AuthService } from './auth.sevice';
 import { CompletedSteps, Gender } from '../models/profile.model';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environment/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +18,7 @@ export class ProfileService {
     editName(name: string) {
         console.log('name to edit: ', name);
         return this._httpClient.post(
-            'http://localhost:8080/profile/edit/name',
+            `${environment.apiBaseUrl}/profile/edit/name`,
             { name },
             {
                 withCredentials: true,
@@ -27,7 +28,7 @@ export class ProfileService {
 
     editGender(gender: Gender) {
         return this._httpClient.post(
-            'http://localhost:8080/profile/edit/gender',
+            'http://10.11.9.2:8080/profile/edit/gender',
             { gender },
             {
                 withCredentials: true,

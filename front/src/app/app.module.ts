@@ -10,13 +10,16 @@ import { SearchModule } from './pages/search/search.module';
 import { SettingsModule } from './pages/settings/settings.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginModule } from './components/login/login.module';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { RegisterModule } from './components/register/register.module';
+import { LoginModule } from './pages/login/login.module';
 import { CompleteProfileModule } from './components/complete-profile/complete-profile.module';
+import { environment } from 'src/environment/environment';
+import { IApiService } from './services/iapi.service';
+import { ApiService } from './services/api.service';
 
 const config: SocketIoConfig = {
-    url: 'http://localhost:8080',
+    url: environment.apiBaseUrl,
     options: { withCredentials: true, autoConnect: false },
 };
 
@@ -38,7 +41,7 @@ const config: SocketIoConfig = {
         RegisterModule,
         CompleteProfileModule,
     ],
-    providers: [],
+    providers: [{ provide: IApiService, useClass: ApiService }],
     bootstrap: [AppComponent],
 })
 export class AppModule {

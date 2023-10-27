@@ -75,7 +75,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         console.log('chat id', this.ChatId);
         if (!this.ChatId) return;
         this._httpClient
-            .get<Conversation>(`http://localhost:8080/chat/conversation/${this.ChatId}`, {
+            .get<Conversation>(`http://10.11.9.2:8080/chat/conversation/${this.ChatId}`, {
                 withCredentials: true,
             })
             .subscribe({
@@ -95,7 +95,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             content,
         };
         this._httpClient
-            .post('http://localhost:8080/chat/message/create', message, { withCredentials: true })
+            .post('http://10.11.9.2:8080/chat/message/create', message, { withCredentials: true })
             .subscribe({
                 next: () => {
                     console.log('message sent');

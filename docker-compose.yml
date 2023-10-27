@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   postgres:
@@ -27,8 +27,25 @@ services:
       - TOKEN_SECRET=${TOKEN_SECRET}
       - EMAIL=${EMAIL}
       - EMAIL_PASS=${EMAIL_PASS}
+      - FRONT_URL=${FRONT_URL}
     volumes:
       - ./back:/usr/app/back
+    networks:
+      - matcha_net
+    restart: always
+
+  front:
+    build: ./front
+    ports:
+      - "4200:4200"
+    depends_on:
+      - express
+    environment:
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - EMAIL=${EMAIL}
+      - EMAIL_PASS=${EMAIL_PASS}
+    volumes:
+      - ./front:/usr/app/front
     networks:
       - matcha_net
     restart: always

@@ -1,6 +1,6 @@
-import {Result, ValidationError, validationResult} from "express-validator";
-import {MyRequest} from "../../Types/request";
-import {NextFunction, Response} from "express";
+import { Result, ValidationError, validationResult } from 'express-validator';
+import { MyRequest } from '../../Types/request';
+import { NextFunction, Response } from 'express';
 
 // const hasFailedValidation = (
 //   req: MyRequest,
@@ -18,9 +18,10 @@ import {NextFunction, Response} from "express";
 function CheckValidation(req: MyRequest, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
+    console.log('no error');
     next();
   } else {
-    console.log("errors: ", errors);
+    console.log('errors: ', errors);
     res.status(400).send(errors);
   }
 }

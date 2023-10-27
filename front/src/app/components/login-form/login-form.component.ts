@@ -1,7 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NonNullableFormBuilder,
+    Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { AccountData } from 'src/app/models/account.model';
 import { ProfileData } from 'src/app/models/profile.model';
 import { AuthService, Credentials } from 'src/app/services/auth.sevice';
@@ -12,26 +19,30 @@ export interface SuccessLoginData {
 }
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
+    selector: 'login-form',
+    templateUrl: './login-form.component.html',
+    styleUrls: ['./login-form.component.scss'],
 })
-export class LoginComponent {
+export class LoginFormComponent {
+    public HeartIconUrl: string = IconUrlEnum.Heart;
+    public HeartIconStyle: Record<string, string> = {
+        display: 'flex',
+        height: '14px',
+        width: '14px',
+    };
+
+    public HasErrors: boolean = false;
+
     constructor(
         private _httpClient: HttpClient,
         private _authService: AuthService,
         private _router: Router,
+        private readonly _formBuilder: NonNullableFormBuilder,
     ) {}
 
-    loginForm = new FormGroup({
-        email: new FormControl('', {
-            nonNullable: true,
-            validators: [Validators.required, Validators.email],
-        }),
-        password: new FormControl('', {
-            nonNullable: true,
-            validators: [Validators.required],
-        }),
+    public loginForm: FormGroup = this._formBuilder.group({
+        email: ['', Validators.required, Validators.email],
+        password: ['', Validators.required],
     });
 
     getErrorMessage(controlName: string): string {
@@ -44,21 +55,17 @@ export class LoginComponent {
         return '';
     }
 
-    onLogin() {
+    async onLogin() {
+        this.HasErrors = !this.loginForm.valid;
         if (this.loginForm.valid) {
             const credentials: Credentials = {
                 email: this.loginForm.value.email!,
                 password: this.loginForm.value.password!,
             };
-            this._authService.login(credentials).subscribe({
-                next: (value) => {
-                    console.log('value', value);
-                    this._authService.setAuth(true, value);
-                    this._router.navigate(['search']);
-                },
-                error: (err) => console.log('error: ', err),
-                complete: () => console.log('complete ?'),
-            });
+            try {
+                const res = await this._authService.login(credentials);
+                console.log('res', res);
+            } catch (err: any) {}
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);

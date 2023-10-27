@@ -7,27 +7,26 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class ApiService implements IApiService {
-
-    constructor(
-        private readonly _http: HttpClient,
-    ) { }
+    constructor(private readonly _http: HttpClient) {}
 
     public async callApi<T>(url: string, method: string, body?: any): Promise<T> {
-        const req = this._http.request<T>(method, environment.apiBaseUrl + url, { body });
+        const req = this._http.request<T>(method, environment.apiBaseUrl + '/' + url, {
+            body,
+            withCredentials: true,
+        });
 
         return new Promise<T>((resolve, reject) => {
-
             const onComplete: (data: any) => void = (data: any) => {
                 resolve(data);
             };
 
-            const onError: (error: any) => void = error => {
+            const onError: (error: any) => void = (error) => {
                 reject(error);
             };
 
             req.subscribe({
-                next: data => onComplete(data),
-                error: error => onError(error),
+                next: (data) => onComplete(data),
+                error: (error) => onError(error),
             });
         });
     }

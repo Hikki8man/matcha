@@ -1,10 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Profile } from '../models/profile.model';
-import { SuccessLoginData } from '../components/login/login.component';
+import { SuccessLoginData } from '../pages/login/login.component';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
+import { IApiService } from './iapi.service';
 
 export interface Credentials {
     email: string;
@@ -24,6 +25,7 @@ export class AuthService {
         private _socket: Socket,
         private router: Router,
         private _http: HttpClient,
+        private _apiService: IApiService,
     ) {
         // this._auth = new Observable((auth) => {
         //     console.log('setting auth observable');
@@ -51,17 +53,17 @@ export class AuthService {
     }
 
     register(form: any) {
-        return this._http.post('http://localhost:8080/auth/register', form);
+        return this._apiService.callApi<SuccessLoginData>('auth/register', 'POST', form);
     }
 
+    // login(credentials: Credentials) {
+
     login(credentials: Credentials) {
-        return this._http.post<SuccessLoginData>('http://localhost:8080/auth/login', credentials, {
-            withCredentials: true,
-        });
+        return this._apiService.callApi<SuccessLoginData>('auth/login', 'POST', credentials);
     }
 
     refreshToken() {
-        return this._http.get<SuccessLoginData>('http://localhost:8080/auth/refresh', {
+        return this._http.get<SuccessLoginData>('http://10.11.9.2:8080/auth/refresh', {
             withCredentials: true,
         });
     }

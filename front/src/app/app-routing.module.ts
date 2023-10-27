@@ -5,11 +5,11 @@ import { MessagesComponent } from './pages/messages/messages.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { LoginComponent } from './components/login/login.component';
 import { AuthService } from './services/auth.sevice';
 import { RegisterComponent } from './components/register/register.component';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
 import { ProfileService } from './services/profile.service';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
     {
@@ -35,7 +35,7 @@ const routes: Routes = [
         component: MainLayoutComponent,
         canActivate: [
             () => inject(AuthService).authGuard(),
-            () => inject(ProfileService).profileCompleteGuard(),
+            // () => inject(ProfileService).profileCompleteGuard(),
         ],
         // canActivateChild: [() => inject(ProfileService).profileCompleteGuard()],
         children: [

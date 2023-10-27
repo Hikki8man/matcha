@@ -4,6 +4,7 @@ declare global {
       TOKEN_SECRET: string;
       EMAIL: string;
       EMAIL_PASS: string;
+      FRONT_URL: string;
     }
   }
 }

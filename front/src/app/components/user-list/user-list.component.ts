@@ -30,7 +30,7 @@ export class UserListComponent implements OnInit {
     ngOnInit(): void {
         console.log('isAuth: ', this._authService.getAuth());
         this._httpClient
-            .get<Profile[]>('http://localhost:8080/profile', {
+            .get<Profile[]>('http://10.11.9.2:8080/profile', {
                 withCredentials: true,
             })
             .subscribe((res) => {

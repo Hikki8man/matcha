@@ -8,7 +8,7 @@ const db = Knex({
     port: 5432,
     user: "chak",
     password: "mdp",
-    database: "matcha_db",
+    database: "matchadb",
   },
 });
 
