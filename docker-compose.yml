@@ -7,9 +7,33 @@ services:
       - 5432:5432
     # volumes:
     #   - ~/apps/postgres:/var/lib/postgresql/data
-    volumes:
-      - ./init-scripts:/docker-entrypoint-initdb.d
+    # volumes:
+    #   - ./init-scripts:/docker-entrypoint-initdb.d
     environment:
-      - POSTGRES_PASSWORD=mdp
-      - POSTGRES_USER=chak
-      - POSTGRES_DB=matcha_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    restart: always
+    networks:
+      - matcha_net
+
+  express:
+    build: ./back
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - EMAIL=${EMAIL}
+      - EMAIL_PASS=${EMAIL_PASS}
+    volumes:
+      - ./back:/usr/app/back
+    networks:
+      - matcha_net
+    restart: always
+
+networks:
+  matcha_net:
+    name: matcha_net
+    driver: bridge
