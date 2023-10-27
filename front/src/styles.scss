@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --background-color-accent: #f6f4f4;
+    --background-color: #ece3e5;
+
+    --color-pink-accent: #f68594;
+    --color-pink-background: #f9e8ec;
+
+    --color-text-primary: #212020;
+    --color-text-secondary: #857e80;
+
+    --color-separator: #e0d7da;
+
+    --title-color: #f44e63;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-slider {
+    --mdc-slider-handle-color: var(--title-color) !important;
+    --mdc-slider-active-track-color: var(--title-color) !important;
+    --mdc-slider-inactive-track-color: var(--color-pink-accent) !important;
+
+    --mdc-slider-inactive-track-height: 8px;
+
+    --mdc-slider-handle-height: 10px;
+    --mdc-slider-handle-width: 10px;
+
+    --mdc-slider-inactive-track-shape: 20px;
+}

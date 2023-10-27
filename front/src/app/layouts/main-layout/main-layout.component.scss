@@ -1,0 +1,18 @@
+#main-layout {
+    padding: 10px 3%;
+    background-color: var(--background-color);
+
+    #app-content {
+        width: 100%;
+        display: flex;
+        padding-top: 20px;
+
+        .content-container {
+            width: 100%;
+        }
+
+        .navbar-container {
+            margin-right: 20px;
+        }
+    }
+}

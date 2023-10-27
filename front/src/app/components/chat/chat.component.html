@@ -1,0 +1,26 @@
+<div class="chat">
+    <ng-container *ngIf="Chat">
+        <div class="chat-head">
+            <div class="user-infos">
+                <div class="user-photo-container">
+                    <img class="user-photo" [src]="Avatar">
+                </div>
+                <div class="user-infos-container">
+                    <span class="user-name">{{ getUserName(Chat) }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="chats-container">
+                <div class="chat-message" *ngFor="let message of Chat.messages" [class.from]="isFrom(message.sender_id)">
+                    <span>{{ message.content }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <div class="input-container">
+                <message-input (OnMessageSent)="sendMessage($event)"></message-input>
+            </div>
+        </div>
+    </ng-container>
+</div>

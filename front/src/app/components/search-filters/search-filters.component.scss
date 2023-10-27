@@ -1,0 +1,39 @@
+.search-filters {
+    background-color: var(--background-color-accent);
+    border-radius: 15px;
+    height: 86vh;
+
+    .title-container {
+        font-size: 14px;
+        font-weight: 550;
+        padding: 20px;
+    }
+
+    .filters-body {
+        padding: 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        .filter-name {
+            font-weight: 550;
+        }
+
+        .tags-title-container {
+            display: flex;
+            justify-content: space-between;
+
+            .select-tags-button {
+                font-size: 14px;
+                color: var(--color-text-secondary);
+                cursor: pointer;
+            }
+        }
+
+        .tags-container {
+            padding-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+}

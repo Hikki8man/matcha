@@ -1,0 +1,16 @@
+* {
+    --tag-background-color: #f2e9e7;
+    --tag-text-color: #f36a7b;
+}
+
+.interest-tag-container {
+    margin-right: 7px;
+    margin-bottom: 10px;
+    padding: 7px 10px;
+    background-color: var(--tag-background-color);
+    border-radius: 7px;
+
+    .interest-tag {
+        color: var(--tag-text-color);
+    }
+}

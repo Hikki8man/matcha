@@ -1,0 +1,6 @@
+<div class="user-photos">
+    <span class="title">Photos</span>
+    <div class="photos-container">
+        <img *ngFor="let image of Album; let i=index" class="user-photo" [src]="image.src" (click)="open(i)">
+    </div>
+</div>

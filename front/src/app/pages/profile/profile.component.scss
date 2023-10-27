@@ -1,0 +1,17 @@
+.profile-page {
+    display: flex;
+    width: 100%;
+
+    .left-content {
+        margin: 0px 15px 20px 0px;
+        width: 70%;
+    }
+
+    .right-content {
+        width: 30%;
+    }
+
+    .profile-item-container {
+        margin-bottom: 15px;
+    }
+}

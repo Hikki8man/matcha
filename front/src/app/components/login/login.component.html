@@ -1,0 +1,14 @@
+<form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+	<input type="email" id="email" placeholder="Email" formControlName="email">
+	<div *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+		{{getErrorMessage('email')}}
+	</div>
+  
+	<input type="password" placeholder="Password" formControlName="password">
+	<div *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+		{{getErrorMessage('password')}}
+	</div>
+
+	<button [disabled]="!loginForm.valid" type="submit">Login</button>
+</form>
+  

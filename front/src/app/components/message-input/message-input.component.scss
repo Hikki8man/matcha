@@ -1,0 +1,32 @@
+.message-input-container {
+
+    //background-color: #edeaeb69;
+    background-color: var(--background-color-accent);
+    border: solid 1px var(--color-separator);
+    border-radius: 20px;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    .message-input {
+        border: none;
+        background-color: inherit;
+        color: var(--color-text-primary);
+        border-radius: 20px;
+        padding: 12px;
+        padding-left: 5px;
+
+        width: 100%;
+
+        margin-left: 10px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &::placeholder {
+            color: var(--color-text-secondary);
+        }
+    }
+}

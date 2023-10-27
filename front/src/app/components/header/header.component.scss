@@ -1,0 +1,65 @@
+* {
+    --title-color: #f44e63;
+}
+
+#header {
+    height: 60px;
+    border-radius: 30px;
+    background-color: var(--background-color-accent);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0px 20px;
+
+    .left-content {
+        display: flex;
+        align-items: center;
+
+        .title-container {
+            display: flex;
+            align-items: center;
+
+            font-weight: 550;
+            color: var(--title-color);
+            margin-right: 100px;
+            margin-left: 14px;
+
+            .app-title {
+                padding: 0px 5px;
+            }
+
+            .heart-icon {
+                fill: var(--title-color);
+            }
+        }
+    }
+
+    .right-content {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 25px;
+            margin-left: 10px;
+        }
+
+        .notifications-button {
+            .notification-dot {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 4px;
+                right: 49px;
+                top: 7px;
+                background-color: #91d18b;
+            }
+
+            cursor: pointer;
+        }
+    }
+}

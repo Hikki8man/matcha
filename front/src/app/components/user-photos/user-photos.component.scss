@@ -1,0 +1,25 @@
+.user-photos {
+    background-color: var(--background-color-accent);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    padding: 20px;
+
+    .title {
+        font-size: 14px;
+        font-weight: 550;
+    }
+
+    .photos-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        .user-photo {
+            cursor: pointer;
+            border-radius: 10px;
+            width: 18%;
+            max-height: 130px;
+        }
+    }
+}

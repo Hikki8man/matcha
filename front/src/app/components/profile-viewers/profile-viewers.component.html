@@ -1,0 +1,19 @@
+<div class="profile-viewers">
+    <span class="title">Vues du profil</span>
+    <div class="viewers-container">
+        <div class="viewer-item" *ngFor="let viewer of Viewers">
+            <div class="left-content">
+                <div class="viewer-photo-container">
+                    <img class="viewer-photo" [src]="viewer.avatar">
+                </div>
+                <div class="viewer-info">
+                    <span class="viewer-name">{{ viewer.name }}</span>
+                    <span class="viewer-date">{{ viewer.date }}</span>
+                </div>
+            </div>
+            <div class="right-content">
+                <svg-icon class="heart-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+            </div>
+        </div>
+    </div>
+</div>

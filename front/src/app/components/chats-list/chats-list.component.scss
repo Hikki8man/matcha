@@ -1,0 +1,78 @@
+.chats-list {
+    background-color: var(--background-color-accent);
+    border-radius: 15px 0px 0px 15px;
+    overflow: auto;
+    height: 100%;
+    border-right: solid 1px var(--color-separator);
+
+    .title-container {
+        font-size: 14px;
+        font-weight: 550;
+        padding: 20px;
+    }
+
+    .items-container {
+        display: flex;
+        flex-direction: column;
+
+        .chat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            max-height: 55px;
+            border-bottom: solid 1px var(--color-separator);
+            cursor: pointer;
+
+            &.selected {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+
+            &:hover:not(.selected) {
+                background-color: rgba(0, 0, 0, 0.03);
+            }
+
+            .left-content {
+                display: flex;
+                align-items: center;
+                width: 70%;
+
+                .chat-photo {
+                    height: 50px;
+                    width: 50px;
+                    border-radius: 25px;
+                    margin-right: 15px;
+                }
+
+                .chat-infos {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    
+                    .chat-name {
+                        font-weight: 550;
+                    }
+                    
+                    .chat-message {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-size: 14px;
+                        color: var(--color-text-secondary);
+                        padding-top: 7px;
+                    }
+                }
+            }
+
+            .right-content {
+                display: flex;
+                flex-direction: column;
+                justify-self: flex-start;
+
+                .chat-date {
+                    font-size: 14px;
+                    color: var(--color-text-secondary);
+                }
+            }
+        }
+    }
+}

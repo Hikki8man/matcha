@@ -1,0 +1,33 @@
+<div class="search-filters">
+    <div class="title-container">
+        <span class="title">Filtres</span>
+    </div>
+    <div class="filters-body">
+        <span class="filter-name">Tranche d'âge: {{ Filters.MinAge }} - {{ formatAgeLabel(Filters.MaxAge) }}</span>
+        <mat-slider min="18" max="60" discrete [displayWith]="formatAgeLabel" (change)="handleFiltersUpdate()">
+            <input [(value)]="Filters.MinAge" matSliderStartThumb>
+            <input [(value)]="Filters.MaxAge" matSliderEndThumb>
+        </mat-slider>
+
+        <span class="filter-name">Distance max: {{ formatDistanceLabel(Filters.DistanceRange) }}</span>
+        <mat-slider min="5" max="100" discrete [displayWith]="formatDistanceLabel" (change)="handleFiltersUpdate()">
+            <input [(value)]="Filters.DistanceRange" matSliderThumb>
+        </mat-slider>
+
+        <span class="filter-name">Fame rating: {{ Filters.MinFameRating }} - {{ Filters.MaxFameRating }}</span>
+        <mat-slider min="0" max="10" discrete (change)="handleFiltersUpdate()">
+            <input [(value)]="Filters.MinFameRating" matSliderStartThumb>
+            <input [(value)]="Filters.MaxFameRating" matSliderEndThumb>
+        </mat-slider>
+
+        <div class="tags-title-container">
+            <span class="filter-name">Tags:</span>
+            <div class="select-tags-button">Sélectionner des tags</div>
+        </div>
+        <div class="tags-container">
+            <div *ngFor="let tag of Filters.Tags">
+                <interest-tag [Name]="tag"></interest-tag>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+
+	<input type="text" id="username" placeholder="Username" formControlName="username">
+	<div *ngIf="registerForm.controls.username.touched && registerForm.controls.username.invalid">
+		{{getErrorMessage('username')}}
+	</div>
+
+	<input type="text" id="firstname" placeholder="firstname" formControlName="firstname">
+	<div *ngIf="registerForm.controls.firstname.touched && registerForm.controls.firstname.invalid">
+		{{getErrorMessage('firstname')}}
+	</div>
+
+	<input type="text" id="lastname" placeholder="lastname" formControlName="lastname">
+	<div *ngIf="registerForm.controls.lastname.touched && registerForm.controls.lastname.invalid">
+		{{getErrorMessage('lastname')}}
+	</div>
+	
+	<label for="birth_date">Birth date:</label>
+	<input type="date" id="birth_date" placeholder="birth_date" formControlName="birth_date">
+	<div *ngIf="registerForm.controls.birth_date.touched && registerForm.controls.birth_date.invalid">
+		{{getErrorMessage('birth_date')}}
+	</div>
+
+	<input type="email" id="email" placeholder="Email" formControlName="email">
+	<div *ngIf="registerForm.controls.email.touched && registerForm.controls.email.invalid">
+		{{getErrorMessage('email')}}
+	</div>
+  
+	<input type="password" placeholder="Password" formControlName="password">
+	<div *ngIf="registerForm.controls.password.touched && registerForm.controls.password.invalid">
+		{{getErrorMessage('password')}}
+	</div>
+
+	<button [disabled]="!registerForm.valid" type="submit">Register</button>
+</form>
+  

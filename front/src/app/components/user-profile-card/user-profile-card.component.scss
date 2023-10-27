@@ -1,0 +1,49 @@
+.user-profile-card {
+    background-color: var(--background-color-accent);
+    display: flex;
+    height: 280px;
+    border-radius: 10px;
+
+    .left-content {
+
+        width: 30%;
+        .profile-image {
+            height: 100%;
+            width: 100%;
+            border-radius: 10px 0px 0px 10px;
+        }
+    }
+
+    .right-content {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .header-content {
+
+            .user-name-container {
+                font-size: 20px;
+                font-weight: 550;
+                display: flex;
+            }
+
+            .user-location-container {
+                display: flex;
+                margin-top: 10px;
+                color: var(--color-text-secondary);
+                font-size: 14px;
+
+                .user-location-icon {
+                    fill: var(--color-text-secondary);
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .user-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+}

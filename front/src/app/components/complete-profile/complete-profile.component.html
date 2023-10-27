@@ -1,0 +1,28 @@
+<form [formGroup]="CompleteForm">
+	<div *ngIf="currentStep === 'name'">
+	  <label for="name">Name</label>
+	  <input type="text" id="name" formControlName="name">
+	</div>
+	<div *ngIf="currentStep === 'gender'">
+		<label for="gender">Gender</label>
+		<select id="gender" formControlName="gender">
+		  <option [value]="gender" *ngFor="let gender of genders">{{ gender }}</option>
+		</select>
+	  </div>
+	  
+	  <div *ngIf="currentStep === 'photo'">
+		<label for="photo">Photos</label>
+		<input type="file" id="photo" (change)="handleFileInput($event)" multiple>
+		<div *ngFor="let photo of photos; let i = index" class="photo-preview">
+		  <img [src]="photo.url" alt="Uploaded Photo {{i + 1}}">
+		  <button (click)="removePhoto(i)">Remove</button>
+		</div>
+	  </div>
+	  
+	<div *ngIf="currentStep === 'bio'">
+	  <label for="bio">Bio</label>
+	  <input type="text" id="bio" formControlName="bio">
+	</div>
+	<button (click)="nextStep()">Next</button>
+  </form>
+  

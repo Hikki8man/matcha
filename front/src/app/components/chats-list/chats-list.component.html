@@ -1,0 +1,22 @@
+<div class="chats-list">
+    <div class="title-container">
+        <span class="title">Messages</span>
+    </div>
+    <div class="items-container">
+        <div *ngFor="let chat of Chats" class="chat-item" (click)="openChat(chat.id)"
+            [class.selected]="SelectedChatId === chat.id">
+            <div class="left-content">
+                <div class="chat-photo-container">
+                    <!-- <img class="chat-photo" [src]="chat.avatar"> -->
+                </div>
+                <div class="chat-infos">
+                    <span class="chat-name">{{ getUserName(chat) }}</span>
+                    <span class="chat-message">{{ chat.last_message_content }}</span>
+                </div>
+            </div>
+            <div class="right-content">
+                <span class="chat-date">{{ chat.last_message_created_at }}</span>
+            </div>
+        </div>
+    </div>
+</div>

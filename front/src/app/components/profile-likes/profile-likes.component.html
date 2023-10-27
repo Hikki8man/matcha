@@ -1,0 +1,19 @@
+<div class="profile-likes">
+    <span class="title">Likes du profil</span>
+    <div class="likes-container">
+        <div class="like-item" *ngFor="let like of Likes">
+            <div class="left-content">
+                <div class="like-photo-container">
+                    <img class="like-photo" [src]="like.avatar">
+                </div>
+                <div class="like-info">
+                    <span class="like-name">{{ like.name }}</span>
+                    <span class="like-date">{{ like.date }}</span>
+                </div>
+            </div>
+            <div class="right-content">
+                <svg-icon class="heart-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+            </div>
+        </div>
+    </div>
+</div>

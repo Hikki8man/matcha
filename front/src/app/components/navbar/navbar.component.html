@@ -1,0 +1,21 @@
+<div id="navbar">
+    <a routerLink="profile" class="navbar-button" [class.selected]="isCurrentPage('profile')">
+        <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Mon profil</span>
+    </a>
+    <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
+        <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Messages</span>
+        <div class="unread-messages-count">
+            <span>3</span>
+        </div>
+    </a>
+    <a routerLink="search" class="navbar-button" [class.selected]="isCurrentPage('search')">
+        <svg-icon class="navbar-icon" [Src]="UsersIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Utilisateurs</span>
+    </a>
+    <a routerLink="settings" class="navbar-button" [class.selected]="isCurrentPage('settings')">
+        <svg-icon class="navbar-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Paramètres</span>
+    </a>
+</div>

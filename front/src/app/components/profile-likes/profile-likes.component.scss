@@ -1,0 +1,55 @@
+.profile-likes {
+    padding: 20px;
+    background-color: var(--background-color-accent);
+    border-radius: 10px;
+
+    .title {
+        font-size: 14px;
+        font-weight: 550;
+    }
+
+    .likes-container {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        margin-top: 25px;
+
+        .like-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+
+            &:nth-last-child(1) {
+                margin-bottom: 0px;
+            }
+            
+            .left-content {
+                align-items: center;
+                display: flex;
+                .like-photo {
+                    border-radius: 25px;
+                    height: 50px;
+                    width: 50px;
+                    margin-right: 15px;
+                }
+                .like-info {
+                    display: flex;
+                    flex-direction: column;
+    
+                    .like-name {
+                        font-weight: 550;
+                    }
+    
+                    .like-date {
+                        font-size: 14px;
+                        color: var(--color-text-secondary);
+                    }
+                }
+            }
+            .heart-icon {
+                fill: var(--color-pink-accent);
+            }
+        }
+    }
+}

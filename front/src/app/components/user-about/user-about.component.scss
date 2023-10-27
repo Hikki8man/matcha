@@ -1,0 +1,32 @@
+.user-about {
+    padding: 20px;
+    background-color: var(--background-color-accent);
+    border-radius: 10px;
+
+    .title {
+        font-size: 14px;
+        font-weight: 550;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        height: 20px;
+    }
+
+    .about-content {
+        margin-top: 20px;
+        display: flex;
+
+        .left-content, .right-content {
+            width: 48%;
+        }
+
+        .about-category {
+            min-width: 20%;
+            color: var(--color-text-secondary);
+        }
+    }
+}
