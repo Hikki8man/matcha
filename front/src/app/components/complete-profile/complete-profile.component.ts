@@ -64,21 +64,25 @@ export class CompleteProfileComponent {
         return null;
     }
 
-    nextStep() {
+    async nextStep() {
         // Implement the logic to move to the next step here
         switch (this.currentStep) {
             case CompletedSteps.Name:
                 if (this.CompleteForm.get('name')?.valid) {
-                    this._profileService
-                        .editName(this.CompleteForm.get('name')!.value)
-                        .subscribe(() => (this.currentStep = CompletedSteps.Gender));
+                    try {
+                        await this._profileService.editName(this.CompleteForm.get('name')!.value);
+                    } catch (err) {}
+                    this.currentStep = CompletedSteps.Gender;
                 }
                 break;
             case CompletedSteps.Gender:
                 if (this.CompleteForm.get('gender')?.valid) {
-                    this._profileService
-                        .editGender(this.CompleteForm.get('gender')!.value)
-                        .subscribe(() => (this.currentStep = CompletedSteps.Photo));
+                    try {
+                        await this._profileService.editGender(
+                            this.CompleteForm.get('gender')!.value,
+                        );
+                        this.currentStep = CompletedSteps.Photo;
+                    } catch (err) {}
                 }
                 break;
             case CompletedSteps.Photo:

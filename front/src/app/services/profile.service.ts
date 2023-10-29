@@ -4,6 +4,7 @@ import { CompletedSteps, Gender } from '../models/profile.model';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environment/environment';
+import { IApiService } from './iapi.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,28 +13,16 @@ export class ProfileService {
     constructor(
         private _authService: AuthService,
         private _router: Router,
-        private _httpClient: HttpClient,
+        private _apiService: IApiService,
     ) {}
 
     editName(name: string) {
         console.log('name to edit: ', name);
-        return this._httpClient.post(
-            `${environment.apiBaseUrl}/profile/edit/name`,
-            { name },
-            {
-                withCredentials: true,
-            },
-        );
+        return this._apiService.callApi('profile/edit/name', 'POST', name);
     }
 
     editGender(gender: Gender) {
-        return this._httpClient.post(
-            'http://10.11.9.2:8080/profile/edit/gender',
-            { gender },
-            {
-                withCredentials: true,
-            },
-        );
+        return this._apiService.callApi('profile/edit/gender', 'POST', gender);
     }
 
     profileCompleteGuard() {

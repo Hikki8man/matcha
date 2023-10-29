@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { AuthService } from 'src/app/services/auth.sevice';
+import { IApiService } from 'src/app/services/iapi.service';
 
 export interface Message {
     content: string;
@@ -26,7 +26,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socket: Socket,
         private _authService: AuthService,
-        private _httpClient: HttpClient,
+        private _apiService: IApiService,
     ) {}
 
     @Input() public ChatId: number | null = null;
@@ -71,38 +71,29 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         return !(this._authService.getAuth().profile.id === sender_id);
     }
 
-    ngOnChanges(): void {
+    async ngOnChanges(): Promise<void> {
         console.log('chat id', this.ChatId);
         if (!this.ChatId) return;
-        this._httpClient
-            .get<Conversation>(`http://10.11.9.2:8080/chat/conversation/${this.ChatId}`, {
-                withCredentials: true,
-            })
-            .subscribe({
-                next: (value) => {
-                    this.Chat = value;
-                    this.scrollDown();
-                },
-                error: (err) => {
-                    console.log('error', err);
-                },
-            });
+        try {
+            const conv = await this._apiService.callApi<Conversation>(
+                `chat/conversation/${this.ChatId}`,
+                'GET',
+            );
+            this.Chat = conv;
+        } catch (err) {
+            console.log('error', err);
+        }
     }
 
-    public sendMessage(content: string): void {
+    public async sendMessage(content: string): Promise<void> {
         const message = {
             conv_id: this.ChatId,
             content,
         };
-        this._httpClient
-            .post('http://10.11.9.2:8080/chat/message/create', message, { withCredentials: true })
-            .subscribe({
-                next: () => {
-                    console.log('message sent');
-                },
-                error: (err) => {
-                    console.log('error creating msg ', err);
-                },
-            });
+        try {
+            await this._apiService.callApi<Conversation>('chat/message/create', 'GET', message);
+        } catch (err) {
+            console.log('error', err);
+        }
     }
 }

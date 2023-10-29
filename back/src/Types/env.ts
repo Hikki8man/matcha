@@ -5,6 +5,9 @@ export interface Env {
   EMAIL: string;
   EMAIL_PASS: string;
   FRONT_URL: string;
+  POSTGRES_DB: string;
+  POSTGRES_USER: string;
+  POSTGRES_PASSWORD: string;
 }
 
 export function loadEnv(): Env {
@@ -21,7 +24,18 @@ export function loadEnv(): Env {
     EMAIL: process.env.EMAIL!,
     EMAIL_PASS: process.env.EMAIL_PASS!,
     FRONT_URL: process.env.FRONT_URL!,
+    POSTGRES_DB: process.env.POSTGRES_DB!,
+    POSTGRES_USER: process.env.POSTGRES_USER!,
+    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD!,
   };
 }
 
-export const requiredEnv = ['TOKEN_SECRET', 'EMAIL', 'EMAIL_PASS', 'FRONT_URL'];
+export const requiredEnv = [
+  'TOKEN_SECRET',
+  'EMAIL',
+  'EMAIL_PASS',
+  'FRONT_URL',
+  'POSTGRES_DB',
+  'POSTGRES_USER',
+  'POSTGRES_PASSWORD',
+];

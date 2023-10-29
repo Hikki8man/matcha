@@ -63,9 +63,7 @@ export class AuthService {
     }
 
     refreshToken() {
-        return this._http.get<SuccessLoginData>('http://10.11.9.2:8080/auth/refresh', {
-            withCredentials: true,
-        });
+        return this._apiService.callApi<SuccessLoginData>('auth/refresh', 'GET');
     }
 
     authGuard() {

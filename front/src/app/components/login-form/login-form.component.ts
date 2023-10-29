@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
     FormBuilder,
@@ -34,7 +33,6 @@ export class LoginFormComponent {
     public HasErrors: boolean = false;
 
     constructor(
-        private _httpClient: HttpClient,
         private _authService: AuthService,
         private _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
@@ -55,17 +53,20 @@ export class LoginFormComponent {
         return '';
     }
 
-    async onLogin() {
+    onLogin() {
         this.HasErrors = !this.loginForm.valid;
+        console.log('is valid', this.loginForm.valid);
         if (this.loginForm.valid) {
             const credentials: Credentials = {
                 email: this.loginForm.value.email!,
                 password: this.loginForm.value.password!,
             };
-            try {
-                const res = await this._authService.login(credentials);
-                console.log('res', res);
-            } catch (err: any) {}
+            // try {
+            const res = this._authService.login(credentials).then((res) => console.log('res', res));
+            console.log('res', res);
+            // } catch (err: any) {
+            //     console.log(err);
+            // }
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);

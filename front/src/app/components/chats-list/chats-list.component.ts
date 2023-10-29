@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { AuthService } from 'src/app/services/auth.sevice';
 import { Message } from '../chat/chat.component';
+import { IApiService } from 'src/app/services/iapi.service';
 
 interface ConversationList {
     id: number;
@@ -21,23 +22,14 @@ export class ChatsListComponent implements OnInit {
     public Chats: ConversationList[];
 
     constructor(
-        private _httpClient: HttpClient,
         private _authService: AuthService,
         private _socket: Socket,
+        private _apiService: IApiService,
     ) {
-        _httpClient
-            .get<ConversationList[]>('http://10.11.9.2:8080/chat/conversation', {
-                withCredentials: true,
-            })
-            .subscribe({
-                next: (data) => {
-                    this.Chats = data;
-                    console.log('data', data);
-                },
-                error: (err) => {
-                    console.error('error', err);
-                },
-            });
+        this._apiService
+            .callApi<ConversationList[]>('chat/conversation', 'GET')
+            .then((data) => (this.Chats = data))
+            .catch((err) => console.log(err));
     }
 
     ngOnInit(): void {
