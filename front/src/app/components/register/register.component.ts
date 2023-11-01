@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -32,15 +33,13 @@ export class RegisterComponent {
         return '';
     }
 
-    onRegister() {
+    async onRegister() {
         if (this.registerForm.valid) {
-            this._authService.register(this.registerForm.value).subscribe({
-                next: () => {
-                    console.log('Register Succes');
-                    this._router.navigate(['/login']);
-                },
-                error: (err) => console.log(err),
-            });
+            try {
+                const res = await this._authService.register(this.registerForm.value);
+            } catch (err: any) {
+                console.log('yes errors', err.error.errors);
+            }
         }
     }
 }

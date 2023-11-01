@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.sevice';
+import { IApiService } from 'src/app/services/iapi.service';
 
 export interface Profile {
     user_id: number;
@@ -22,29 +22,24 @@ export interface Profile {
 })
 export class UserListComponent implements OnInit {
     constructor(
-        private _httpClient: HttpClient,
+        private _apiService: IApiService,
         private _authService: AuthService,
     ) {
         // this.Users = this.getUsers()
     }
     ngOnInit(): void {
         console.log('isAuth: ', this._authService.getAuth());
-        this._httpClient
-            .get<Profile[]>('http://localhost:8080/profile', {
-                withCredentials: true,
-            })
-            .subscribe((res) => {
-                console.log('res', res);
-                this.Users = res.map((profile) => {
-                    return {
-                        id: profile.user_id,
-                        name: profile.name,
-                        age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
-                        avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-                        bio: 'bonjour à tous',
-                    };
-                });
+        this._apiService.callApi<Profile[]>('profile', 'GET').then((profiles: Profile[]) => {
+            this.Users = profiles.map((profile) => {
+                return {
+                    id: profile.user_id,
+                    name: profile.name,
+                    age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
+                    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
+                    bio: 'bonjour à tous',
+                };
             });
+        });
     }
     public Users: any = [
         {

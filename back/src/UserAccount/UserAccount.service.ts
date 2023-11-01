@@ -186,6 +186,7 @@ class UserAccountService {
             firstname: body.firstname,
             lastname: body.lastname,
             password: hash,
+            verified: true,
           },
           ['*'],
         );

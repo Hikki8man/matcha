@@ -44,21 +44,16 @@ export class LoginComponent {
         return '';
     }
 
-    onLogin() {
+    async onLogin() {
         if (this.loginForm.valid) {
             const credentials: Credentials = {
                 email: this.loginForm.value.email!,
                 password: this.loginForm.value.password!,
             };
-            this._authService.login(credentials).subscribe({
-                next: (value) => {
-                    console.log('value', value);
-                    this._authService.setAuth(true, value);
-                    this._router.navigate(['search']);
-                },
-                error: (err) => console.log('error: ', err),
-                complete: () => console.log('complete ?'),
-            });
+            try {
+                const res = await this._authService.login(credentials);
+                console.log('res', res);
+            } catch (err: any) {}
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);

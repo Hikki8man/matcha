@@ -1,15 +1,18 @@
 import { body } from 'express-validator';
 import userService from '../../UserAccount/UserAccount.service';
 
-const emailNotTaken = async (email: string) => {
-  const userfound = await userService.get_by_email(email);
-  return userfound ? false : true;
-};
+// const emailNotTaken = (email: string) => {
+//   const userfound = userService.get_by_email(email);
+//   console.log('mail taken', userfound);
+//   console.log('ret', userfound !== undefined ? false : true);
+//   return userfound ? false : true;
+// };
 
-const usernameNotTaken = async (username: string) => {
-  const userfound = await userService.get_by_username(username);
-  return userfound ? false : true;
-};
+// const usernameNotTaken = async (username: string) => {
+//   const userfound = await userService.get_by_username(username);
+//   console.log('user taken', userfound);
+//   return userfound ? false : true;
+// };
 
 const isOverEighteen = (birth_date: Date) => {
   const birthDate = new Date(birth_date);
@@ -17,7 +20,7 @@ const isOverEighteen = (birth_date: Date) => {
   const age = today.getFullYear() - birthDate.getFullYear();
 
   if (age < 18) {
-    throw new Error('You must be at least 18 years old.');
+    return false;
   }
   return true;
 };
@@ -27,14 +30,30 @@ const registerValidation = [
     .isString()
     .isLength({ min: 1 })
     .withMessage('User must be at least 1 char long')
-    .custom(usernameNotTaken)
+    .custom(async (username) => {
+      const userfound = await userService.get_by_username(username);
+      console.log('mail taken', userfound);
+      console.log('ret', userfound !== undefined ? false : true);
+      if (userfound) {
+        return Promise.reject();
+      }
+      return true;
+    })
     .withMessage('Username already taken'),
   body('firstname').isString(),
   body('lastname').isString(),
   body('email')
     .isEmail()
     .withMessage('Enter a valid email')
-    .custom(emailNotTaken)
+    .custom(async (email) => {
+      const userfound = await userService.get_by_email(email);
+      console.log('mail taken', userfound);
+      console.log('ret', userfound !== undefined ? false : true);
+      if (userfound) {
+        return Promise.reject();
+      }
+      return true;
+    })
     .withMessage('Email already exist'),
   body('password')
     .isString()

@@ -1,14 +1,15 @@
-import Knex from "knex";
+import Knex from 'knex';
+import { env } from '../config';
 
 const db = Knex({
-  client: "pg",
+  client: 'pg',
   // debug: true,
   connection: {
-    host: "postgres",
+    host: 'postgres',
     port: 5432,
-    user: "chak",
-    password: "mdp",
-    database: "matcha_db",
+    database: env.POSTGRES_DB,
+    user: env.POSTGRES_USER,
+    password: env.POSTGRES_PASSWORD,
   },
 });
 

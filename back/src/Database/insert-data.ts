@@ -4,6 +4,60 @@ import profileService from '../Profile/Profile.service';
 import { Gender } from '../Types/Profile';
 
 export const insertTestData = async () => {
+  const interestTags = [
+    { name: 'Cooking' },
+    { name: 'Travel' },
+    { name: 'Photography' },
+    { name: 'Hiking' },
+    { name: 'Painting' },
+    { name: 'Gaming' },
+    { name: 'Reading' },
+    { name: 'Yoga' },
+    { name: 'Music' },
+    { name: 'Gardening' },
+    { name: 'Fitness' },
+    { name: 'Movies' },
+    { name: 'Dancing' },
+    { name: 'Sports' },
+    { name: 'Technology' },
+    { name: 'Fashion' },
+    { name: 'Foodie' },
+    { name: 'Pets' },
+    { name: 'Meditation' },
+    { name: 'Writing' },
+    { name: 'Volunteering' },
+    { name: 'Astronomy' },
+    { name: 'History' },
+    { name: 'Woodworking' },
+    { name: 'Art' },
+    { name: 'Nature' },
+    { name: 'Science' },
+    { name: 'Crafting' },
+    { name: 'Camping' },
+    { name: 'DIY' },
+    { name: 'Languages' },
+    { name: 'Surfing' },
+    { name: 'Fishing' },
+    { name: 'Wine Tasting' },
+    { name: 'Coffee' },
+    { name: 'Running' },
+    { name: 'Skiing' },
+    { name: 'Snowboarding' },
+    { name: 'Philosophy' },
+    { name: 'Comedy' },
+    { name: 'Health' },
+    { name: 'Architecture' },
+    { name: 'Board Games' },
+    { name: 'Anime' },
+    { name: 'Biking' },
+    { name: 'Fashion Design' },
+    { name: 'Traveling' },
+    { name: 'Collecting' },
+    { name: 'Film' },
+    { name: 'Vintage' },
+  ];
+
+  await db('tags').insert(interestTags);
   // await db('user_account').insert([
   //   { email: 'chaf@example.com', password: 'hashed_password_for_chaf' },
   //   { email: 'sawako@example.com', password: 'hashed_password_for_sawako' },
@@ -111,4 +165,12 @@ export const insertTestData = async () => {
   ]);
   await profileService.like(1, 3);
   await profileService.like(3, 1);
+
+  await db('profile_tags').insert([
+    { profile_id: 1, tag_id: 1 },
+    { profile_id: 1, tag_id: 3 },
+    { profile_id: 2, tag_id: 1 },
+    { profile_id: 2, tag_id: 7 },
+    { profile_id: 2, tag_id: 8 },
+  ]);
 };

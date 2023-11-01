@@ -7,6 +7,7 @@ import { Server, Socket } from 'socket.io';
 import authService from './Auth/Auth.service';
 import db from './Database/database';
 import { Conversation } from './Types/Chat';
+import { env } from './config';
 
 class App {
   public app: express.Application;
@@ -19,7 +20,7 @@ class App {
     this.port = port;
     this.server = http.createServer(this.app);
     App._io = new Server(this.server, {
-      cors: { origin: 'http://localhost:4200', credentials: true },
+      cors: { origin: env.FRONT_URL, credentials: true },
     });
 
     this.initializeMiddlewares();
@@ -32,7 +33,7 @@ class App {
     this.app.use(express.json());
     this.app.use(
       cors({
-        origin: 'http://localhost:4200',
+        origin: env.FRONT_URL,
         credentials: true,
       }),
     );

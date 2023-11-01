@@ -4,6 +4,10 @@ declare global {
       TOKEN_SECRET: string;
       EMAIL: string;
       EMAIL_PASS: string;
+      FRONT_URL: string;
+      POSTGRES_PASSWORD: string;
+      POSTGRES_USER: string;
+      POSTGRES_DB: string;
     }
   }
 }
