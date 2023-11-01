@@ -1,6 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 export interface Message {
     content: string;
@@ -25,14 +27,21 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socket: Socket,
         private _apiService: IApiService,
+        private readonly _authenticationService: IAuthenticationService
     ) {}
 
     @Input() public ChatId: number | null = null;
     public Avatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation;
+    public CurrentUser: ProfileModel;
 
     ngOnInit(): void {
         this.listenNewMessageEvent();
+        this.init();
+    }
+
+    private async init() {
+        this.CurrentUser = await this._authenticationService.getCurrentUser();
     }
 
     ngOnDestroy(): void {
@@ -59,16 +68,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    getUserName(_chat: Conversation) {
-        return 'we';//todo
-       /*  return this._authenticationService.getAuth().profile.id === chat.user_1.id
+    getUserName(chat: Conversation) {
+        return this.CurrentUser.id === chat.user_1.id
             ? chat.user_2.name
-            : chat.user_1.name; */
+            : chat.user_1.name;
     }
 
-    isFrom(_sender_id: number): boolean {
-        return true; // todo
-        //return !(this._authenticationService.getAuth().profile.id === sender_id);
+    isFrom(sender_id: number): boolean {
+        return this.CurrentUser.id !== sender_id;
     }
 
     async ngOnChanges(): Promise<void> {
