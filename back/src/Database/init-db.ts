@@ -1,138 +1,95 @@
-import db from './database';
+import db from './connection';
+import profileService from '../Profile/Profile.service';
+import { Gender } from '../Types/Profile';
+import DbService from './db.service';
 
 export const initDb = async () => {
-  console.log('INITIALISATION OF DATABASE');
+  const dbService = new DbService();
 
-  // Table creation function
-  const createTableIfNotExists = async (
-    tableName: string,
-    callback: (table: any) => void,
-  ) => {
-    const tableExists = await db.schema.hasTable(tableName);
-    if (!tableExists) {
-      await db.schema.createTable(tableName, callback);
-    }
-  };
-
-  // Create user_account table
-  await createTableIfNotExists('user_account', (table) => {
-    table.increments('id').primary();
-    table.string('username').unique();
-    table.string('firstname');
-    table.string('lastname');
-    table.string('email').unique();
-    table.string('password');
-    table.string('token_validation');
-    table.boolean('verified').defaultTo(false);
-  });
-
-  // Create profile table
-  await createTableIfNotExists('profile', (table) => {
-    table
-      .integer('id')
-      .primary()
-      .references('id')
-      .inTable('user_account')
-      .onDelete('CASCADE');
-    table.string('name').notNullable();
-    table.string('bio');
-    table.date('birth_date');
-    table.enum('gender', ['male', 'female', 'other']).default('male');
-    table.enum('completed_steps', [
-      'name',
-      'gender',
-      'photo',
-      'bio',
-      'completed',
-    ]);
-  });
-
-  // Create likes table
-  await createTableIfNotExists('likes', (table) => {
-    table.increments('id').primary();
-    table
-      .integer('liker_id')
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table
-      .integer('liked_id')
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table.timestamp('created_at').defaultTo(db.fn.now());
-  });
-
-  // Create photo table
-  await createTableIfNotExists('photo', (table) => {
-    table.increments('id').primary();
-    table
-      .integer('user_id')
-      .notNullable()
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table.string('filename');
-    table.string('path');
-    table.bigInteger('size');
-    table.timestamp('created_at').defaultTo(db.fn.now());
-  });
-
-  // Create conversation table
-  await createTableIfNotExists('conversation', (table) => {
-    table.increments('id').primary();
-    table
-      .integer('user_1')
-      .notNullable()
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table
-      .integer('user_2')
-      .notNullable()
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-  });
-
-  // Create message table
-  await createTableIfNotExists('message', (table) => {
-    table.increments('id').primary();
-    table
-      .integer('sender_id')
-      .notNullable()
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table
-      .integer('conv_id')
-      .notNullable()
-      .references('id')
-      .inTable('conversation')
-      .onDelete('CASCADE');
-    table.text('content');
-    table.timestamp('created_at').defaultTo(db.fn.now());
-  });
-
-  // Create tags table
-  await createTableIfNotExists('tags', (table) => {
-    table.increments('id').primary();
-    table.string('name');
-  });
-
-  // Create profile_tags table
-  await createTableIfNotExists('profile_tags', (table) => {
-    table.increments('id').primary();
-    table
-      .integer('profile_id')
-      .references('id')
-      .inTable('profile')
-      .onDelete('CASCADE');
-    table
-      .integer('tag_id')
-      .references('id')
-      .inTable('tags')
-      .onDelete('CASCADE');
-    table.unique(['profile_id', 'tag_id']);
-  });
+  await dbService.insertTags();
+  const profiles = await dbService.createTest([
+    {
+      email: 'johan.c@outlook.fr',
+      password: 'mdpdefou',
+      username: 'chakito',
+      firstname: 'chakito',
+      lastname: 'Papou',
+      birth_date: '1996-09-15',
+      gender: Gender.Male,
+      bio: 'oeoe',
+    },
+    {
+      email: 'richard@example.com',
+      password: 'mdpdefou',
+      username: 'riri',
+      firstname: 'riri',
+      lastname: 'Papillon',
+      birth_date: '1998-09-15',
+      gender: Gender.Male,
+      bio: 'Im a giga chad',
+    },
+    {
+      email: 'alice@example.com',
+      password: 'mdpdefou',
+      username: 'alice',
+      firstname: 'alice',
+      lastname: 'Merveille',
+      birth_date: '1995-07-21',
+      gender: Gender.Female,
+      bio: 'Hello, I am Alice!',
+    },
+    {
+      email: 'bob@example.com',
+      password: 'mdpdefou',
+      username: 'bob',
+      firstname: 'Bob',
+      lastname: 'Le Bricoleur',
+      birth_date: '1989-04-03',
+      gender: Gender.Male,
+      bio: 'Bob here, nice to meet you!',
+    },
+    {
+      email: 'charlie@example.com',
+      password: 'mdpdefou',
+      username: 'charlie',
+      firstname: 'Charlie',
+      lastname: 'Chaplin',
+      birth_date: '1992-11-30',
+      gender: Gender.Male,
+      bio: 'Greetings from Charlie!',
+    },
+    {
+      email: 'eve@example.com',
+      password: 'mdpdefou',
+      username: 'eve',
+      firstname: 'eve',
+      lastname: 'wall-e',
+      birth_date: '2000-05-18',
+      gender: Gender.Female,
+      bio: 'Eve says hi!',
+    },
+    {
+      email: 'dave@example.com',
+      password: 'mdpdefou',
+      username: 'dave',
+      firstname: 'Dave',
+      lastname: 'Dove',
+      birth_date: '1985-02-10',
+      gender: Gender.Male,
+      bio: 'Dave reporting in!',
+    },
+    {
+      email: 'grace@example.com',
+      password: 'mdpdefou',
+      username: 'grace',
+      firstname: 'Grace',
+      lastname: 'Hatoi',
+      birth_date: '1993-08-27',
+      gender: Gender.Female,
+      bio: 'Grace sends her regards!',
+    },
+  ]);
+  await profileService.like(1, 3);
+  await profileService.like(3, 1);
+  await dbService.addRandomTagsToProfiles(profiles);
 };

@@ -1,12 +1,12 @@
 import ProfileController from './Profile/Profile.controller';
 import UserAccountController from './UserAccount/UserAccount.controller';
 import App from './app';
-import db from './Database/database';
+import db from './Database/connection';
 import dotenv from 'dotenv';
 import AuthController from './Auth/Auth.controller';
 import ChatController from './Chat/Chat.controller';
+import { createDb } from './Database/create-db';
 import { initDb } from './Database/init-db';
-import { insertTestData } from './Database/insert-data';
 import { dropTable } from './Database/drop-tables';
 import EditProfileController from './Profile/EditProfile.controller';
 import TagsController from './Tags/tags.controller';
@@ -28,10 +28,10 @@ const main = async () => {
   if (connected) {
     console.log('Connected to database');
     try {
+      await createDb();
       await initDb();
-      await insertTestData();
     } catch (err) {
-      // console.error("Database init error: ", err);
+      console.error('Database init error: ', err);
     }
     const app = new App(
       [

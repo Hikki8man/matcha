@@ -1,6 +1,6 @@
 import { Conversation } from '../Types/Chat';
 import HttpError from '../Utils/HttpError';
-import db from '../Database/database';
+import db from '../Database/connection';
 
 class ConversationService {
   async isInConversation(user_id: number, conv_id: number) {

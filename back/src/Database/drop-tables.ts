@@ -1,4 +1,4 @@
-import db from './database';
+import db from './connection';
 
 export const dropTable = async () => {
   await db.schema.dropTableIfExists('likes');
