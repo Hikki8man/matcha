@@ -23,13 +23,14 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
-    env_file:
-      - .env
-    # environment:
-    #   - TOKEN_SECRET=${TOKEN_SECRET}
-    #   - EMAIL=${EMAIL}
-    #   - EMAIL_PASS=${EMAIL_PASS}
-    #   - FRONT_URL=${FRONT_URL}
+    environment:
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - EMAIL=${EMAIL}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - FRONT_URL=${FRONT_URL}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - ./back:/usr/app/back
     networks:

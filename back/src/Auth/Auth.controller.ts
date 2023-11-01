@@ -1,14 +1,13 @@
-import express, { Request, Response, NextFunction } from 'express';
-import userAccountService from '../UserAccount/UserAccount.service';
-import authService from './Auth.service';
-import { validationResult } from 'express-validator';
-import HttpError from '../Utils/HttpError';
-import jwtRefreshStrategy from './jwtRefresh.strategy';
+import express, { NextFunction, Request, Response } from 'express';
 import profileService from '../Profile/Profile.service';
 import { MyRequest } from '../Types/request';
+import userAccountService from '../UserAccount/UserAccount.service';
+import HttpError from '../Utils/HttpError';
 import asyncWrapper from '../Utils/asyncWrapper';
 import CheckValidation from '../Utils/validations/checkValidationResult';
 import registerValidation from '../Utils/validations/signupValidation';
+import authService from './Auth.service';
+import jwtRefreshStrategy from './jwtRefresh.strategy';
 
 class AuthController {
   public path = '/auth';
@@ -29,6 +28,7 @@ class AuthController {
     this.router.post(this.path + '/validate-account', this.validateAccount);
     this.router.get(this.path + '/refresh', jwtRefreshStrategy, this.refresh);
     this.router.post(this.path + '/logout', this.logout);
+    this.router.get(this.path + '/me', this.checkToken)
   }
 
   register = async (req: Request, res: Response) => {
@@ -82,13 +82,13 @@ class AuthController {
     }
   };
 
-  //   checkToken = async (req: Request, res: Response, next: NextFunction) => {
-  //     const user = await userAccountService.get_by_id(req.user.id);
-  //     if (!user) {
-  //       return next(new HttpError(400, "user not found"));
-  //     }
-  //     res.send(user);
-  //   };
+  checkToken = async (req: MyRequest, res: Response, next: NextFunction) => {
+    const user = await profileService.get_by_id(req.user_id!);
+    if (!user) {
+      return next(new HttpError(400, "user not found"));
+    }
+    res.send(user);
+  };
 
   refresh = async (req: MyRequest, res: Response) => {
     // console.log("token refreshed");

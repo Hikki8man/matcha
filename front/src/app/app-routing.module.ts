@@ -1,65 +1,65 @@
 import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AppPathEnum } from './enums/app-path-enum';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { LoginComponent } from './pages/login/login.component';
 import { MessagesComponent } from './pages/messages/messages.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { AuthService } from './services/auth.sevice';
-import { RegisterComponent } from './components/register/register.component';
-import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
-import { ProfileService } from './services/profile.service';
-import { LoginComponent } from './pages/login/login.component';
+import { IAuthenticationService } from './services/authentication/iauthentication.service';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: 'profile',
+        redirectTo: AppPathEnum.Profile,
         pathMatch: 'full',
     },
     {
-        path: 'login',
+        path: AppPathEnum.Login,
         component: LoginComponent,
     },
     {
-        path: 'register',
+        path: AppPathEnum.Register,
         component: RegisterComponent,
     },
     {
-        path: 'complete-profile',
-        canActivate: [() => inject(AuthService).authGuard()],
+        path: AppPathEnum.CompleteProfile,
+        canActivate: [() => inject(IAuthenticationService).isAuthenticatedGuard()],
         component: CompleteProfileComponent,
     },
     {
         path: '',
         component: MainLayoutComponent,
         canActivate: [
-            () => inject(AuthService).authGuard(),
-            // () => inject(ProfileService).profileCompleteGuard(),
+            () => inject(IAuthenticationService).isAuthenticatedGuard(),
+            // () => inject(IProfileService).isProfileCompleteGuard(),
         ],
-        // canActivateChild: [() => inject(ProfileService).profileCompleteGuard()],
+        // canActivateChild: [() => inject(IProfileService).isProfileCompleteGuard()],
         children: [
             {
-                path: 'profile',
+                path: AppPathEnum.Profile,
                 component: ProfileComponent,
             },
             {
-                path: 'messages',
+                path: AppPathEnum.Messages,
                 component: MessagesComponent,
             },
             {
-                path: 'search',
+                path: AppPathEnum.Search,
                 component: SearchComponent,
             },
             {
-                path: 'settings',
+                path: AppPathEnum.Settings,
                 component: SettingsComponent,
             },
         ],
     },
     {
         path: '**',
-        redirectTo: 'profile',
+        redirectTo: AppPathEnum.Profile,
         pathMatch: 'full',
     },
 ];

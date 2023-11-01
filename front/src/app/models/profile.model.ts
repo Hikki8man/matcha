@@ -1,8 +1,4 @@
-export enum Gender {
-    Male = 'male',
-    Female = 'female',
-    Other = 'other',
-}
+import { GenderEnum } from "../enums/gender-enum";
 
 export enum CompletedSteps {
     Name = 'name',
@@ -12,26 +8,10 @@ export enum CompletedSteps {
     Completed = 'completed',
 }
 
-export interface ProfileData {
+export interface ProfileModel {
     id: number;
     name: string;
     birth_date: Date;
-    gender: Gender;
+    gender: GenderEnum;
     completed_steps: CompletedSteps;
-}
-
-export class Profile {
-    id: number;
-    name: string;
-    age: number;
-    gender: Gender;
-    completed_steps: CompletedSteps;
-
-    constructor(data: ProfileData) {
-        this.id = data.id;
-        this.name = data.name;
-        this.gender = data.gender;
-        this.completed_steps = data.completed_steps;
-        this.age = new Date().getFullYear() - new Date(data.birth_date).getFullYear();
-    }
 }

@@ -1,17 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { AuthService } from 'src/app/services/auth.sevice';
+import { ConversationModel } from 'src/app/models/conversation.model';
+import { ProfileModel } from 'src/app/models/profile.model';
+import { IApiService } from 'src/app/services/api/iapi.service';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { Message } from '../chat/chat.component';
-import { IApiService } from 'src/app/services/iapi.service';
 
-interface ConversationList {
-    id: number;
-    user_1: { id: number; name: string };
-    user_2: { id: number; name: string };
-    last_message_content: string;
-    last_message_created_at: Date;
-}
+
 
 @Component({
     selector: 'chats-list',
@@ -19,34 +14,46 @@ interface ConversationList {
     styleUrls: ['./chats-list.component.scss'],
 })
 export class ChatsListComponent implements OnInit {
-    public Chats: ConversationList[];
+
+    public Chats: ConversationModel[];
+    public CurrentUser: ProfileModel;
+
+    @Input() public SelectedChatId: number | null = null;
+
+    @Output() public OnChatSelected: EventEmitter<number> = new EventEmitter<number>();
 
     constructor(
-        private _authService: AuthService,
         private _socket: Socket,
         private _apiService: IApiService,
+        private readonly _authenticationService: IAuthenticationService
     ) {
         this._apiService
-            .callApi<ConversationList[]>('chat/conversation', 'GET')
+            .callApi<ConversationModel[]>('chat/conversation', 'GET')
             .then((data) => (this.Chats = data))
             .catch((err) => console.log(err));
     }
 
     ngOnInit(): void {
-        this.listenNewMessageEvent();
+        this.subscribeToNewMessages();
+        this.init();
     }
 
-    // lastMessageDate(date: Date) {
-    //     const current_date = new Date();
-    //     const message_date = new Date(date);
-    //     const month = current_date.getMonth() - message_date.getMonth();
-    //     const time = message_date.g;
-    //     console.log('month', month);
-    //     console.log('time', time);
-    //     return new Date(date);
-    // }
+    private async init() {
+        this.CurrentUser = await this._authenticationService.getCurrentUser();
+    }
 
-    listenNewMessageEvent() {
+    public getUserName(conversation: ConversationModel): string {
+        return this.CurrentUser.id === conversation.user_1.id
+            ? conversation.user_2.name
+            : conversation.user_1.name;
+    }
+
+    public openChat(chatId: number): void {
+        this.SelectedChatId = chatId;
+        this.OnChatSelected.emit(chatId);
+    }
+
+    private subscribeToNewMessages() {
         this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
             const conversation = this.Chats.find((chat) => chat.id === message.conv_id);
             if (conversation) {
@@ -54,20 +61,5 @@ export class ChatsListComponent implements OnInit {
                 conversation.last_message_created_at = message.created_at;
             }
         });
-    }
-
-    getUserName(conv: ConversationList) {
-        return this._authService.getAuth().profile.id === conv.user_1.id
-            ? conv.user_2.name
-            : conv.user_1.name;
-    }
-
-    @Input() public SelectedChatId: number | null = null;
-
-    @Output() public OnChatSelected: EventEmitter<number> = new EventEmitter<number>();
-
-    public openChat(chatId: number): void {
-        this.SelectedChatId = chatId;
-        this.OnChatSelected.emit(chatId);
     }
 }

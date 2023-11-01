@@ -1,8 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.sevice';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
     selector: 'app-register',
@@ -11,8 +9,7 @@ import { AuthService } from 'src/app/services/auth.sevice';
 })
 export class RegisterComponent {
     constructor(
-        private _authService: AuthService,
-        private _router: Router,
+        private _authService: IAuthenticationService,
     ) {}
     registerForm = new FormGroup({
         username: new FormControl('', { validators: [Validators.required] }),
@@ -37,6 +34,7 @@ export class RegisterComponent {
         if (this.registerForm.valid) {
             try {
                 const res = await this._authService.register(this.registerForm.value);
+                console.log(res);
             } catch (err: any) {
                 console.log('yes errors', err.error.errors);
             }
