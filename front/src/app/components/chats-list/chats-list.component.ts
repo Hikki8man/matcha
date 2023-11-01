@@ -1,9 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { AuthService } from 'src/app/services/auth.sevice';
-import { Message } from '../chat/chat.component';
 import { IApiService } from 'src/app/services/iapi.service';
+import { Message } from '../chat/chat.component';
 
 interface ConversationList {
     id: number;

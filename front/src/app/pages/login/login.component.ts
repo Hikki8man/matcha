@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AccountData } from 'src/app/models/account.model';
 import { ProfileData } from 'src/app/models/profile.model';
 import { AuthService, Credentials } from 'src/app/services/auth.sevice';
@@ -18,9 +16,7 @@ export interface SuccessLoginData {
 })
 export class LoginComponent {
     constructor(
-        private _httpClient: HttpClient,
         private _authService: AuthService,
-        private _router: Router,
     ) {}
 
     loginForm = new FormGroup({

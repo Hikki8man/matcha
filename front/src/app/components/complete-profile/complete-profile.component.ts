@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CompletedSteps, Gender } from 'src/app/models/profile.model';
 import { AuthService } from 'src/app/services/auth.sevice';
 import { ProfileService } from 'src/app/services/profile.service';
@@ -13,7 +12,6 @@ import { ProfileService } from 'src/app/services/profile.service';
 export class CompleteProfileComponent {
     constructor(
         private _authService: AuthService,
-        private _router: Router,
         private _profileService: ProfileService,
     ) {}
 

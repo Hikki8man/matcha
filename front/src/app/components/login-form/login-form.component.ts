@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import {
-    FormBuilder,
-    FormControl,
     FormGroup,
     NonNullableFormBuilder,
-    Validators,
+    Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
@@ -31,15 +29,16 @@ export class LoginFormComponent {
     };
 
     public HasErrors: boolean = false;
+    public IsLoading: boolean = false;
 
     constructor(
         private _authService: AuthService,
         private _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
-    ) {}
+    ) { }
 
     public loginForm: FormGroup = this._formBuilder.group({
-        email: ['', Validators.required, Validators.email],
+        email: ['', [Validators.required, Validators.email]],
         password: ['', Validators.required],
     });
 
@@ -53,20 +52,29 @@ export class LoginFormComponent {
         return '';
     }
 
-    onLogin() {
+    public async onLogin() {
         this.HasErrors = !this.loginForm.valid;
-        console.log('is valid', this.loginForm.valid);
         if (this.loginForm.valid) {
+            this.IsLoading = true;
+
             const credentials: Credentials = {
                 email: this.loginForm.value.email!,
                 password: this.loginForm.value.password!,
             };
-            // try {
-            const res = this._authService.login(credentials).then((res) => console.log('res', res));
-            console.log('res', res);
-            // } catch (err: any) {
-            //     console.log(err);
-            // }
+
+            let response;
+            try {
+                response = await this._authService.login(credentials);
+                console.log(response);
+            } catch (err: any) {
+                console.log(err);
+                this.IsLoading = false;
+            }
+
+            this.IsLoading = false;
+
+            if (response?.profile)
+            this._router.navigate(['search']);
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);

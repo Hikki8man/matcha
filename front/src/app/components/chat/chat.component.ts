@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { AuthService } from 'src/app/services/auth.sevice';
 import { IApiService } from 'src/app/services/iapi.service';

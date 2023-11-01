@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.sevice';
-import { CompletedSteps, Gender } from '../models/profile.model';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environment/environment';
+import { CompletedSteps, Gender } from '../models/profile.model';
+import { AuthService } from './auth.sevice';
 import { IApiService } from './iapi.service';
 
 @Injectable({

@@ -1,10 +1,8 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
 import { Profile } from '../models/profile.model';
 import { SuccessLoginData } from '../pages/login/login.component';
-import { Router } from '@angular/router';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
 import { IApiService } from './iapi.service';
 
 export interface Credentials {
@@ -18,13 +16,11 @@ export interface Credentials {
 export class AuthService {
     //TODO in session service
     private _authenticated: boolean;
-    private _auth: Observable<boolean>;
     private _profile: Profile;
 
     constructor(
         private _socket: Socket,
         private router: Router,
-        private _http: HttpClient,
         private _apiService: IApiService,
     ) {
         // this._auth = new Observable((auth) => {

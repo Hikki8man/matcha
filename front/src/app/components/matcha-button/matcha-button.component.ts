@@ -1,11 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { AccountData } from 'src/app/models/account.model';
-import { ProfileData } from 'src/app/models/profile.model';
-import { AuthService, Credentials } from 'src/app/services/auth.sevice';
 
 @Component({
     selector: 'matcha-button',
