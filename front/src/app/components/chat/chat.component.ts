@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { AuthService } from 'src/app/services/auth.sevice';
-import { IApiService } from 'src/app/services/iapi.service';
+import { IApiService } from 'src/app/services/api/iapi.service';
 
 export interface Message {
     content: string;
@@ -25,7 +24,6 @@ export interface Conversation {
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socket: Socket,
-        private _authService: AuthService,
         private _apiService: IApiService,
     ) {}
 
@@ -61,14 +59,16 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    getUserName(chat: Conversation) {
-        return this._authService.getAuth().profile.id === chat.user_1.id
+    getUserName(_chat: Conversation) {
+        return 'we';//todo
+       /*  return this._authenticationService.getAuth().profile.id === chat.user_1.id
             ? chat.user_2.name
-            : chat.user_1.name;
+            : chat.user_1.name; */
     }
 
-    isFrom(sender_id: number): boolean {
-        return !(this._authService.getAuth().profile.id === sender_id);
+    isFrom(_sender_id: number): boolean {
+        return true; // todo
+        //return !(this._authenticationService.getAuth().profile.id === sender_id);
     }
 
     async ngOnChanges(): Promise<void> {

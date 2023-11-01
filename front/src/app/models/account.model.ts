@@ -1,4 +1,4 @@
-export interface AccountData {
+export interface AccountModel {
     id: number;
     email: string;
     // token_validation?: string;

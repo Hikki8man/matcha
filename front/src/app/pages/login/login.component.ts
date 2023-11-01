@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AccountData } from 'src/app/models/account.model';
-import { ProfileData } from 'src/app/models/profile.model';
-import { AuthService, Credentials } from 'src/app/services/auth.sevice';
-
-export interface SuccessLoginData {
-    profile: ProfileData;
-    account: AccountData;
-}
+import { Credentials } from 'src/app/services/authentication/authentication.sevice';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
     selector: 'app-login',
@@ -16,7 +10,7 @@ export interface SuccessLoginData {
 })
 export class LoginComponent {
     constructor(
-        private _authService: AuthService,
+        private _authenticationService: IAuthenticationService,
     ) {}
 
     loginForm = new FormGroup({
@@ -47,7 +41,7 @@ export class LoginComponent {
                 password: this.loginForm.value.password!,
             };
             try {
-                const res = await this._authService.login(credentials);
+                const res = await this._authenticationService.login(credentials);
                 console.log('res', res);
             } catch (err: any) {}
         }

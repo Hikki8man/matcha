@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.sevice';
-import { IApiService } from 'src/app/services/iapi.service';
+import { IApiService } from 'src/app/services/api/iapi.service';
 
 export interface Profile {
     user_id: number;
@@ -22,12 +21,11 @@ export interface Profile {
 export class UserListComponent implements OnInit {
     constructor(
         private _apiService: IApiService,
-        private _authService: AuthService,
     ) {
         // this.Users = this.getUsers()
     }
     ngOnInit(): void {
-        console.log('isAuth: ', this._authService.getAuth());
+       // console.log('isAuth: ', this._authenticationService.getAuth());
         this._apiService.callApi<Profile[]>('profile', 'GET').then((profiles: Profile[]) => {
             this.Users = profiles.map((profile) => {
                 return {

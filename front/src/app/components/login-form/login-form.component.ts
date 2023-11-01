@@ -5,15 +5,10 @@ import {
     Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { AccountData } from 'src/app/models/account.model';
-import { ProfileData } from 'src/app/models/profile.model';
-import { AuthService, Credentials } from 'src/app/services/auth.sevice';
-
-export interface SuccessLoginData {
-    profile: ProfileData;
-    account: AccountData;
-}
+import { Credentials } from 'src/app/services/authentication/authentication.sevice';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
     selector: 'login-form',
@@ -30,9 +25,10 @@ export class LoginFormComponent {
 
     public HasErrors: boolean = false;
     public IsLoading: boolean = false;
+    public InvalidCredentials: boolean = false;
 
     constructor(
-        private _authService: AuthService,
+        private _authenticationService: IAuthenticationService,
         private _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
     ) { }
@@ -54,6 +50,7 @@ export class LoginFormComponent {
 
     public async onLogin() {
         this.HasErrors = !this.loginForm.valid;
+        this.InvalidCredentials = false;
         if (this.loginForm.valid) {
             this.IsLoading = true;
 
@@ -64,17 +61,18 @@ export class LoginFormComponent {
 
             let response;
             try {
-                response = await this._authService.login(credentials);
+                response = await this._authenticationService.login(credentials);
                 console.log(response);
             } catch (err: any) {
                 console.log(err);
                 this.IsLoading = false;
+                this.InvalidCredentials = true;
             }
 
             this.IsLoading = false;
 
             if (response?.profile)
-            this._router.navigate(['search']);
+            this._router.navigate([AppPathEnum.Search]);
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);

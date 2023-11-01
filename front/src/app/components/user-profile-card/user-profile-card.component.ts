@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { AuthService } from 'src/app/services/auth.sevice';
 
 @Component({
     selector: 'user-profile-card',
@@ -8,9 +7,9 @@ import { AuthService } from 'src/app/services/auth.sevice';
     styleUrls: ['./user-profile-card.component.scss'],
 })
 export class UserProfileCardComponent {
-    constructor(private _authService: AuthService) {
-        const profile = this._authService.getAuth().profile;
-        this.UserName = profile.name;
+    constructor() {
+       // const profile = this._authService.getAuth().profile;
+        //this.UserName = profile.name;
     }
     public ProfileImage: string = 'assets/images/becoshy.png';
     public UserName: string = 'beco';
