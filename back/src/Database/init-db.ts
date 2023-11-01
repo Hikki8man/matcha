@@ -113,4 +113,26 @@ export const initDb = async () => {
     table.text('content');
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
+
+  // Create tags table
+  await createTableIfNotExists('tags', (table) => {
+    table.increments('id').primary();
+    table.string('name');
+  });
+
+  // Create profile_tags table
+  await createTableIfNotExists('profile_tags', (table) => {
+    table.increments('id').primary();
+    table
+      .integer('profile_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table
+      .integer('tag_id')
+      .references('id')
+      .inTable('tags')
+      .onDelete('CASCADE');
+    table.unique(['profile_id', 'tag_id']);
+  });
 };

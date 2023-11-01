@@ -21,9 +21,9 @@ class ChatController {
   public initializeRoutes() {
     this.router.post(
       this.path + '/conversation/create',
+      jwtStrategy,
       body('id').isInt(),
       CheckValidation,
-      jwtStrategy,
       asyncWrapper(this.createConversation),
     );
 

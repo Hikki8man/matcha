@@ -4,7 +4,6 @@ import authService from './Auth.service';
 
 function jwtStrategy(req: MyRequest, res: Response, next: NextFunction) {
   const access_token: string = req.cookies.access_token;
-  console.log('verify token', req.user_id);
   const payload = authService.verifyToken(access_token);
   if (payload) {
     req.user_id = payload.id;
