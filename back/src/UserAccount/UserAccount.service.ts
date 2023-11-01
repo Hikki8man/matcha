@@ -1,20 +1,9 @@
 import bcrypt from 'bcrypt';
-import db from '../Database/database';
+import db from '../Database/connection';
 import { UserAccount } from '../Types/UserAccount';
 import HttpError from '../Utils/HttpError';
 import { CompletedSteps, Gender, Profile } from '../Types/Profile';
 import { RegisterBody } from '../Types/RegisterBody';
-
-interface testUser {
-  email: string;
-  username: string;
-  firstname: string;
-  lastname: string;
-  password: string;
-  birth_date: string;
-  gender: Gender;
-  bio: string;
-}
 
 class UserAccountService {
   private saltRounds = 10;
@@ -172,38 +161,6 @@ class UserAccountService {
   //     return undefined;
   //   }
   // }
-
-  async createTest(bodys: testUser[]) {
-    for (const body of bodys) {
-      console.log('inserting ' + body.firstname);
-
-      const hash = await bcrypt.hash(body.password, this.saltRounds);
-      try {
-        const [user_account] = await db<UserAccount>('user_account').insert(
-          {
-            email: body.email,
-            username: body.username,
-            firstname: body.firstname,
-            lastname: body.lastname,
-            password: hash,
-            verified: true,
-          },
-          ['*'],
-        );
-        // Insert user's profile information into the 'PROFILE' table
-        await db<Profile>('profile').insert({
-          id: user_account.id,
-          name: body.firstname,
-          birth_date: new Date(body.birth_date),
-          gender: body.gender,
-          completed_steps: CompletedSteps.Name,
-          bio: body.bio,
-        });
-      } catch (e: any) {
-        console.log(e.message);
-      }
-    }
-  }
 }
 
 export default new UserAccountService();

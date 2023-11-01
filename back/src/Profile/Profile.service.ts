@@ -1,6 +1,6 @@
 import { CompletedSteps, Gender, Like, Profile } from '../Types/Profile';
 import HttpError from '../Utils/HttpError';
-import db from '../Database/database';
+import db from '../Database/connection';
 import conversationService from '../Chat/Conversation.service';
 
 class ProfileService {

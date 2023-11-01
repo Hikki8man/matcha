@@ -1,4 +1,4 @@
-import db from '../Database/database';
+import db from '../Database/connection';
 import { Tag } from '../Types/Tag';
 
 class TagsService {

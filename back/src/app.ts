@@ -5,7 +5,7 @@ import errorHandler from './Utils/errorHandler';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
 import authService from './Auth/Auth.service';
-import db from './Database/database';
+import db from './Database/connection';
 import { Conversation } from './Types/Chat';
 import { env } from './config';
 
