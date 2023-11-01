@@ -9,6 +9,7 @@ import { initDb } from './Database/init-db';
 import { insertTestData } from './Database/insert-data';
 import { dropTable } from './Database/drop-tables';
 import EditProfileController from './Profile/EditProfile.controller';
+import TagsController from './Tags/tags.controller';
 
 dotenv.config({ path: './env' });
 
@@ -39,6 +40,7 @@ const main = async () => {
         new EditProfileController(),
         new AuthController(),
         new ChatController(),
+        new TagsController(),
       ],
       8080,
     );

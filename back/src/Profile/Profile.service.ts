@@ -6,11 +6,23 @@ import conversationService from '../Chat/Conversation.service';
 class ProfileService {
   async get_by_id(id: number) {
     try {
-      return await db<Profile>('profile').select('*').where('id', id).first();
-      // return await db.oneOrNone(
-      //   `SELECT profile.*, json_agg(photo.*) AS photos FROM profile LEFT JOIN photo ON profile.user_id = photo.user_id WHERE profile.user_id = $1 GROUP BY profile.user_id`,
-      //   id
-      // );
+      return await db<Profile>('profile')
+        .select('profile.*')
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+            END as tags
+          `),
+        )
+        .leftJoin('user_account as acc', 'profile.id', 'acc.id')
+        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
+        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .where('profile.id', id)
+        .andWhere('acc.verified', true)
+        .groupBy('profile.id')
+        .first();
     } catch (e: any) {
       console.log('Error', e.message);
       return undefined;
@@ -19,7 +31,22 @@ class ProfileService {
 
   async get_all(id: number) {
     try {
-      return await db<Profile>('profile').select('*').whereNot('id', id);
+      return await db<Profile>('profile')
+        .select('profile.*')
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+            END as tags
+          `),
+        )
+        .leftJoin('user_account as acc', 'profile.id', 'acc.id')
+        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
+        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .whereNot('profile.id', id)
+        .andWhere('acc.verified', true)
+        .groupBy('profile.id');
     } catch (e: any) {
       console.log('error in getting all profile', e.message);
       return undefined;
