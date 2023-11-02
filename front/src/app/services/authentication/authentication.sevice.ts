@@ -16,14 +16,11 @@ export interface Credentials {
 })
 export class AuthenticationService implements IAuthenticationService {
     //TODO in session service
-    private _authenticated: boolean;
-
+    private _profile: ProfileModel | null = null;
     constructor(
         private router: Router,
         private _apiService: IApiService,
-    ) {
-        this._authenticated = false;
-    }
+    ) {}
 
     public register(form: any): Promise<UserModel> {
         return this._apiService.callApi<UserModel>('auth/register', 'POST', form);
@@ -47,11 +44,15 @@ export class AuthenticationService implements IAuthenticationService {
         return false;
     }
 
-    public getCurrentUser(): Promise<ProfileModel> {
-        return this._apiService.callApi('/auth/me', 'GET');
+    public getProfile(): ProfileModel | null {
+        return this._profile;
+    }
+
+    public setProfile(profile: ProfileModel): void {
+        this._profile = profile;
     }
 
     private isAuthenticated() {
-        return this._authenticated;
+        return this._profile !== null;
     }
 }
