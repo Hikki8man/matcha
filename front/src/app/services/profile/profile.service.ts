@@ -28,7 +28,9 @@ export class ProfileService implements IProfileService {
 
     public async isProfileCompleteGuard(): Promise<boolean> {
         console.log('Profile Complete Guard');
-        if ((await this._authenticationService.getCurrentUser()).completed_steps === CompletedSteps.Completed) {
+        if (
+            this._authenticationService.getProfile()?.completed_steps === CompletedSteps.Completed
+        ) {
             return true;
         }
         this._router.navigate([AppPathEnum.CompleteProfile]);

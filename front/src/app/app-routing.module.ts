@@ -34,7 +34,7 @@ const routes: Routes = [
         path: '',
         component: MainLayoutComponent,
         canActivate: [
-            // () => inject(IAuthenticationService).isAuthenticatedGuard(),
+            () => inject(IAuthenticationService).isAuthenticatedGuard(),
             // () => inject(IProfileService).isProfileCompleteGuard(),
         ],
         // canActivateChild: [() => inject(IProfileService).isProfileCompleteGuard()],

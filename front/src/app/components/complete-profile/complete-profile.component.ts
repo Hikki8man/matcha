@@ -14,27 +14,25 @@ export class CompleteProfileComponent implements OnInit {
     constructor(
         private _authenticationService: IAuthenticationService,
         private _profileService: IProfileService,
-    ) { }
+    ) {}
 
-    private _profile: ProfileModel;
- 
- 
-    public Photos: { url: string }[] = [];   
+    private _profile: ProfileModel | null;
+
+    public Photos: { url: string }[] = [];
     public Genders: GenderEnum[] = Object.values(GenderEnum);
     public CurrentStep: CompletedSteps;
     public CompleteForm: FormGroup;
-
 
     ngOnInit(): void {
         this.init();
     }
 
     private async init() {
-        this._profile = await this._authenticationService.getCurrentUser();
-        this.CurrentStep = this._profile.completed_steps;
-        
+        this._profile = this._authenticationService.getProfile();
+        this.CurrentStep = this._profile?.completed_steps!;
+
         this.CompleteForm = new FormGroup({
-            name: new FormControl(this._profile.name, {
+            name: new FormControl(this._profile?.name, {
                 validators: [Validators.required],
                 nonNullable: true,
             }),
@@ -50,7 +48,6 @@ export class CompleteProfileComponent implements OnInit {
             }),
         });
     }
-
 
     public handleFileInput(event: Event) {
         const inputElement = event.target as HTMLInputElement;
@@ -83,7 +80,7 @@ export class CompleteProfileComponent implements OnInit {
                 if (this.CompleteForm.get('name')?.valid) {
                     try {
                         await this._profileService.editName(this.CompleteForm.get('name')!.value);
-                    } catch (err) { }
+                    } catch (err) {}
                     this.CurrentStep = CompletedSteps.Gender;
                 }
                 break;
@@ -94,7 +91,7 @@ export class CompleteProfileComponent implements OnInit {
                             this.CompleteForm.get('gender')!.value,
                         );
                         this.CurrentStep = CompletedSteps.Photo;
-                    } catch (err) { }
+                    } catch (err) {}
                 }
                 break;
             case CompletedSteps.Photo:

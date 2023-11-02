@@ -23,8 +23,8 @@ import { ProfileService } from './services/profile/profile.service';
 import { RegisterModule } from './pages/register/register.module';
 
 const config: SocketIoConfig = {
-    url: environment.apiBaseUrl,
-    options: { withCredentials: true, autoConnect: false },
+    url: environment.apiBaseUrl!,
+    options: { withCredentials: true, autoConnect: true },
 };
 
 @NgModule({
@@ -48,7 +48,7 @@ const config: SocketIoConfig = {
     providers: [
         { provide: IApiService, useClass: ApiService },
         { provide: IAuthenticationService, useClass: AuthenticationService },
-        { provide: IProfileService, useClass: ProfileService }
+        { provide: IProfileService, useClass: ProfileService },
     ],
     bootstrap: [AppComponent],
 })

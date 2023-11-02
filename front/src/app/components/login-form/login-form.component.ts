@@ -55,20 +55,15 @@ export class LoginFormComponent {
                 password: this.loginForm.value.password!,
             };
 
-            let response;
             try {
-                response = await this._authenticationService.login(credentials);
-
-                console.log(response);
+                const response = await this._authenticationService.login(credentials);
+                this._authenticationService.setProfile(response.profile);
+                this._router.navigate([AppPathEnum.Search]);
+                this.IsLoading = false;
             } catch (err: any) {
                 console.log(err);
                 this.IsLoading = false;
                 this.InvalidCredentials = true;
-            }
-
-            this.IsLoading = false;
-            if (response?.profile) {
-                this._router.navigate([AppPathEnum.Search]);
             }
         }
         console.log('onLogin');

@@ -6,17 +6,14 @@ import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { Message } from '../chat/chat.component';
 
-
-
 @Component({
     selector: 'chats-list',
     templateUrl: './chats-list.component.html',
     styleUrls: ['./chats-list.component.scss'],
 })
 export class ChatsListComponent implements OnInit {
-
     public Chats: ConversationModel[];
-    public CurrentUser: ProfileModel;
+    public CurrentUser: ProfileModel | null;
 
     @Input() public SelectedChatId: number | null = null;
 
@@ -25,7 +22,7 @@ export class ChatsListComponent implements OnInit {
     constructor(
         private _socket: Socket,
         private _apiService: IApiService,
-        private readonly _authenticationService: IAuthenticationService
+        private readonly _authenticationService: IAuthenticationService,
     ) {
         this._apiService
             .callApi<ConversationModel[]>('chat/conversation', 'GET')
@@ -39,11 +36,11 @@ export class ChatsListComponent implements OnInit {
     }
 
     private async init() {
-        this.CurrentUser = await this._authenticationService.getCurrentUser();
+        this.CurrentUser = await this._authenticationService.getProfile();
     }
 
     public getUserName(conversation: ConversationModel): string {
-        return this.CurrentUser.id === conversation.user_1.id
+        return this.CurrentUser?.id === conversation.user_1.id
             ? conversation.user_2.name
             : conversation.user_1.name;
     }

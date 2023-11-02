@@ -27,13 +27,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socket: Socket,
         private _apiService: IApiService,
-        private readonly _authenticationService: IAuthenticationService
+        private readonly _authenticationService: IAuthenticationService,
     ) {}
 
     @Input() public ChatId: number | null = null;
     public Avatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation;
-    public CurrentUser: ProfileModel;
+    public CurrentUser: ProfileModel | null;
 
     ngOnInit(): void {
         this.listenNewMessageEvent();
@@ -41,7 +41,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private async init() {
-        this.CurrentUser = await this._authenticationService.getCurrentUser();
+        this.CurrentUser = await this._authenticationService.getProfile();
     }
 
     ngOnDestroy(): void {
@@ -69,13 +69,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     getUserName(chat: Conversation) {
-        return this.CurrentUser.id === chat.user_1.id
-            ? chat.user_2.name
-            : chat.user_1.name;
+        return this.CurrentUser?.id === chat.user_1.id ? chat.user_2.name : chat.user_1.name;
     }
 
     isFrom(sender_id: number): boolean {
-        return this.CurrentUser.id !== sender_id;
+        return this.CurrentUser?.id !== sender_id;
     }
 
     async ngOnChanges(): Promise<void> {
@@ -98,7 +96,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             content,
         };
         try {
-            await this._apiService.callApi<Conversation>('chat/message/create', 'GET', message);
+            await this._apiService.callApi<Conversation>('chat/message/create', 'POST', message);
         } catch (err) {
             console.log('error', err);
         }
