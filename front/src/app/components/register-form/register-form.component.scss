@@ -1,0 +1,49 @@
+.register-form-container {
+    padding: 20px;
+    padding-bottom: 10px;
+    border-radius: 15px;
+    width: 400px;
+
+    background-color: var(--background-color-accent);
+
+    .register-form-head {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+
+            font-weight: 550;
+            color: var(--title-color);
+
+            .app-title {
+                padding: 0px 5px;
+            }
+
+            .heart-icon {
+                fill: var(--title-color);
+            }
+        }
+
+        .title-container {
+            padding: 20px;
+            font-size: 22px;
+            font-weight: 550;
+        }
+    }
+
+    .register-form {
+    }
+}
+
+@media screen and (max-width: 460px) {
+    .register-form-container {
+        width: 300px;
+
+        .register-form {
+            padding: 0px 30px;
+        }
+    }
+}
