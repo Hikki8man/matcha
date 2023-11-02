@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 
 export interface Profile {
     user_id: number;
     name: string;
     birth_date: Date;
+    bio: string;
     // gender: Gender;
     // completed_steps: CompletedSteps;
 }
@@ -19,24 +21,24 @@ export interface Profile {
     styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
-    constructor(
-        private _apiService: IApiService,
-    ) {
+    constructor(private _apiService: IApiService) {
         // this.Users = this.getUsers()
     }
     ngOnInit(): void {
-       // console.log('isAuth: ', this._authenticationService.getAuth());
-        this._apiService.callApi<Profile[]>('profile', 'GET').then((profiles: Profile[]) => {
-            this.Users = profiles.map((profile) => {
-                return {
-                    id: profile.user_id,
-                    name: profile.name,
-                    age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
-                    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-                    bio: 'bonjour à tous',
-                };
+        // console.log('isAuth: ', this._authenticationService.getAuth());
+        this._apiService
+            .callApi<ProfileModel[]>('profile', 'GET')
+            .then((profiles: ProfileModel[]) => {
+                this.Users = profiles.map((profile) => {
+                    return {
+                        id: profile.id,
+                        name: profile.name,
+                        age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
+                        avatar: 'https://www.w3schools.com/howto/img_avatar.png',
+                        bio: profile.bio,
+                    };
+                });
             });
-        });
     }
     public Users: any = [
         {

@@ -1,4 +1,4 @@
-import { GenderEnum } from "../enums/gender-enum";
+import { GenderEnum } from '../enums/gender-enum';
 
 export enum CompletedSteps {
     Name = 'name',
@@ -12,6 +12,7 @@ export interface ProfileModel {
     id: number;
     name: string;
     birth_date: Date;
+    bio: string;
     gender: GenderEnum;
     completed_steps: CompletedSteps;
 }

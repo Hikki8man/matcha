@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    FormGroup,
-    NonNullableFormBuilder,
-    Validators
-} from '@angular/forms';
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
@@ -31,7 +27,7 @@ export class LoginFormComponent {
         private _authenticationService: IAuthenticationService,
         private _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
-    ) { }
+    ) {}
 
     public loginForm: FormGroup = this._formBuilder.group({
         email: ['', [Validators.required, Validators.email]],
@@ -59,20 +55,16 @@ export class LoginFormComponent {
                 password: this.loginForm.value.password!,
             };
 
-            let response;
             try {
-                response = await this._authenticationService.login(credentials);
-                console.log(response);
+                const response = await this._authenticationService.login(credentials);
+                this._authenticationService.setProfile(response.profile);
+                this._router.navigate([AppPathEnum.Search]);
+                this.IsLoading = false;
             } catch (err: any) {
                 console.log(err);
                 this.IsLoading = false;
                 this.InvalidCredentials = true;
             }
-
-            this.IsLoading = false;
-
-            if (response?.profile)
-            this._router.navigate([AppPathEnum.Search]);
         }
         console.log('onLogin');
         console.log('login: ' + this.loginForm.value.email);
