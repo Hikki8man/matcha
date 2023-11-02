@@ -8,17 +8,15 @@
     display: flex;
     align-items: center;
 
+    padding: 7px 12px;
+
     .matcha-input {
         border: none;
         background-color: inherit;
-        color: var(--color-text-primary);
+        color: var(--title-color);
         border-radius: 20px;
-        padding: 7px;
-        margin-left: 5px;
 
         width: 100%;
-
-        margin-left: 10px;
 
         &:focus {
             outline: none;
