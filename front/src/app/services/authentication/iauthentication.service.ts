@@ -9,5 +9,5 @@ export abstract class IAuthenticationService {
     public abstract getProfile(): ProfileModel | null;
     public abstract setProfile(profile: ProfileModel): void;
 
-    public abstract isAuthenticatedGuard(): boolean;
+    public abstract isAuthenticatedGuard(): Promise<boolean>;
 }

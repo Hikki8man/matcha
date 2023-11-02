@@ -1,3 +1,4 @@
 export const environment = {
-    apiBaseUrl: process.env['API_URL'],
+    production: false,
+    apiBaseUrl: 'http://10.14.1.1:8080',
 };

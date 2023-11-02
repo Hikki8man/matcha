@@ -34,11 +34,18 @@ export class AuthenticationService implements IAuthenticationService {
         return this._apiService.callApi<UserModel>('auth/refresh', 'GET');
     }
 
-    public isAuthenticatedGuard(): boolean {
+    public async isAuthenticatedGuard(): Promise<boolean> {
         const isAuth = this.isAuthenticated();
         console.log('AuthGuard: ', isAuth);
         if (isAuth) {
             return true;
+        }
+        try {
+            const profile = await this.refreshToken();
+            this.setProfile(profile.profile);
+            return true;
+        } catch (error) {
+            console.log(error);
         }
         this.router.navigate([AppPathEnum.Login]);
         return false;
