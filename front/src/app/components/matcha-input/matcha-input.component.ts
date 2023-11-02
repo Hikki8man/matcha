@@ -20,6 +20,7 @@ export class MatchaInputComponent implements OnInit {
         this.init();
     }
     @Input() public Name: string;
+    @Input() public HasError: boolean | undefined = false;
     
     public InputFormControl: FormControl = new FormControl();
     public IsPassword: boolean = false;
