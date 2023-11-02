@@ -1,7 +1,6 @@
 import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
-import { RegisterComponent } from './components/register/register.component';
 import { AppPathEnum } from './enums/app-path-enum';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -10,6 +9,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
+import { RegisterComponent } from './pages/register/register.component';
 
 const routes: Routes = [
     {

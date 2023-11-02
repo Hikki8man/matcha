@@ -8,7 +8,6 @@ import { environment } from 'src/environment/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CompleteProfileModule } from './components/complete-profile/complete-profile.module';
-import { RegisterModule } from './components/register/register.module';
 import { MainLayoutModule } from './layouts/main-layout/main-layout.module';
 import { LoginModule } from './pages/login/login.module';
 import { MessagesModule } from './pages/messages/messages.module';
@@ -21,6 +20,7 @@ import { AuthenticationService } from './services/authentication/authentication.
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
 import { IProfileService } from './services/profile/iprofile.service';
 import { ProfileService } from './services/profile/profile.service';
+import { RegisterModule } from './pages/register/register.module';
 
 const config: SocketIoConfig = {
     url: environment.apiBaseUrl,

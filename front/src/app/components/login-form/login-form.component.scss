@@ -1,5 +1,6 @@
 .login-form-container {
     padding: 20px;
+    padding-bottom: 10px;
     border-radius: 15px;
     width: 400px;
 
@@ -60,6 +61,18 @@
             display: flex;
             justify-content: center;
             padding-top: 10px;
+        }
+
+    }
+    .register-button-container {
+        padding-top: 15px;
+        text-align: center;
+        color: var(--color-text-primary);
+        font-size: 10px;
+
+        .register-button {
+            text-decoration: none;
+            color: var(--title-color);
         }
     }
 }

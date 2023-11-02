@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
-    selector: 'app-register',
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss'],
+    selector: 'register-form',
+    templateUrl: './register-form.component.html',
+    styleUrls: ['./register-form.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterFormComponent {
     constructor(
         private _authService: IAuthenticationService,
     ) {}
