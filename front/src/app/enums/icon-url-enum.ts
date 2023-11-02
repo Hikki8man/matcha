@@ -11,4 +11,6 @@ export class IconUrlEnum {
     public static readonly Settings: string = `${this._baseUrl}settings.svg`;
     public static readonly User: string = `${this._baseUrl}user.svg`;
     public static readonly Users: string = `${this._baseUrl}users.svg`;
+    public static readonly Visibility: string = `${this._baseUrl}visibility.svg`;
+    public static readonly VisibilityOff: string = `${this._baseUrl}visibility-off.svg`;
 }

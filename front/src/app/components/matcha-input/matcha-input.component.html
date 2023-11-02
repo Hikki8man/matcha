@@ -1,3 +1,5 @@
-<div class="matcha-input-container">
+<div class="matcha-input-container" [class.error]="HasError">
     <input class="matcha-input" [type]="Type" [placeholder]="Placeholder" [formControl]="InputFormControl" [name]="Name">
+    <svg-icon *ngIf="IsPassword" [Src]="IconVisibilityUrl" [ContentStyle]="IconVisibilityStyle"
+            (click)="handlePasswordVisibilityChange()"></svg-icon>
 </div>

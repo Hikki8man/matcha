@@ -5,6 +5,7 @@ import { LoginFormComponent } from './login-form.component';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 import { MatchaInputModule } from '../matcha-input/matcha-input.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [LoginFormComponent],
@@ -14,6 +15,7 @@ import { MatchaInputModule } from '../matcha-input/matcha-input.module';
         SvgIconComponentModule,
         MatchaButtonModule,
         MatchaInputModule,
+        RouterModule,
     ],
     exports: [LoginFormComponent],
 })

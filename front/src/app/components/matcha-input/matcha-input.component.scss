@@ -3,22 +3,23 @@
     background-color: white;
     border: solid 1px var(--color-pink-background);
     border-radius: 20px;
-    width: 100%;
 
     display: flex;
     align-items: center;
+
+    padding: 7px 12px;
+
+    &.error {
+        border: solid 1px red;
+    }
 
     .matcha-input {
         border: none;
         background-color: inherit;
         color: var(--color-text-primary);
         border-radius: 20px;
-        padding: 7px;
-        margin-left: 5px;
 
         width: 100%;
-
-        margin-left: 10px;
 
         &:focus {
             outline: none;

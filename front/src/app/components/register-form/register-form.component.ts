@@ -1,16 +1,26 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
-    selector: 'app-register',
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss'],
+    selector: 'register-form',
+    templateUrl: './register-form.component.html',
+    styleUrls: ['./register-form.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterFormComponent {
+
+    public HeartIconUrl: string = IconUrlEnum.Heart;
+    public HeartIconStyle: Record<string, string> = {
+        display: 'flex',
+        height: '14px',
+        width: '14px',
+    };
+
     constructor(
         private _authService: IAuthenticationService,
     ) {}
+
     registerForm = new FormGroup({
         username: new FormControl('', { validators: [Validators.required] }),
         firstname: new FormControl('', { validators: [Validators.required] }),

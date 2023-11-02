@@ -8,24 +8,34 @@
             <span class="form-title">Connection</span>
         </div>
     </div>
-	<form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
 
         <div class="input-container">
-            <matcha-input Type="email" Placeholder="Email" Name="email" [FormGroup]="loginForm"></matcha-input>
+            <matcha-input Type="email" Placeholder="Email" Name="email" [FormGroup]="loginForm"
+                [HasError]="HasErrors && loginForm.get('email')?.invalid"></matcha-input>
             <div class="error-message" *ngIf="HasErrors && loginForm.get('email')?.invalid">
                 {{getErrorMessage('email')}}
             </div>
         </div>
-      
+
         <div class="input-container">
-            <matcha-input Type="password" Placeholder="Password" Name="password" [FormGroup]="loginForm"></matcha-input>
+            <matcha-input Type="password" Placeholder="Password" Name="password" [FormGroup]="loginForm"
+                [HasError]="HasErrors && loginForm.get('password')?.invalid"></matcha-input>
             <div class="error-message" *ngIf="HasErrors && loginForm.get('password')?.invalid">
                 {{getErrorMessage('password')}}
             </div>
         </div>
-    
+
+
+        <div *ngIf="InvalidCredentials" class="error-message invalid-credentials">
+            <span>Nom d'utilisateur ou mot de passe incorrect</span>
+        </div>
+
         <div class="actions">
             <matcha-button Type="submit" [Disabled]="IsLoading" Label="Login"></matcha-button>
         </div>
     </form>
+    <div class="register-button-container">
+        <span>Pas encore de compte ? <a class="register-button" routerLink="/register">inscription</a></span>
+    </div>
 </div>

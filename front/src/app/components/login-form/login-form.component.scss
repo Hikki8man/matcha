@@ -1,5 +1,6 @@
 .login-form-container {
     padding: 20px;
+    padding-bottom: 10px;
     border-radius: 15px;
     width: 400px;
 
@@ -37,7 +38,7 @@
         display: flex;
         flex-direction: column;
 
-        padding: 0px 60px;
+        padding: 0px 50px;
 
         .input-container {
             padding-bottom: 10px;
@@ -46,6 +47,14 @@
         .error-message {
             padding-left: 10px;
             font-size: 12px;
+            color: red;
+        }
+
+        .invalid-credentials {
+            padding: 7px 10px;
+            background-color: var(--color-pink-background);
+            border-radius: 10px;
+            border: solid 1px red;
         }
 
         .actions {
@@ -53,11 +62,27 @@
             justify-content: center;
             padding-top: 10px;
         }
+
+    }
+    .register-button-container {
+        padding-top: 15px;
+        text-align: center;
+        color: var(--color-text-primary);
+        font-size: 10px;
+
+        .register-button {
+            text-decoration: none;
+            color: var(--title-color);
+        }
     }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 460px) {
     .login-form-container {
         width: 300px;
+
+        .login-form {
+            padding: 0px 30px;
+        }
     }
 }
