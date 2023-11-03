@@ -1,6 +1,9 @@
 <div class="chat">
     <ng-container *ngIf="Chat">
         <div class="chat-head">
+            <div *ngIf="IsMobileView" class="back-arrow-container" (click)="handleBackArrowClick()">
+                <svg-icon [Src]="IconBackUrl" [ContentStyle]="IconBackStyle"></svg-icon>
+            </div>
             <div class="user-infos">
                 <div class="user-photo-container">
                     <img class="user-photo" [src]="Avatar">
@@ -9,6 +12,7 @@
                     <span class="user-name">{{ getUserName(Chat) }}</span>
                 </div>
             </div>
+            <div *ngIf="IsMobileView" class="dummy-div"></div>
         </div>
         <div class="chat-body">
             <div class="chats-container">

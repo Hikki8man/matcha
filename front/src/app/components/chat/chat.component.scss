@@ -65,3 +65,14 @@
         }
     }
 }
+
+@media screen and (max-width: 600px) {
+    .chat {
+        border-radius: 15px;
+
+        .chat-head {
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+}

@@ -30,3 +30,13 @@
         }
     }
 }
+
+@media screen and (max-width: 600px) {
+    .user-about {
+        padding: 10px;
+
+        .about-content {
+            margin-top: 10px;
+        }
+    }
+}

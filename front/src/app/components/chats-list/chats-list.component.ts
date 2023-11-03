@@ -32,11 +32,7 @@ export class ChatsListComponent implements OnInit {
 
     ngOnInit(): void {
         this.subscribeToNewMessages();
-        this.init();
-    }
-
-    private async init() {
-        this.CurrentUser = await this._authenticationService.getProfile();
+        this.CurrentUser = this._authenticationService.getProfile();
     }
 
     public getUserName(conversation: ConversationModel): string {

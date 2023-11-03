@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -23,31 +24,45 @@ export interface Conversation {
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit, OnChanges, OnDestroy {
+export class ChatComponent implements OnInit, OnChanges {
+
+    public Avatar = 'assets/images/detective_squirrel.png';
+    public Chat: Conversation;
+    public CurrentUser: ProfileModel | null;
+    public IsMobileView: boolean = false;
+
+    public IconBackUrl: string = IconUrlEnum.ArrowBack;
+    public IconBackStyle: Record<string, string> = { display: 'flex', height: '24px', width: '24px' };
+
+    @Input() public ChatId: number | null = null;
+
+    @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
+
     constructor(
         private _socket: Socket,
         private _apiService: IApiService,
         private readonly _authenticationService: IAuthenticationService,
-    ) {}
-
-    @Input() public ChatId: number | null = null;
-    public Avatar = 'assets/images/detective_squirrel.png';
-    public Chat: Conversation;
-    public CurrentUser: ProfileModel | null;
+    ) { }
 
     ngOnInit(): void {
         this.listenNewMessageEvent();
         this.init();
+        this.IsMobileView = window.innerWidth <= 600;
     }
 
     private async init() {
         this.CurrentUser = await this._authenticationService.getProfile();
     }
-
-    ngOnDestroy(): void {
-        console.log('Chat Component destroy');
+    
+    @HostListener('window:resize', ['$event'])
+    public handleResize(event: any) {
+        this.IsMobileView = event.target.innerWidth <= 600;
     }
 
+    public handleBackArrowClick(): void {
+        this.BackArrowClicked.emit();
+    }
+    
     scrollDown() {
         const bodyDiv = document.querySelector('.chat-body');
         // Body div null at first fetch, LOLO fix
@@ -75,6 +90,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     isFrom(sender_id: number): boolean {
         return this.CurrentUser?.id !== sender_id;
     }
+
 
     async ngOnChanges(): Promise<void> {
         console.log('chat id', this.ChatId);
