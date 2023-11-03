@@ -5,7 +5,7 @@
             <span class="empty-text">Aucun résultat</span>
         </div>
         <div *ngFor="let user of Users" class="user-item">
-            <div class="user-photo-container">
+            <div class="user-photo-container" *ngIf="user.avatar">
                 <img class="user-photo" [src]="user.avatar">
             </div>
             <div class="user-infos">

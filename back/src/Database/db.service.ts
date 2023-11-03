@@ -4,6 +4,8 @@ import { UserAccount } from '../Types/UserAccount';
 import db from './connection';
 import bcrypt from 'bcrypt';
 import tagsService from '../Tags/tags.service';
+import fs from 'fs/promises';
+import { Photo } from '../Types/Photo';
 
 const NB_OF_TAGS = 50;
 const MAX_TAG_PER_USER = 10;
@@ -130,6 +132,23 @@ class DbService {
         tagsToInsert.push(availableTags.splice(randomIndex, 1)[0]);
       }
       await tagsService.add(profile.id, tagsToInsert);
+    }
+  }
+
+  async addProfilesAvatar(profiles: Profile[]) {
+    for (const profile of profiles) {
+      const filePath = `src/Database/Avatars/${profile.name.toLowerCase()}.png`;
+      try {
+        await db<Photo>('photo').insert({
+          user_id: profile.id,
+          filename: `${profile.name.toLowerCase()}.png`,
+          path: filePath,
+          content_type: 'image/png',
+          avatar: true,
+        });
+      } catch (err) {
+        console.log('err', err);
+      }
     }
   }
 }

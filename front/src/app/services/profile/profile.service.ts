@@ -32,8 +32,9 @@ export class ProfileService implements IProfileService {
         return this._apiService.callApi('profile/upload/avatar', 'POST', formData);
     }
 
-    public getAvatar(id: number) {
-        return this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`);
+    public async getAvatar(id: number): Promise<string> {
+        const avatar = await this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`);
+        return URL.createObjectURL(avatar);
     }
 
     public async isProfileCompleteGuard(): Promise<boolean> {

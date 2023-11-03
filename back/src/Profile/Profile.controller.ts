@@ -75,42 +75,43 @@ class ProfileController {
   };
 
   uploadPhotos = async (req: MyRequest, res: Response, next: NextFunction) => {
-    const file = req.file;
-    console.log('file', file);
-
-    if (!file) {
-      throw new HttpError(400, 'Please upload a file');
-    }
-    const result = await validateMIMEType(file.path, {
-      originalFilename: file.originalname,
-      allowMimeTypes: ['image/jpeg', 'image/png'],
-    });
-    if (!result.ok) {
-      await fs.unlink(file.path);
-      throw new HttpError(400, 'Invalid file type');
-    }
-    await photoService.insert(req.user_id!, file);
-    console.log('result: ', result);
-    res.send(file);
+    // const file = req.file;
+    // console.log('file', file);
+    // if (!file) {
+    //   throw new HttpError(400, 'Please upload a file');
+    // }
+    // const result = await validateMIMEType(file.path, {
+    //   originalFilename: file.originalname,
+    //   allowMimeTypes: ['image/jpeg', 'image/png'],
+    // });
+    // if (!result.ok) {
+    //   await fs.unlink(file.path);
+    //   throw new HttpError(400, 'Invalid file type');
+    // }
+    // await photoService.insert(req.user_id!, file);
+    // console.log('result: ', result);
+    // res.send(file);
   };
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    const file = req.file;
+    await photoService.uploadAvatar(req.user_id!, req.file);
+    res.end();
+    // const file = req.file;
 
-    if (!file) {
-      throw new HttpError(400, 'Please upload a file');
-    }
-    const result = await validateMIMEType(file.path, {
-      originalFilename: file.originalname,
-      allowMimeTypes: ['image/jpeg', 'image/png'],
-    });
-    if (!result.ok) {
-      await fs.unlink(file.path);
-      throw new HttpError(400, 'Invalid file type');
-    }
-    await photoService.insert(req.user_id!, file, true);
-    console.log('result: ', result);
-    res.send(file);
+    // if (!file) {
+    //   throw new HttpError(400, 'Please upload a file');
+    // }
+    // const result = await validateMIMEType(file.path, {
+    //   originalFilename: file.originalname,
+    //   allowMimeTypes: ['image/jpeg', 'image/png'],
+    // });
+    // if (!result.ok) {
+    //   await fs.unlink(file.path);
+    //   throw new HttpError(400, 'Invalid file type');
+    // }
+    // await photoService.insert(req.user_id!, file, true);
+    // console.log('result: ', result);
+    // res.send(file);
   };
 
   sendPhoto = async (req: MyRequest, res: Response) => {

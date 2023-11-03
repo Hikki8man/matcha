@@ -4,7 +4,7 @@ export abstract class IProfileService {
     public abstract editName(name: string): Promise<void>;
     public abstract editGender(gender: GenderEnum): Promise<void>;
     public abstract editAvatar(photo: any): Promise<void>;
-    public abstract getAvatar(id: number): any;
+    public abstract getAvatar(id: number): Promise<string>;
 
     public abstract isProfileCompleteGuard(): Promise<boolean>;
 }
