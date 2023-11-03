@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageInputComponent } from './message-input.component';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { MessageInputComponent } from './message-input.component';
 
 
 
@@ -11,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 	],
 	imports: [
 		CommonModule,
-		FormsModule
+		FormsModule,
+		SvgIconComponentModule
 	],
 	exports: [
 		MessageInputComponent

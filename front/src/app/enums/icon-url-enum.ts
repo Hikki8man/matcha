@@ -9,6 +9,7 @@ export class IconUrlEnum {
     public static readonly Message: string = `${this._baseUrl}message.svg`;
     public static readonly Notification: string = `${this._baseUrl}notification.svg`;
     public static readonly Search: string = `${this._baseUrl}search.svg`;
+    public static readonly Send: string = `${this._baseUrl}send.svg`;
     public static readonly Settings: string = `${this._baseUrl}settings.svg`;
     public static readonly User: string = `${this._baseUrl}user.svg`;
     public static readonly Users: string = `${this._baseUrl}users.svg`;
