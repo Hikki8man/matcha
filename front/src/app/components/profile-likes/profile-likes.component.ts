@@ -37,5 +37,5 @@ export class ProfileLikesComponent {
 	];
 
 	public HeartIconUrl: string = IconUrlEnum.HeartEmpty;
-	public IconStyle: Record<string, string> = { display: 'flex', height: '18px' };
+	public IconStyle: Record<string, string> = { display: 'flex', height: '18px', width: '18px' };
 }

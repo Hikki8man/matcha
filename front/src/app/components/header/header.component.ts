@@ -19,6 +19,7 @@ export class HeaderComponent {
 	public HeartIconStyle: Record<string, string> = {
 		display: 'flex',
 		height: '14px',
+		width: '14px',
 	};
 
 	public HasNotifications: boolean = true;

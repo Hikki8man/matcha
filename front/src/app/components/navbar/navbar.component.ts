@@ -9,7 +9,7 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 export class NavbarComponent {
 
 	public UserIconUrl: string = IconUrlEnum.User;
-	public UsersIconUrl: string = IconUrlEnum.Users;
+	public UsersIconUrl: string = IconUrlEnum.HeartEmpty;
 	public MessageIconUrl: string = IconUrlEnum.Message;
 	public SettingsIconUrl: string = IconUrlEnum.Settings;
 
