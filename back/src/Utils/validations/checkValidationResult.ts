@@ -18,7 +18,6 @@ import { NextFunction, Response } from 'express';
 function CheckValidation(req: MyRequest, res: Response, next: NextFunction) {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
-    console.log('no error');
     next();
   } else {
     console.log('errors: ', errors);

@@ -109,7 +109,7 @@ class DbService {
           .returning('*');
         profiles.push(profile);
       } catch (e: any) {
-        console.log(e.message);
+        // console.log(e.message);
       }
     }
     return profiles;

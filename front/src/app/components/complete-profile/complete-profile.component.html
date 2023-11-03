@@ -11,13 +11,15 @@
 	  </div>
 	  
 	  <div *ngIf="CurrentStep === 'photo'">
-		<label for="photo">Photos</label>
-		<input type="file" id="photo" (change)="handleFileInput($event)" multiple>
-		<div *ngFor="let photo of Photos; let i = index" class="photo-preview">
-		  <img [src]="photo.url" alt="Uploaded Photo {{i + 1}}">
-		  <button (click)="removePhoto(i)">Remove</button>
+		<label for="photo">Photo</label>
+		<input type="file" name="photo" #fileInput (change)="selectFile($event)" />
+		<!-- <input type="file" name="photo" id="photo" (change)="handleFileInput($event)"> -->
+		<div class="photo-preview" *ngIf="Preview">
+			<img [src]="Preview.url" alt="Uploaded Photo">
+			<!-- <button (click)="removePhoto()">Remove</button> -->
 		</div>
-	  </div>
+	</div>
+	
 	  
 	<div *ngIf="CurrentStep === 'bio'">
 	  <label for="bio">Bio</label>

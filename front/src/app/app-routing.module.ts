@@ -10,6 +10,7 @@ import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
 import { RegisterComponent } from './pages/register/register.component';
+// import { IProfileService } from './services/profile/iprofile.service';
 
 const routes: Routes = [
     {

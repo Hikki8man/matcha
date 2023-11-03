@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { CompletedSteps, ProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -16,9 +16,10 @@ export class CompleteProfileComponent implements OnInit {
         private _profileService: IProfileService,
     ) {}
 
+    @ViewChild('fileInput') fileInput: ElementRef;
     private _profile: ProfileModel | null;
 
-    public Photos: { url: string }[] = [];
+    public Preview: { url: string } | undefined;
     public Genders: GenderEnum[] = Object.values(GenderEnum);
     public CurrentStep: CompletedSteps;
     public CompleteForm: FormGroup;
@@ -40,48 +41,45 @@ export class CompleteProfileComponent implements OnInit {
                 validators: [Validators.required],
                 nonNullable: true,
             }),
-            photos: new FormControl<{ url: string }[]>([], {
-                // validators: [this.validatePhotos],
-            }),
+            photo: new FormControl<File | undefined>(undefined, this.validatePhoto),
             bio: new FormControl('', {
                 validators: [Validators.required],
             }),
         });
     }
 
-    public handleFileInput(event: Event) {
+    selectFile(event: Event): void {
+        console.log('fileinput', this.fileInput);
         const inputElement = event.target as HTMLInputElement;
         if (inputElement.files && inputElement.files.length > 0) {
-            for (let i = 0; i < inputElement.files.length; i++) {
-                const file = inputElement.files[i];
-                this.Photos.push({ url: URL.createObjectURL(file) });
-            }
-            this.CompleteForm.get('photos')?.setValue(this.Photos);
+            const file = inputElement.files[0];
+            this.Preview = { url: URL.createObjectURL(file) };
+            this.CompleteForm.get('photo')?.setValue(file);
+        } else {
+            this.CompleteForm.get('photo')?.setValue(undefined);
+            this.Preview = undefined;
+            this.fileInput.nativeElement.value = '';
         }
     }
 
-    public removePhoto(index: number) {
-        this.Photos.splice(index, 1);
-        this.CompleteForm.get('photos')?.setValue(this.Photos);
-    }
-
-    public validatePhotos(control: FormControl) {
-        const photos = control.value as { url: string }[];
-        if (photos.length < 1) {
+    public validatePhoto(control: AbstractControl) {
+        const photo = control.value as File;
+        console.log('validator', photo);
+        if (!photo) {
             return { required: true };
         }
         return null;
     }
 
     public async nextStep() {
-        // Implement the logic to move to the next step here
         switch (this.CurrentStep) {
             case CompletedSteps.Name:
                 if (this.CompleteForm.get('name')?.valid) {
                     try {
+                        console.log('value', this.CompleteForm.get('name')!.value);
                         await this._profileService.editName(this.CompleteForm.get('name')!.value);
+                        this.CurrentStep = CompletedSteps.Gender;
                     } catch (err) {}
-                    this.CurrentStep = CompletedSteps.Gender;
                 }
                 break;
             case CompletedSteps.Gender:
@@ -96,7 +94,13 @@ export class CompleteProfileComponent implements OnInit {
                 break;
             case CompletedSteps.Photo:
                 if (this.CompleteForm.get('photo')?.valid) {
-                    this.CurrentStep = CompletedSteps.Bio;
+                    try {
+                        const file: File = this.CompleteForm.get('photo')?.value;
+                        await this._profileService.editAvatar(file);
+                        this.fileInput.nativeElement.value = '';
+                    } catch (err) {
+                        console.log(err);
+                    }
                 }
                 break;
             case CompletedSteps.Bio:

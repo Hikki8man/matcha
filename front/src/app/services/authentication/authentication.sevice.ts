@@ -15,8 +15,8 @@ export interface Credentials {
     providedIn: 'root',
 })
 export class AuthenticationService implements IAuthenticationService {
-    //TODO in session service
-    private _profile: ProfileModel | null = null;
+    private _profile: ProfileModel;
+
     constructor(
         private router: Router,
         private _apiService: IApiService,
@@ -51,7 +51,7 @@ export class AuthenticationService implements IAuthenticationService {
         return false;
     }
 
-    public getProfile(): ProfileModel | null {
+    public getProfile(): ProfileModel {
         return this._profile;
     }
 
@@ -60,6 +60,6 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     private isAuthenticated() {
-        return this._profile !== null;
+        return this._profile !== undefined;
     }
 }

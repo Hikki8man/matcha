@@ -19,11 +19,21 @@ export class ProfileService implements IProfileService {
 
     public editName(name: string): Promise<void> {
         console.log('name to edit: ', name);
-        return this._apiService.callApi('profile/edit/name', 'POST', name);
+        return this._apiService.callApi('profile/edit/name', 'POST', { name });
     }
 
     public editGender(gender: GenderEnum): Promise<void> {
-        return this._apiService.callApi('profile/edit/gender', 'POST', gender);
+        return this._apiService.callApi('profile/edit/gender', 'POST', { gender });
+    }
+
+    public editAvatar(file: File): Promise<void> {
+        const formData = new FormData();
+        formData.append('photo', file);
+        return this._apiService.callApi('profile/upload/avatar', 'POST', formData);
+    }
+
+    public getAvatar(id: number) {
+        return this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`);
     }
 
     public async isProfileCompleteGuard(): Promise<boolean> {

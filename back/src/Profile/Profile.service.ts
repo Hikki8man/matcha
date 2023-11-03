@@ -5,9 +5,12 @@ import conversationService from '../Chat/Conversation.service';
 
 class ProfileService {
   async get_by_id(id: number) {
+    // return await db<Profile>('profile').select('*').where('id', id).first();
+    console.log('get by id', id);
     try {
       return await db<Profile>('profile')
-        .select('profile.*')
+        .select('profile.*', 'photo.path as avatar_path')
+        // .select(db.raw('MAX(photo.path) as photo_path'))
         .select(
           db.raw(`
             CASE
@@ -19,9 +22,14 @@ class ProfileService {
         .leftJoin('user_account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .leftJoin('photo as photo', function () {
+          this.on('profile.id', '=', 'photo.user_id').andOn(
+            db.raw('photo.avatar = true'),
+          );
+        })
         .where('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id')
+        .groupBy('profile.id', 'photo.path')
         .first();
     } catch (e: any) {
       console.log('Error', e.message);

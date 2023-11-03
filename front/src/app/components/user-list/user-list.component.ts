@@ -2,19 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 
-export interface Profile {
-    user_id: number;
-    name: string;
-    birth_date: Date;
-    bio: string;
-    // gender: Gender;
-    // completed_steps: CompletedSteps;
-}
-
-// export interface GetProfilesResponse {
-//   profiles: Profile[];
-// }
-
 @Component({
     selector: 'user-list',
     templateUrl: './user-list.component.html',

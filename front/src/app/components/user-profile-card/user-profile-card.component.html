@@ -1,11 +1,11 @@
 <div class="user-profile-card">
-    <div class="left-content">
-        <img class="profile-image" [src]="ProfileImage" alt="User profile image">
+    <div class="left-content" *ngIf="avatarUrl">
+        <img class="profile-image" [src]="avatarUrl" alt="User profile image">
     </div>
     <div class="right-content">
         <div class="header-content">
             <div class="user-name-container">
-                <span class="user-name">{{ UserName }}</span>
+                <span class="user-name">{{ profile.name }}</span>
                 <div class="user-status" [class.online]="IsOnline"></div>
             </div>
             <div class="user-location-container">
@@ -14,11 +14,11 @@
             </div>
         </div>
         <div class="user-bio-container">
-            <span class="user-bio">{{ UserBio }}</span>
+            <span class="user-bio">{{ profile.bio }}</span>
         </div>
         <div class="user-tags-container">
-            <div *ngFor="let tag of UserTags">
-                <interest-tag [Name]="tag"></interest-tag>
+            <div *ngFor="let tag of profile.tags">
+                <interest-tag [Name]="tag.name"></interest-tag>
             </div>
         </div>
     </div>

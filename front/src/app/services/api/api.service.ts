@@ -30,4 +30,26 @@ export class ApiService implements IApiService {
             });
         });
     }
+
+    public async callApiAvatar<T>(url: string): Promise<T> {
+        const req = this._http.get<T>(environment.apiBaseUrl + '/' + url, {
+            withCredentials: true,
+            responseType: 'blob' as 'json', // Set the responseType to 'blob'
+        });
+
+        return new Promise<T>((resolve, reject) => {
+            const onComplete: (data: any) => void = (data: any) => {
+                resolve(data);
+            };
+
+            const onError: (error: any) => void = (error) => {
+                reject(error);
+            };
+
+            req.subscribe({
+                next: (data) => onComplete(data),
+                error: (error) => onError(error),
+            });
+        });
+    }
 }
