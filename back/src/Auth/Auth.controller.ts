@@ -26,9 +26,13 @@ class AuthController {
     );
     this.router.post(this.path + '/login', asyncWrapper(this.login));
     this.router.post(this.path + '/validate-account', this.validateAccount);
-    this.router.get(this.path + '/refresh', jwtRefreshStrategy, this.refresh);
+    this.router.get(
+      this.path + '/refresh',
+      jwtRefreshStrategy,
+      asyncWrapper(this.refresh),
+    );
     this.router.post(this.path + '/logout', this.logout);
-    this.router.get(this.path + '/me', this.checkToken)
+    this.router.get(this.path + '/me', this.checkToken);
   }
 
   register = async (req: Request, res: Response) => {
@@ -48,6 +52,7 @@ class AuthController {
       throw new HttpError(401, 'Email or Password incorrect');
     }
     const profile = await profileService.get_by_id(user_account.id);
+    console.log('profile', user_account);
     if (!profile) {
       throw new HttpError(404, 'Profile not found');
     }
@@ -85,7 +90,7 @@ class AuthController {
   checkToken = async (req: MyRequest, res: Response, next: NextFunction) => {
     const user = await profileService.get_by_id(req.user_id!);
     if (!user) {
-      return next(new HttpError(400, "user not found"));
+      return next(new HttpError(400, 'user not found'));
     }
     res.send(user);
   };

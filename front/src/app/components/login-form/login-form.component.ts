@@ -58,6 +58,7 @@ export class LoginFormComponent {
             try {
                 const response = await this._authenticationService.login(credentials);
                 this._authenticationService.setProfile(response.profile);
+                console.log('res login', response.profile);
                 this._router.navigate([AppPathEnum.Search]);
                 this.IsLoading = false;
             } catch (err: any) {
@@ -66,8 +67,5 @@ export class LoginFormComponent {
                 this.InvalidCredentials = true;
             }
         }
-        console.log('onLogin');
-        console.log('login: ' + this.loginForm.value.email);
-        console.log('password: ' + this.loginForm.value.password);
     }
 }

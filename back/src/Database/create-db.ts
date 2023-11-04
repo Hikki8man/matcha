@@ -72,6 +72,8 @@ export const createDb = async () => {
       .references('id')
       .inTable('profile')
       .onDelete('CASCADE');
+    table.boolean('avatar').default(false);
+    table.string('content_type');
     table.string('filename');
     table.string('path');
     table.bigInteger('size');

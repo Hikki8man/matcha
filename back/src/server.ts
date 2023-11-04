@@ -31,7 +31,7 @@ const main = async () => {
       await createDb();
       await initDb();
     } catch (err) {
-      console.error('Database init error: ', err);
+      // console.error('Database init error: ', err);
     }
     const app = new App(
       [
