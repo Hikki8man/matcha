@@ -1,6 +1,6 @@
-import {Response, NextFunction} from "express";
-import {MyRequest} from "../Types/request";
-import authService from "./Auth.service";
+import { Response, NextFunction } from 'express';
+import { MyRequest } from '../Types/request';
+import authService from './Auth.service';
 
 function jwtRefreshStrategy(req: MyRequest, res: Response, next: NextFunction) {
   const refresh_token: string = req.cookies.refresh_token;
@@ -9,9 +9,9 @@ function jwtRefreshStrategy(req: MyRequest, res: Response, next: NextFunction) {
     req.user_id = payload.id;
     next();
   } else {
-    console.log("refresh token expired");
-    res.clearCookie("access_token");
-    res.status(403).send("Token expired");
+    console.log('refresh token expired');
+    res.clearCookie('refresh_token');
+    res.status(401).send('Refresh token expired');
   }
 }
 

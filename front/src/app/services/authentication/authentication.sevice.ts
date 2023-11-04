@@ -36,7 +36,7 @@ export class AuthenticationService implements IAuthenticationService {
 
     public async isAuthenticatedGuard(): Promise<boolean> {
         const isAuth = this.isAuthenticated();
-        console.log('AuthGuard: ', isAuth);
+        console.log('isAuth', isAuth);
         if (isAuth) {
             return true;
         }
@@ -45,7 +45,7 @@ export class AuthenticationService implements IAuthenticationService {
             this.setProfile(profile.profile);
             return true;
         } catch (error) {
-            console.log(error);
+            console.log('refresh expired', error);
         }
         this.router.navigate([AppPathEnum.Login]);
         return false;

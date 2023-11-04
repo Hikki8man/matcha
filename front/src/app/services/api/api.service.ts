@@ -21,6 +21,7 @@ export class ApiService implements IApiService {
             };
 
             const onError: (error: any) => void = (error) => {
+                console.log('callapi error', error);
                 reject(error);
             };
 

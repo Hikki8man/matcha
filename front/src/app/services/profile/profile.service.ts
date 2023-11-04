@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { GenderEnum } from '../../enums/gender-enum';
-import { CompletedSteps } from '../../models/profile.model';
+import { CompletedSteps, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { AuthenticationService } from '../authentication/authentication.sevice';
 import { IProfileService } from './iprofile.service';
@@ -35,6 +35,14 @@ export class ProfileService implements IProfileService {
     public async getAvatar(id: number): Promise<string> {
         const avatar = await this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`);
         return URL.createObjectURL(avatar);
+    }
+
+    public async getAllTags(): Promise<Tag[]> {
+        return await this._apiService.callApi<Tag[]>('tags', 'GET');
+    }
+
+    public async editTags(tags: Tag[]): Promise<void> {
+        return await this._apiService.callApi('tags/edit', 'POST', { tags });
     }
 
     public async isProfileCompleteGuard(): Promise<boolean> {
