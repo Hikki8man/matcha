@@ -53,7 +53,7 @@ export class CompleteProfileTagsComponent implements OnInit {
 
     onSubmit() {
         console.log('on Submit');
-        this._completeProfileService.completeAvatar(this.tagsChosen).subscribe({
+        this._completeProfileService.completeTags(this.tagsChosen).subscribe({
             complete: () => {
                 this._profile.tags = this.tagsChosen;
                 this._router.navigate(['complete-profile/bio']);

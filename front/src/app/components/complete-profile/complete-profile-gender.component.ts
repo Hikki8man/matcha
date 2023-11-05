@@ -40,7 +40,7 @@ export class CompleteProfileGenderComponent implements OnInit {
     onSubmit() {
         console.log('on Submit');
         if (this.genderControl.valid) {
-            this._completeProfileService.completeAvatar(this.genderControl.value).subscribe({
+            this._completeProfileService.completeGender(this.genderControl.value).subscribe({
                 complete: () => {
                     this._profile.gender = this.genderControl.value;
                     this._router.navigate(['complete-profile/avatar']);

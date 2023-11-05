@@ -34,7 +34,7 @@ export class CompleteProfileBioComponent implements OnInit {
     onSubmit() {
         console.log('on Submit');
         if (this.bioControl.valid) {
-            this._completeProfileService.completeAvatar(this.bioControl.value).subscribe({
+            this._completeProfileService.completeBio(this.bioControl.value).subscribe({
                 complete: () => {
                     this._profile.bio = this.bioControl.value;
                     this._profile.completed_steps = CompletedSteps.Completed;
