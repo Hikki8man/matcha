@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-// import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProfileModel, Tag } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 
 @Component({
@@ -27,7 +28,9 @@ export class CompleteProfileTagsComponent implements OnInit {
     public allTags: Tag[] = [];
     constructor(
         private _authenticationService: IAuthenticationService,
-        private _profileService: IProfileService, // private _router: Router,
+        private _profileService: IProfileService,
+        private _completeProfileService: ICompleteProfileService,
+        private _router: Router,
     ) {
         this._profile = _authenticationService.getProfile();
         this.tagsChosen = this._profile.tags;
@@ -59,9 +62,9 @@ export class CompleteProfileTagsComponent implements OnInit {
     async onSubmit() {
         console.log('on Submit');
         try {
-            await this._profileService.editTags(this.tagsChosen);
+            await this._completeProfileService.completeTags(this.tagsChosen);
             this._profile.tags = this.tagsChosen;
-            // this._router.navigate(['complete-profile/gender']);
+            this._router.navigate(['complete-profile/bio']);
         } catch (err) {
             console.log('error', err);
         }

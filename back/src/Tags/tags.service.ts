@@ -14,17 +14,23 @@ class TagsService {
 
   async editTags(user_id: number, tags: Tag[]) {
     try {
-      for (const tag of tags) {
-        await db<ProfileTag>('profile_tags')
-          .insert({ profile_id: user_id, tag_id: tag.id })
-          .onConflict(['profile_id', 'tag_id'])
-          .ignore();
-      }
       const tagIds = tags.map((tag) => tag.id);
       await db<ProfileTag>('profile_tags')
         .whereNotIn('tag_id', tagIds)
         .andWhere('profile_id', user_id)
         .del();
+
+      const insertData = tags.map((tag) => ({
+        profile_id: user_id,
+        tag_id: tag.id,
+      }));
+      if (insertData.length) {
+        return await db<ProfileTag>('profile_tags')
+          .insert(insertData)
+          .onConflict(['profile_id', 'tag_id'])
+          .ignore();
+      }
+      return true;
     } catch (err) {
       console.error(err);
     }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ProfileModel } from 'src/app/models/profile.model';
+import { CompletedSteps, ProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
     template: `
@@ -16,6 +17,7 @@ export class CompleteProfileBioComponent implements OnInit {
     public bioControl: FormControl;
     constructor(
         private _authenticationService: IAuthenticationService,
+        private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
         this._profile = _authenticationService.getProfile();
@@ -33,9 +35,10 @@ export class CompleteProfileBioComponent implements OnInit {
         console.log('on Submit');
         if (this.bioControl.valid) {
             try {
-                // await this._profileService.editBio(this.bioControl.value);
+                await this._completeProfileService.completeBio(this.bioControl.value);
                 this._profile.bio = this.bioControl.value;
-                this._router.navigate(['complete-profile/gender']);
+                this._profile.completed_steps = CompletedSteps.Completed;
+                this._router.navigate(['/']);
             } catch (err) {
                 console.log('error', err);
             }

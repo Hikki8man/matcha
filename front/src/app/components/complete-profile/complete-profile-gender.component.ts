@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
-import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
     template: `
@@ -23,7 +23,7 @@ export class CompleteProfileGenderComponent implements OnInit {
 
     constructor(
         private _authenticationService: IAuthenticationService,
-        private _profileService: IProfileService,
+        private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
         this._profile = _authenticationService.getProfile();
@@ -41,7 +41,7 @@ export class CompleteProfileGenderComponent implements OnInit {
         console.log('on Submit');
         if (this.genderControl.valid) {
             try {
-                await this._profileService.editGender(this.genderControl.value);
+                await this._completeProfileService.completeGender(this.genderControl.value);
                 this._profile.gender = this.genderControl.value;
                 this._router.navigate(['complete-profile/avatar']);
             } catch (err) {

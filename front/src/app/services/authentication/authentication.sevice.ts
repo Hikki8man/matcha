@@ -5,6 +5,7 @@ import { ProfileModel } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IAuthenticationService } from './iauthentication.service';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 export interface Credentials {
     email: string;
@@ -34,21 +35,26 @@ export class AuthenticationService implements IAuthenticationService {
         return this._apiService.callApi<UserModel>('auth/refresh', 'GET');
     }
 
-    public async isAuthenticatedGuard(): Promise<boolean> {
+    public isAuthenticatedGuard(): Observable<ProfileModel | undefined> {
         const isAuth = this.isAuthenticated();
-        console.log('isAuth', isAuth);
+        console.log('isAuth ===', isAuth);
+
         if (isAuth) {
-            return true;
+            return of(this._profile);
         }
-        try {
-            const profile = await this.refreshToken();
-            this.setProfile(profile.profile);
-            return true;
-        } catch (error) {
-            console.log('refresh expired', error);
-        }
-        this.router.navigate([AppPathEnum.Login]);
-        return false;
+
+        return from(this.refreshToken()).pipe(
+            map((profile) => {
+                this._profile = profile.profile;
+                console.log('setting profile', this._profile);
+                return this._profile;
+            }),
+            catchError((error) => {
+                console.log('refresh expired', error);
+                this.router.navigate([AppPathEnum.Login]);
+                return of(undefined);
+            }),
+        );
     }
 
     public getProfile(): ProfileModel {

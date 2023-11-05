@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
-import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
     template: `
@@ -17,7 +17,7 @@ export class CompleteProfileNameComponent implements OnInit {
     public nameControl: FormControl;
     constructor(
         private _authenticationService: IAuthenticationService,
-        private _profileService: IProfileService,
+        private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
         this._profile = _authenticationService.getProfile();
@@ -35,7 +35,7 @@ export class CompleteProfileNameComponent implements OnInit {
         console.log('on Submit');
         if (this.nameControl.valid) {
             try {
-                await this._profileService.editName(this.nameControl.value);
+                await this._completeProfileService.completeName(this.nameControl.value);
                 this._profile.name = this.nameControl.value;
                 this._router.navigate(['complete-profile/gender']);
             } catch (err) {

@@ -72,6 +72,15 @@ class ProfileService {
     }
   }
 
+  async editBio(id: number, bio: string) {
+    try {
+      return await db<Profile>('profile').update({ bio: bio }).where('id', id);
+    } catch (e: any) {
+      console.log('error updating bio', e.message);
+      return undefined;
+    }
+  }
+
   async editGender(id: number, gender: Gender) {
     try {
       return await db<Profile>('profile')

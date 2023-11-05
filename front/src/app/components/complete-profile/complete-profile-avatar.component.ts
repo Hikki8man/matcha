@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
-import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
     template: `
@@ -11,6 +11,7 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
         <div class="photo-preview" *ngIf="preview">
             <img [src]="preview.url" alt="Uploaded Photo" />
         </div>
+        <button (click)="onSubmit()">Next</button>
     `,
 })
 export class CompleteProfileAvatarComponent implements OnInit {
@@ -20,7 +21,7 @@ export class CompleteProfileAvatarComponent implements OnInit {
 
     constructor(
         private _authenticationService: IAuthenticationService,
-        private _profileService: IProfileService,
+        private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
         this.avatarControl = new FormControl<File | undefined>(undefined, this.validateAvatar);
@@ -57,9 +58,9 @@ export class CompleteProfileAvatarComponent implements OnInit {
         console.log('on Submit');
         if (this.avatarControl.valid) {
             try {
-                await this._profileService.editAvatar(this.avatarControl.value);
+                await this._completeProfileService.completeAvatar(this.avatarControl.value);
                 this.fileInput.nativeElement.value = '';
-                this._router.navigate(['complete-profile/bio']);
+                this._router.navigate(['complete-profile/tags']);
             } catch (err) {
                 console.log('error', err);
             }
