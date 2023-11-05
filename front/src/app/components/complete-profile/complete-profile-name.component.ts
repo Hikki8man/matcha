@@ -31,16 +31,18 @@ export class CompleteProfileNameComponent implements OnInit {
         void this._authenticationService;
     }
 
-    async onSubmit() {
+    onSubmit() {
         console.log('on Submit');
         if (this.nameControl.valid) {
-            try {
-                await this._completeProfileService.completeName(this.nameControl.value);
-                this._profile.name = this.nameControl.value;
-                this._router.navigate(['complete-profile/gender']);
-            } catch (err) {
-                console.log('error', err);
-            }
+            this._completeProfileService.completeAvatar(this.nameControl.value).subscribe({
+                complete: () => {
+                    this._profile.name = this.nameControl.value;
+                    this._router.navigate(['complete-profile/gender']);
+                },
+                error: (error) => {
+                    console.error('Error:', error);
+                },
+            });
         }
     }
 }

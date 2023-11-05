@@ -31,17 +31,19 @@ export class CompleteProfileBioComponent implements OnInit {
         void this._authenticationService;
     }
 
-    async onSubmit() {
+    onSubmit() {
         console.log('on Submit');
         if (this.bioControl.valid) {
-            try {
-                await this._completeProfileService.completeBio(this.bioControl.value);
-                this._profile.bio = this.bioControl.value;
-                this._profile.completed_steps = CompletedSteps.Completed;
-                this._router.navigate(['/']);
-            } catch (err) {
-                console.log('error', err);
-            }
+            this._completeProfileService.completeAvatar(this.bioControl.value).subscribe({
+                complete: () => {
+                    this._profile.bio = this.bioControl.value;
+                    this._profile.completed_steps = CompletedSteps.Completed;
+                    this._router.navigate(['/']);
+                },
+                error: (error) => {
+                    console.error('Error:', error);
+                },
+            });
         }
     }
 }

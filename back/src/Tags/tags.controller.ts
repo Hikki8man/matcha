@@ -1,9 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Response } from 'express';
 import jwtStrategy from '../Auth/jwt.strategy';
 import { MyRequest } from '../Types/request';
 import tagsService from './tags.service';
-import { body } from 'express-validator';
-import CheckValidation from '../Utils/validations/checkValidationResult';
 
 class TagsController {
   public path = '/tags';

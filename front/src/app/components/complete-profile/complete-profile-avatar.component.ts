@@ -54,16 +54,18 @@ export class CompleteProfileAvatarComponent implements OnInit {
         return null;
     }
 
-    async onSubmit() {
+    onSubmit() {
         console.log('on Submit');
         if (this.avatarControl.valid) {
-            try {
-                await this._completeProfileService.completeAvatar(this.avatarControl.value);
-                this.fileInput.nativeElement.value = '';
-                this._router.navigate(['complete-profile/tags']);
-            } catch (err) {
-                console.log('error', err);
-            }
+            this._completeProfileService.completeAvatar(this.avatarControl.value).subscribe({
+                complete: () => {
+                    this.fileInput.nativeElement.value = '';
+                    this._router.navigate(['complete-profile/tags']);
+                },
+                error: (error) => {
+                    console.error('Error:', error);
+                },
+            });
         }
     }
 }

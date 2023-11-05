@@ -4,9 +4,9 @@ import { Credentials } from './authentication.sevice';
 import { Observable } from 'rxjs';
 
 export abstract class IAuthenticationService {
-    public abstract register(form: any): Promise<UserModel>;
-    public abstract login(credentials: Credentials): Promise<UserModel>;
-    public abstract refreshToken(): Promise<UserModel>;
+    public abstract register(form: any): Observable<UserModel>;
+    public abstract login(credentials: Credentials): Observable<UserModel>;
+    public abstract refreshToken(): Observable<UserModel>;
     public abstract getProfile(): ProfileModel;
     public abstract setProfile(profile: ProfileModel): void;
 

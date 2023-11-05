@@ -38,15 +38,7 @@ export class CompleteProfileTagsComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         void this._authenticationService;
-        try {
-            this.allTags = await this._profileService.getAllTags();
-            this.allTags = this.allTags.filter(
-                (tag) => !this.tagsChosen.some((pickedTag) => pickedTag.id === tag.id),
-            );
-            console.log(this.allTags);
-        } catch (err) {
-            console.log('error fetching tags', err);
-        }
+        this._profileService.getAllTags().subscribe((tags) => (this.allTags = tags));
     }
 
     onAddTag(clickedTag: Tag) {
@@ -59,14 +51,16 @@ export class CompleteProfileTagsComponent implements OnInit {
         this.allTags.push(clickedTag);
     }
 
-    async onSubmit() {
+    onSubmit() {
         console.log('on Submit');
-        try {
-            await this._completeProfileService.completeTags(this.tagsChosen);
-            this._profile.tags = this.tagsChosen;
-            this._router.navigate(['complete-profile/bio']);
-        } catch (err) {
-            console.log('error', err);
-        }
+        this._completeProfileService.completeAvatar(this.tagsChosen).subscribe({
+            complete: () => {
+                this._profile.tags = this.tagsChosen;
+                this._router.navigate(['complete-profile/bio']);
+            },
+            error: (error) => {
+                console.error('Error:', error);
+            },
+        });
     }
 }

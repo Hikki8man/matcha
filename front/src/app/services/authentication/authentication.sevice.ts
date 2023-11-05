@@ -23,15 +23,15 @@ export class AuthenticationService implements IAuthenticationService {
         private _apiService: IApiService,
     ) {}
 
-    public register(form: any): Promise<UserModel> {
+    public register(form: any): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/register', 'POST', form);
     }
 
-    public login(credentials: Credentials): Promise<UserModel> {
+    public login(credentials: Credentials): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/login', 'POST', credentials);
     }
 
-    public refreshToken(): Promise<UserModel> {
+    public refreshToken(): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/refresh', 'GET');
     }
 
@@ -42,7 +42,7 @@ export class AuthenticationService implements IAuthenticationService {
         if (isAuth) {
             return of(this._profile);
         }
-
+        //TODO
         return from(this.refreshToken()).pipe(
             map((profile) => {
                 this._profile = profile.profile;

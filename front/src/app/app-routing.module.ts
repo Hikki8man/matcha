@@ -39,6 +39,11 @@ const routes: Routes = [
         //TODO add profile not complete guard
         children: [
             {
+                pathMatch: 'full',
+                path: '',
+                redirectTo: '/',
+            },
+            {
                 path: 'name',
                 component: CompleteProfileNameComponent,
             },

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { GenderEnum } from '../../enums/gender-enum';
 import { CompletedSteps, ProfileModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
-// import { AuthenticationService } from '../authentication/authentication.sevice';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { ICompleteProfileService } from './icomplete-profile.service';
 import { Observable, of } from 'rxjs';
@@ -13,32 +12,31 @@ import { Observable, of } from 'rxjs';
 })
 export class CompleteProfileService implements ICompleteProfileService {
     constructor(
-        // private _authenticationService: AuthenticationService,
         private _router: Router,
         private _apiService: IApiService,
     ) {}
 
-    public completeName(name: string): Promise<void> {
+    public completeName(name: string): Observable<void> {
         console.log('name to complete: ', name);
         return this._apiService.callApi('profile/complete/name', 'POST', { name });
     }
 
-    public completeGender(gender: GenderEnum): Promise<void> {
+    public completeGender(gender: GenderEnum): Observable<void> {
         return this._apiService.callApi('profile/complete/gender', 'POST', { gender });
     }
 
-    public completeAvatar(file: File): Promise<void> {
+    public completeAvatar(file: File): Observable<void> {
         const formData = new FormData();
         formData.append('photo', file);
         return this._apiService.callApi('profile/complete/avatar', 'POST', formData);
     }
 
-    public async completeTags(tags: Tag[]): Promise<void> {
-        return await this._apiService.callApi('profile/complete/tags', 'POST', { tags });
+    public completeTags(tags: Tag[]): Observable<void> {
+        return this._apiService.callApi('profile/complete/tags', 'POST', { tags });
     }
 
-    public async completeBio(bio: string): Promise<void> {
-        return await this._apiService.callApi('profile/complete/bio', 'POST', { bio });
+    public completeBio(bio: string): Observable<void> {
+        return this._apiService.callApi('profile/complete/bio', 'POST', { bio });
     }
 
     public isProfileCompleteGuard(profile: ProfileModel | undefined): Observable<boolean> {

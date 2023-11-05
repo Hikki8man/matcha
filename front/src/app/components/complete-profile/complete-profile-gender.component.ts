@@ -37,16 +37,18 @@ export class CompleteProfileGenderComponent implements OnInit {
         void this._authenticationService;
     }
 
-    async onSubmit() {
+    onSubmit() {
         console.log('on Submit');
         if (this.genderControl.valid) {
-            try {
-                await this._completeProfileService.completeGender(this.genderControl.value);
-                this._profile.gender = this.genderControl.value;
-                this._router.navigate(['complete-profile/avatar']);
-            } catch (err) {
-                console.log('error', err);
-            }
+            this._completeProfileService.completeAvatar(this.genderControl.value).subscribe({
+                complete: () => {
+                    this._profile.gender = this.genderControl.value;
+                    this._router.navigate(['complete-profile/avatar']);
+                },
+                error: (error) => {
+                    console.error('Error:', error);
+                },
+            });
         }
     }
 }

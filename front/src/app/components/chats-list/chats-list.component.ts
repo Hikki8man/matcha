@@ -26,8 +26,7 @@ export class ChatsListComponent implements OnInit {
     ) {
         this._apiService
             .callApi<ConversationModel[]>('chat/conversation', 'GET')
-            .then((data) => (this.Chats = data))
-            .catch((err) => console.log(err));
+            .subscribe((conversations) => (this.Chats = conversations));
     }
 
     ngOnInit(): void {
@@ -36,7 +35,7 @@ export class ChatsListComponent implements OnInit {
     }
 
     private async init() {
-        this.CurrentUser = await this._authenticationService.getProfile();
+        this.CurrentUser = this._authenticationService.getProfile();
     }
 
     public getUserName(conversation: ConversationModel): string {

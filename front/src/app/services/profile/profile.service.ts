@@ -3,6 +3,7 @@ import { GenderEnum } from '../../enums/gender-enum';
 import { Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -10,34 +11,35 @@ import { IProfileService } from './iprofile.service';
 export class ProfileService implements IProfileService {
     constructor(private _apiService: IApiService) {}
 
-    public editName(name: string): Promise<void> {
+    public editName(name: string): Observable<void> {
         return this._apiService.callApi('profile/edit/name', 'POST', { name });
     }
 
-    public editGender(gender: GenderEnum): Promise<void> {
+    public editGender(gender: GenderEnum): Observable<void> {
         return this._apiService.callApi('profile/edit/gender', 'POST', { gender });
     }
 
-    public editAvatar(file: File): Promise<void> {
+    public editAvatar(file: File): Observable<void> {
         const formData = new FormData();
         formData.append('photo', file);
         return this._apiService.callApi('profile/edit/avatar', 'POST', formData);
     }
 
-    public async getAvatar(id: number): Promise<string> {
-        const avatar = await this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`);
-        return URL.createObjectURL(avatar);
+    public getAvatar(id: number): Observable<string> {
+        return this._apiService
+            .callApiAvatar<Blob>(`profile/${id}/avatar`)
+            .pipe(map((avatar: Blob) => URL.createObjectURL(avatar)));
     }
 
-    public async getAllTags(): Promise<Tag[]> {
-        return await this._apiService.callApi<Tag[]>('tags', 'GET');
+    public getAllTags(): Observable<Tag[]> {
+        return this._apiService.callApi<Tag[]>('tags', 'GET');
     }
 
-    public async editTags(tags: Tag[]): Promise<void> {
-        return await this._apiService.callApi('edit/tags', 'POST', { tags });
+    public editTags(tags: Tag[]): Observable<void> {
+        return this._apiService.callApi('edit/tags', 'POST', { tags });
     }
 
-    public editBio(bio: string): Promise<void> {
+    public editBio(bio: string): Observable<void> {
         return this._apiService.callApi('profile/edit/bio', 'POST', { bio });
     }
 }
