@@ -1,6 +1,7 @@
 import db from './connection';
 
 export const dropTable = async () => {
+  await db.schema.dropTableIfExists('notification');
   await db.schema.dropTableIfExists('likes');
   await db.schema.dropTableIfExists('photo');
   await db.schema.dropTableIfExists('message');

@@ -33,15 +33,16 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public ChatId: number | null = null;
     public Avatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation;
-    public CurrentUser: ProfileModel | null;
+    public CurrentUser: ProfileModel;
 
     ngOnInit(): void {
         this.listenNewMessageEvent();
         this.init();
     }
 
-    private async init() {
-        this.CurrentUser = await this._authenticationService.getProfile();
+    private init() {
+        console.log('Chat component init');
+        this.CurrentUser = this._authenticationService.getProfile();
     }
 
     ngOnDestroy(): void {
@@ -81,12 +82,16 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.ChatId) return;
         this._apiService
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
-            .subscribe((conv) => (this.Chat = conv));
+            .subscribe((conv) => {
+                this.Chat = conv;
+            });
     }
 
-    public async sendMessage(content: string): Promise<void> {
+    public sendMessage(content: string): void {
+        const receiver_id =
+            this.Chat.user_1.id === this.CurrentUser.id ? this.Chat.user_2.id : this.Chat.user_1.id;
         const message = {
-            conv_id: this.ChatId,
+            receiver_id,
             content,
         };
 

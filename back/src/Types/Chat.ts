@@ -11,3 +11,10 @@ export interface Conversation {
   user_1: number;
   user_2: number;
 }
+
+export interface ConversationLoaded {
+  id: number;
+  user_1: { id: number; name: string };
+  user_2: { id: number; name: string };
+  messages: Message[];
+}
