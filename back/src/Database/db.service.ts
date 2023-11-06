@@ -131,7 +131,7 @@ class DbService {
         // Add the selected tag to the profile's tags array
         tagsToInsert.push(availableTags.splice(randomIndex, 1)[0]);
       }
-      await tagsService.add(profile.id, tagsToInsert);
+      await tagsService.editTags(profile.id, tagsToInsert);
     }
   }
 

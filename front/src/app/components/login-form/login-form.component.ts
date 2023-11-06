@@ -44,7 +44,7 @@ export class LoginFormComponent {
         return '';
     }
 
-    public async onLogin() {
+    public onLogin() {
         this.HasErrors = !this.loginForm.valid;
         this.InvalidCredentials = false;
         if (this.loginForm.valid) {
@@ -55,17 +55,19 @@ export class LoginFormComponent {
                 password: this.loginForm.value.password!,
             };
 
-            try {
-                const response = await this._authenticationService.login(credentials);
-                this._authenticationService.setProfile(response.profile);
-                console.log('res login', response.profile);
-                this._router.navigate([AppPathEnum.Search]);
-                this.IsLoading = false;
-            } catch (err: any) {
-                console.log(err);
-                this.IsLoading = false;
-                this.InvalidCredentials = true;
-            }
+            this._authenticationService.login(credentials).subscribe({
+                next: (user) => {
+                    this._authenticationService.setProfile(user.profile);
+                    this._router.navigate([AppPathEnum.Search]);
+                    this.IsLoading = false;
+                },
+                error: (err) => {
+                    console.log(err);
+                    this.InvalidCredentials = true;
+                    this.IsLoading = false;
+                },
+                complete() {},
+            });
         }
     }
 }

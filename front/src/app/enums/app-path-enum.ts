@@ -5,5 +5,5 @@ export enum AppPathEnum {
     CompleteProfile = 'complete-profile',
     Messages = 'messages',
     Search = 'search',
-    Settings = 'settings'
+    Settings = 'settings',
 }

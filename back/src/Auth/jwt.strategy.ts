@@ -11,7 +11,7 @@ function jwtStrategy(req: MyRequest, res: Response, next: NextFunction) {
   } else {
     console.log('access token expired');
     res.clearCookie('access_token');
-    res.status(403).send('Invalid credential');
+    res.status(401).send('Access token expired');
   }
 }
 

@@ -76,18 +76,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         return this.CurrentUser?.id !== sender_id;
     }
 
-    async ngOnChanges(): Promise<void> {
+    ngOnChanges() {
         console.log('chat id', this.ChatId);
         if (!this.ChatId) return;
-        try {
-            const conv = await this._apiService.callApi<Conversation>(
-                `chat/conversation/${this.ChatId}`,
-                'GET',
-            );
-            this.Chat = conv;
-        } catch (err) {
-            console.log('error', err);
-        }
+        this._apiService
+            .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
+            .subscribe((conv) => (this.Chat = conv));
     }
 
     public async sendMessage(content: string): Promise<void> {
@@ -95,10 +89,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             conv_id: this.ChatId,
             content,
         };
-        try {
-            await this._apiService.callApi<Conversation>('chat/message/create', 'POST', message);
-        } catch (err) {
-            console.log('error', err);
-        }
+
+        this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();
     }
 }

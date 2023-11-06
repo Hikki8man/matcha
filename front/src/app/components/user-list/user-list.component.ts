@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ProfileModel } from 'src/app/models/profile.model';
+import { Component } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { ProfileModel, PublicProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 
@@ -8,36 +9,24 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss'],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
     constructor(
         private _apiService: IApiService,
         private _profileService: IProfileService,
     ) {}
 
-    public Users: any = [];
-    async ngOnInit(): Promise<void> {
-        try {
-            const profiles = await this._apiService.callApi<ProfileModel[]>('profile', 'GET');
-            const avatarPromises = profiles.map(async (profile) => {
-                try {
-                    const avatar = await this._profileService.getAvatar(profile.id);
-                    return avatar;
-                } catch (err) {
-                    console.log('Error getting avatar for profile', profile.id, err);
-                    return 'https://www.w3schools.com/howto/img_avatar.png'; // Default avatar URL
-                }
-            });
-            const avatars = await Promise.all(avatarPromises);
-
-            this.Users = profiles.map((profile, index) => ({
-                id: profile.id,
-                name: profile.name,
-                age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
-                avatar: avatars[index],
-                bio: profile.bio,
-            }));
-        } catch (error) {
-            console.error('Error fetching user profiles', error);
-        }
-    }
+    public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
+    public profiles$: Observable<PublicProfileModel[]> = this._apiService
+        .callApi<ProfileModel[]>('profile', 'GET')
+        .pipe(
+            map((profiles) => {
+                return profiles.map((profile) => ({
+                    id: profile.id,
+                    name: profile.name,
+                    age: new Date().getFullYear() - new Date(profile.birth_date).getFullYear(),
+                    bio: profile.bio,
+                    avatar: this._profileService.getAvatar(profile.id),
+                }));
+            }),
+        );
 }

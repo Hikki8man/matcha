@@ -9,7 +9,6 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
     styleUrls: ['./register-form.component.scss'],
 })
 export class RegisterFormComponent {
-
     public HeartIconUrl: string = IconUrlEnum.Heart;
     public HeartIconStyle: Record<string, string> = {
         display: 'flex',
@@ -17,9 +16,7 @@ export class RegisterFormComponent {
         width: '14px',
     };
 
-    constructor(
-        private _authService: IAuthenticationService,
-    ) {}
+    constructor(private _authService: IAuthenticationService) {}
 
     registerForm = new FormGroup({
         username: new FormControl('', { validators: [Validators.required] }),
@@ -40,14 +37,16 @@ export class RegisterFormComponent {
         return '';
     }
 
-    async onRegister() {
+    onRegister() {
         if (this.registerForm.valid) {
-            try {
-                const res = await this._authService.register(this.registerForm.value);
-                console.log(res);
-            } catch (err: any) {
-                console.log('yes errors', err.error.errors);
-            }
+            this._authService.register(this.registerForm.value).subscribe({
+                error: (err) => {
+                    console.log('error', err.error.errors);
+                },
+                complete: () => {
+                    /*redirect*/
+                },
+            });
         }
     }
 }

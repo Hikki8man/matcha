@@ -30,18 +30,6 @@ class ProfileController {
       CheckValidation,
       asyncWrapper(this.getById),
     );
-    this.router.post(
-      this.path + '/upload/photos',
-      jwtStrategy,
-      photoStorage.single('photo'),
-      asyncWrapper(this.uploadPhotos),
-    );
-    this.router.post(
-      this.path + '/upload/avatar',
-      jwtStrategy,
-      photoStorage.single('photo'),
-      asyncWrapper(this.uploadAvatar),
-    );
     this.router.get(
       this.path + '/:id/avatar',
       jwtStrategy,
@@ -72,63 +60,6 @@ class ProfileController {
   getAll = async (req: MyRequest, res: Response) => {
     const user = await profileService.get_all(req.user_id!);
     res.send(user);
-  };
-
-  uploadPhotos = async (req: MyRequest, res: Response, next: NextFunction) => {
-    // const file = req.file;
-    // console.log('file', file);
-    // if (!file) {
-    //   throw new HttpError(400, 'Please upload a file');
-    // }
-    // const result = await validateMIMEType(file.path, {
-    //   originalFilename: file.originalname,
-    //   allowMimeTypes: ['image/jpeg', 'image/png'],
-    // });
-    // if (!result.ok) {
-    //   await fs.unlink(file.path);
-    //   throw new HttpError(400, 'Invalid file type');
-    // }
-    // await photoService.insert(req.user_id!, file);
-    // console.log('result: ', result);
-    // res.send(file);
-  };
-
-  uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadAvatar(req.user_id!, req.file);
-    res.end();
-    // const file = req.file;
-
-    // if (!file) {
-    //   throw new HttpError(400, 'Please upload a file');
-    // }
-    // const result = await validateMIMEType(file.path, {
-    //   originalFilename: file.originalname,
-    //   allowMimeTypes: ['image/jpeg', 'image/png'],
-    // });
-    // if (!result.ok) {
-    //   await fs.unlink(file.path);
-    //   throw new HttpError(400, 'Invalid file type');
-    // }
-    // await photoService.insert(req.user_id!, file, true);
-    // console.log('result: ', result);
-    // res.send(file);
-  };
-
-  sendPhoto = async (req: MyRequest, res: Response) => {
-    const photo = await photoService.getProfilePhotos(req.params.id!);
-    // if (!photo) {
-    //   return res.send(undefined);
-    // }
-    // res.setHeader(
-    //   'Content-Disposition',
-    //   `attachment; filename=${photo.filename}`,
-    // );
-    // const dirname = path.resolve() + '/';
-    // res.sendFile(dirname + photo.path);
-    // res.send({
-    //   status: 'success',
-    //   message: 'File sent successfully',
-    // });
   };
 
   //TODO receive Path of avatar or stay with db call to retreive path

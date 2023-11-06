@@ -1,4 +1,5 @@
 import db from '../Database/connection';
+import { ProfileTag } from '../Types/Profile-Tag';
 import { Tag } from '../Types/Tag';
 
 class TagsService {
@@ -11,26 +12,25 @@ class TagsService {
     }
   }
 
-  async add(user_id: number, tags: Tag[]) {
+  async editTags(user_id: number, tags: Tag[]) {
     try {
-      for (const tag of tags) {
-        await db('profile_tags')
-          .insert({ profile_id: user_id, tag_id: tag.id })
+      const tagIds = tags.map((tag) => tag.id);
+      await db<ProfileTag>('profile_tags')
+        .whereNotIn('tag_id', tagIds)
+        .andWhere('profile_id', user_id)
+        .del();
+
+      const insertData = tags.map((tag) => ({
+        profile_id: user_id,
+        tag_id: tag.id,
+      }));
+      if (insertData.length) {
+        return await db<ProfileTag>('profile_tags')
+          .insert(insertData)
           .onConflict(['profile_id', 'tag_id'])
           .ignore();
       }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async remove(user_id: number, tags: Tag[]) {
-    try {
-      for (const tag of tags) {
-        await db('profile_tags')
-          .where({ profile_id: user_id, tag_id: tag.id })
-          .del();
-      }
+      return true;
     } catch (err) {
       console.error(err);
     }

@@ -5,6 +5,7 @@ import { ProfileModel } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IAuthenticationService } from './iauthentication.service';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 export interface Credentials {
     email: string;
@@ -22,33 +23,38 @@ export class AuthenticationService implements IAuthenticationService {
         private _apiService: IApiService,
     ) {}
 
-    public register(form: any): Promise<UserModel> {
+    public register(form: any): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/register', 'POST', form);
     }
 
-    public login(credentials: Credentials): Promise<UserModel> {
+    public login(credentials: Credentials): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/login', 'POST', credentials);
     }
 
-    public refreshToken(): Promise<UserModel> {
+    public refreshToken(): Observable<UserModel> {
         return this._apiService.callApi<UserModel>('auth/refresh', 'GET');
     }
 
-    public async isAuthenticatedGuard(): Promise<boolean> {
+    public isAuthenticatedGuard(): Observable<ProfileModel | undefined> {
         const isAuth = this.isAuthenticated();
-        console.log('AuthGuard: ', isAuth);
+        console.log('isAuth ===', isAuth);
+
         if (isAuth) {
-            return true;
+            return of(this._profile);
         }
-        try {
-            const profile = await this.refreshToken();
-            this.setProfile(profile.profile);
-            return true;
-        } catch (error) {
-            console.log(error);
-        }
-        this.router.navigate([AppPathEnum.Login]);
-        return false;
+        //TODO
+        return from(this.refreshToken()).pipe(
+            map((profile) => {
+                this._profile = profile.profile;
+                console.log('setting profile', this._profile);
+                return this._profile;
+            }),
+            catchError((error) => {
+                console.log('refresh expired', error);
+                this.router.navigate([AppPathEnum.Login]);
+                return of(undefined);
+            }),
+        );
     }
 
     public getProfile(): ProfileModel {

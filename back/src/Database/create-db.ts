@@ -43,6 +43,7 @@ export const createDb = async () => {
       'gender',
       'photo',
       'bio',
+      'tags',
       'completed',
     ]);
   });

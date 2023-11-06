@@ -21,6 +21,8 @@ import { IAuthenticationService } from './services/authentication/iauthenticatio
 import { IProfileService } from './services/profile/iprofile.service';
 import { ProfileService } from './services/profile/profile.service';
 import { RegisterModule } from './pages/register/register.module';
+import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+import { CompleteProfileService } from './services/complete-profile/complete-profile.service';
 
 const config: SocketIoConfig = {
     url: environment.apiBaseUrl!,
@@ -49,6 +51,7 @@ const config: SocketIoConfig = {
         { provide: IApiService, useClass: ApiService },
         { provide: IAuthenticationService, useClass: AuthenticationService },
         { provide: IProfileService, useClass: ProfileService },
+        { provide: ICompleteProfileService, useClass: CompleteProfileService },
     ],
     bootstrap: [AppComponent],
 })

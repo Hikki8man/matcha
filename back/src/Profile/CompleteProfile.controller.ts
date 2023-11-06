@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Response, NextFunction } from 'express';
 import profileService from './Profile.service';
 import HttpError from '../Utils/HttpError';
 import photoService from './Photo.service';
@@ -6,13 +6,13 @@ import jwtStrategy from '../Auth/jwt.strategy';
 import photoStorage from '../Utils/photoStorage';
 import asyncWrapper from '../Utils/asyncWrapper';
 import { MyRequest } from '../Types/request';
-import { body } from 'express-validator';
+import { body, check, param } from 'express-validator';
 import CheckValidation from '../Utils/validations/checkValidationResult';
-import { Gender } from '../Types/Profile';
+import { CompletedSteps, Gender } from '../Types/Profile';
 import tagsService from '../Tags/tags.service';
 
-class EditProfileController {
-  public path = '/profile/edit';
+class CompleteProfileController {
+  public path = '/profile/complete';
   public router = express.Router();
 
   constructor() {
@@ -37,19 +37,19 @@ class EditProfileController {
     );
 
     this.router.post(
-      this.path + '/tags',
-      jwtStrategy,
-      [body('tags').exists(), body('tags.*.id').isInt()],
-      CheckValidation,
-      this.tags,
-    );
-
-    this.router.post(
       this.path + '/bio',
       jwtStrategy,
       body('bio').isString(),
       CheckValidation,
       asyncWrapper(this.bio),
+    );
+
+    this.router.post(
+      this.path + '/tags',
+      jwtStrategy,
+      [body('tags').exists(), body('tags.*.id').isInt()],
+      CheckValidation,
+      this.tags,
     );
 
     this.router.post(
@@ -65,6 +65,7 @@ class EditProfileController {
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
     await photoService.uploadAvatar(req.user_id!, req.file);
+    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Tags);
     res.end();
   };
 
@@ -74,6 +75,7 @@ class EditProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
+    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Gender);
     res.end();
   };
 
@@ -86,6 +88,7 @@ class EditProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
+    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Photo);
     res.end();
   };
 
@@ -95,6 +98,7 @@ class EditProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
+    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Completed);
     res.end();
   };
 
@@ -104,8 +108,9 @@ class EditProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
+    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Bio);
     res.end();
   };
 }
 
-export default EditProfileController;
+export default CompleteProfileController;

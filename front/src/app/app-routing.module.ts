@@ -1,6 +1,6 @@
 import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
+// import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
 import { AppPathEnum } from './enums/app-path-enum';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -10,7 +10,13 @@ import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
 import { RegisterComponent } from './pages/register/register.component';
-// import { IProfileService } from './services/profile/iprofile.service';
+import { CompleteProfileNameComponent } from './components/complete-profile/complete-profile-name.component';
+import { CompleteProfileGenderComponent } from './components/complete-profile/complete-profile-gender.component';
+import { CompleteProfileAvatarComponent } from './components/complete-profile/complete-profile-avatar.component';
+import { CompleteProfileBioComponent } from './components/complete-profile/complete-profile-bio.component';
+import { CompleteProfileTagsComponent } from './components/complete-profile/complete-profile-tags.component';
+import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+import { mergeMap } from 'rxjs';
 
 const routes: Routes = [
     {
@@ -27,18 +33,52 @@ const routes: Routes = [
         component: RegisterComponent,
     },
     {
-        path: AppPathEnum.CompleteProfile,
+        path: 'complete-profile',
         canActivate: [() => inject(IAuthenticationService).isAuthenticatedGuard()],
-        component: CompleteProfileComponent,
+        // component: CompleteProfileComponent,
+        //TODO add profile not complete guard
+        children: [
+            {
+                pathMatch: 'full',
+                path: '',
+                redirectTo: '/',
+            },
+            {
+                path: 'name',
+                component: CompleteProfileNameComponent,
+            },
+            {
+                path: 'gender',
+                component: CompleteProfileGenderComponent,
+            },
+            {
+                path: 'avatar',
+                component: CompleteProfileAvatarComponent,
+            },
+            {
+                path: 'bio',
+                component: CompleteProfileBioComponent,
+            },
+            {
+                path: 'tags',
+                component: CompleteProfileTagsComponent,
+            },
+        ],
     },
     {
         path: '',
         component: MainLayoutComponent,
         canActivate: [
-            () => inject(IAuthenticationService).isAuthenticatedGuard(),
-            // () => inject(IProfileService).isProfileCompleteGuard(),
+            () => {
+                const authService = inject(IAuthenticationService);
+                const completedService = inject(ICompleteProfileService);
+                const guard$ = authService
+                    .isAuthenticatedGuard()
+                    .pipe(mergeMap((profile) => completedService.isProfileCompleteGuard(profile)));
+
+                return guard$;
+            },
         ],
-        // canActivateChild: [() => inject(IProfileService).isProfileCompleteGuard()],
         children: [
             {
                 path: AppPathEnum.Profile,

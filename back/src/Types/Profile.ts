@@ -8,6 +8,7 @@ export enum CompletedSteps {
   Name = 'name',
   Gender = 'gender',
   Photo = 'photo',
+  Tags = 'tags',
   Bio = 'bio',
   Completed = 'completed',
 }
