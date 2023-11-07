@@ -1,19 +1,19 @@
-import { Conversation } from '../Types/Chat';
+import { Conversation, ConversationLoaded } from '../Types/Chat';
 import HttpError from '../Utils/HttpError';
 import db from '../Database/connection';
 
 class ConversationService {
-  async isInConversation(user_id: number, conv_id: number) {
-    try {
-      return await db<Conversation>('conversation')
-        .select('*')
-        .where({ user_1: user_id, id: conv_id })
-        .orWhere({ user_2: user_id, id: conv_id })
-        .first();
-    } catch (err) {
-      return null;
-    }
-  }
+  // async isInConversation(user_id: number, conv_id: number) {
+  //   try {
+  //     return await db<Conversation>('conversation')
+  //       .select('*')
+  //       .where({ user_1: user_id, id: conv_id })
+  //       .orWhere({ user_2: user_id, id: conv_id })
+  //       .first();
+  //   } catch (err) {
+  //     return null;
+  //   }
+  // }
 
   async conversationExist(user_1: number, user_2: number) {
     try {
@@ -23,7 +23,7 @@ class ConversationService {
         .orWhere({ user_1: user_2, user_2: user_1 })
         .first();
     } catch (err) {
-      return null;
+      return undefined;
     }
   }
 
@@ -47,9 +47,9 @@ class ConversationService {
     }
   }
 
-  async getBydId(id: number) {
+  async getBydId(id: number): Promise<ConversationLoaded | undefined> {
     try {
-      return await db<Conversation>('conversation')
+      return await db<ConversationLoaded>('conversation')
         .select(
           'conversation.id',
           db.raw(
@@ -106,43 +106,5 @@ class ConversationService {
       .orWhere('user_2', id);
   }
 }
-// Conversation {
-//   id: 1,
-//   user_1: {
-//     user_id:
-//     name:
-//     birth_date:
-//     gender:
-//   },
-//   user_2: {
-//     user_id:
-//     name:
-//     birth_date:
-//     gender:
-//   },
-// }
-
-// Conversation {
-//   id: 1,
-//   user_id: 2,
-//   user_name: "name"
-// }
-
-// [
-//   {
-//     id: 1,
-//     user_id: 7,
-//     user_name: 'Alice',
-//     last_message_content: 'oui',
-//     last_message_created_at: '2023-10-20T14:57:23.441Z',
-//   },
-//   {
-//     id: 2,
-//     user_id: 1,
-//     user_name: 'Chaf',
-//     last_message_content: null,
-//     last_message_created_at: null,
-//   },
-// ];
 
 export default new ConversationService();

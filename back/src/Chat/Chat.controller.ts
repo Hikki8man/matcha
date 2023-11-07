@@ -2,13 +2,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import { MyRequest } from '../Types/request';
 import jwtStrategy from '../Auth/jwt.strategy';
 import { body, param } from 'express-validator';
-import hasFailedValidation from '../Utils/validations/checkValidationResult';
 import convService from './Conversation.service';
 import messageService from './Message.service';
 import asyncWrapper from '../Utils/asyncWrapper';
 import { Message } from '../Types/Chat';
-import App from '../app';
 import CheckValidation from '../Utils/validations/checkValidationResult';
+import SocketService from '../socket.service';
+import notificationService from '../Notification/notification.service';
 
 class ChatController {
   public path = '/chat';
@@ -43,7 +43,7 @@ class ChatController {
 
     this.router.post(
       this.path + '/message/create',
-      body('conv_id').isNumeric(),
+      body('receiver_id').isInt(),
       body('content').isString().notEmpty(),
       jwtStrategy,
       asyncWrapper(this.createMessage),
@@ -60,11 +60,17 @@ class ChatController {
 
   getConvById = async (req: MyRequest, res: Response) => {
     const conv = await convService.getBydId(req.params.id!);
-    console.log(conv);
+    console.log('get conv by id', conv);
+    if (conv) {
+      const sender_id =
+        conv.user_1.id === req.user_id! ? conv.user_2.id : conv.user_1.id;
+      notificationService.deleteMessagesNotif(req.user_id!, sender_id);
+    }
     res.send(conv);
   };
 
   getAllConv = async (req: MyRequest, res: Response) => {
+    console.log('getting all conv');
     const convs = await convService.getAll(req.user_id!);
     res.send(convs);
   };
@@ -73,10 +79,15 @@ class ChatController {
   createMessage = async (req: MyRequest, res: Response) => {
     const msg: Message = await messageService.create(
       req.user_id!,
-      req.body.conv_id,
+      req.body.receiver_id,
       req.body.content,
     );
-    App.getIO.to(`conversation-${msg.conv_id}`).emit('NewMessage', msg);
+    messageService.sendMessage(msg);
+    notificationService.sendMessageNotification(
+      msg.sender_id,
+      req.body.receiver_id,
+      msg.conv_id,
+    );
     res.end();
   };
 }

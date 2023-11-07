@@ -105,7 +105,7 @@ class DbService {
             name: body.firstname,
             birth_date: new Date(body.birth_date),
             gender: body.gender,
-            completed_steps: CompletedSteps.Name,
+            completed_steps: CompletedSteps.Completed,
             bio: body.bio,
           })
           .returning('*');

@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import db from './connection';
 
 export const createDb = async () => {
@@ -6,7 +7,7 @@ export const createDb = async () => {
   // Table creation function
   const createTableIfNotExists = async (
     tableName: string,
-    callback: (table: any) => void,
+    callback: (table: Knex.CreateTableBuilder) => void,
   ) => {
     const tableExists = await db.schema.hasTable(tableName);
     if (!tableExists) {
@@ -37,7 +38,7 @@ export const createDb = async () => {
     table.string('name').notNullable();
     table.string('bio');
     table.date('birth_date');
-    table.enum('gender', ['male', 'female', 'other']).default('male');
+    table.enum('gender', ['male', 'female', 'other']).defaultTo('male');
     table.enum('completed_steps', [
       'name',
       'gender',
@@ -73,7 +74,7 @@ export const createDb = async () => {
       .references('id')
       .inTable('profile')
       .onDelete('CASCADE');
-    table.boolean('avatar').default(false);
+    table.boolean('avatar').defaultTo(false);
     table.string('content_type');
     table.string('filename');
     table.string('path');
@@ -137,5 +138,22 @@ export const createDb = async () => {
       .inTable('tags')
       .onDelete('CASCADE');
     table.unique(['profile_id', 'tag_id']);
+  });
+
+  // Create notification table
+  await createTableIfNotExists('notification', (table) => {
+    table.increments('id').primary();
+    table
+      .integer('sender_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table
+      .integer('receiver_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table.enum('type', ['message']);
+    table.timestamp('created_at').defaultTo(db.fn.now());
   });
 };

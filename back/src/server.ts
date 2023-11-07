@@ -11,6 +11,7 @@ import { dropTable } from './Database/drop-tables';
 import EditProfileController from './Profile/EditProfile.controller';
 import TagsController from './Tags/tags.controller';
 import CompleteProfileController from './Profile/CompleteProfile.controller';
+import NotificationController from './Notification/notification.controller';
 
 dotenv.config({ path: './env' });
 
@@ -43,6 +44,7 @@ const main = async () => {
         new AuthController(),
         new ChatController(),
         new TagsController(),
+        new NotificationController(),
       ],
       8080,
     );

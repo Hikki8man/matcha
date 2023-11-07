@@ -91,6 +91,8 @@ export const initDb = async () => {
   ]);
   await profileService.like(1, 3);
   await profileService.like(3, 1);
+  await profileService.like(1, 6);
+  await profileService.like(6, 1);
   await dbService.addRandomTagsToProfiles(profiles);
   await dbService.addProfilesAvatar(profiles);
 };
