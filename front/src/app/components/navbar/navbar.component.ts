@@ -1,50 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
-import { map } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription, map } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { NotificationType, Notification } from 'src/app/models/notification.model';
-import { ApiService } from 'src/app/services/api/api.service';
+import { NotificationType } from 'src/app/models/notification.model';
+import { INotificationService } from 'src/app/services/notification/inotification.service';
 
 @Component({
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
-    public notifications: Notification[];
-    public msgNotifications: Notification[];
+export class NavbarComponent implements OnDestroy {
+    private _msgSubscription: Subscription;
+    public notificationsCount: number;
 
-    constructor(
-        private _socket: Socket,
-        private _apiService: ApiService,
-    ) {
-        this.notifications = [];
-        this.msgNotifications = [];
+    constructor(private _notificationService: INotificationService) {
+        this._msgSubscription = this._notificationService
+            .getNotifications()
+            .pipe(
+                map((notifications) =>
+                    notifications.filter((notif) => notif.type === NotificationType.Message),
+                ),
+                map((filteredNotifications) => filteredNotifications.length),
+            )
+            .subscribe((count) => (this.notificationsCount = count));
     }
 
-    ngOnInit(): void {
-        this._apiService
-            .callApi<Notification[]>('notification', 'GET')
-            .pipe(
-                map((notifs) => {
-                    notifs.forEach((notif) => {
-                        if (notif.type === NotificationType.Message) {
-                            this.msgNotifications.push(notif);
-                        } else {
-                            this.notifications.push(notif);
-                        }
-                    });
-                }),
-            )
-            .subscribe();
-
-        this._socket.fromEvent<Notification>('NewNotification').subscribe((notification) => {
-            if (notification.type === NotificationType.Message) {
-                this.msgNotifications.push(notification);
-            } else {
-                this.notifications.push(notification);
-            }
-        });
+    ngOnDestroy(): void {
+        this._msgSubscription.unsubscribe();
     }
 
     public UserIconUrl: string = IconUrlEnum.User;

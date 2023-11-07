@@ -41,7 +41,7 @@ const routes: Routes = [
             {
                 pathMatch: 'full',
                 path: '',
-                redirectTo: '/',
+                redirectTo: '/search',
             },
             {
                 path: 'name',

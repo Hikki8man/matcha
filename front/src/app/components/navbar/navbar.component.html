@@ -6,10 +6,9 @@
     <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
         <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span>Messages</span>
-        <div class="unread-messages-count" *ngIf="msgNotifications.length > 0">
-            <span>{{ msgNotifications.length > 99 ? '99+' : msgNotifications.length }}</span>
+        <div class="unread-messages-count" *ngIf="notificationsCount > 0">
+            <span>{{ notificationsCount > 99 ? '99+' : notificationsCount }}</span>
         </div>
-        
     </a>
     <a routerLink="search" class="navbar-button" [class.selected]="isCurrentPage('search')">
         <svg-icon class="navbar-icon" [Src]="UsersIconUrl" [ContentStyle]="IconStyle"></svg-icon>

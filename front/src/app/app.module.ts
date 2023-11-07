@@ -23,6 +23,8 @@ import { ProfileService } from './services/profile/profile.service';
 import { RegisterModule } from './pages/register/register.module';
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileService } from './services/complete-profile/complete-profile.service';
+import { INotificationService } from './services/notification/inotification.service';
+import { NotificationService } from './services/notification/notification.service';
 
 const config: SocketIoConfig = {
     url: environment.apiBaseUrl!,
@@ -52,6 +54,7 @@ const config: SocketIoConfig = {
         { provide: IAuthenticationService, useClass: AuthenticationService },
         { provide: IProfileService, useClass: ProfileService },
         { provide: ICompleteProfileService, useClass: CompleteProfileService },
+        { provide: INotificationService, useClass: NotificationService },
     ],
     bootstrap: [AppComponent],
 })
