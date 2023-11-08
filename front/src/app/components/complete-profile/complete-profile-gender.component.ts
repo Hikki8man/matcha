@@ -26,7 +26,7 @@ export class CompleteProfileGenderComponent implements OnInit {
         private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
-        this._profile = _authenticationService.getProfile();
+        this._profile = _authenticationService.profileValue!;
         this.genderControl = new FormControl<GenderEnum>(GenderEnum.Male, {
             validators: [Validators.required],
             nonNullable: true,

@@ -15,8 +15,8 @@ import { CompleteProfileGenderComponent } from './components/complete-profile/co
 import { CompleteProfileAvatarComponent } from './components/complete-profile/complete-profile-avatar.component';
 import { CompleteProfileBioComponent } from './components/complete-profile/complete-profile-bio.component';
 import { CompleteProfileTagsComponent } from './components/complete-profile/complete-profile-tags.component';
-import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
-import { mergeMap } from 'rxjs';
+// import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+// import { mergeMap } from 'rxjs';
 
 const routes: Routes = [
     {
@@ -70,14 +70,17 @@ const routes: Routes = [
         component: MainLayoutComponent,
         canActivate: [
             () => {
-                const authService = inject(IAuthenticationService);
-                const completedService = inject(ICompleteProfileService);
-                const guard$ = authService
-                    .isAuthenticatedGuard()
-                    .pipe(mergeMap((profile) => completedService.isProfileCompleteGuard(profile)));
-
-                return guard$;
+                inject(IAuthenticationService).isAuthenticatedGuard();
             },
+            // () => {
+            //     const authService = inject(IAuthenticationService);
+            //     const completedService = inject(ICompleteProfileService);
+            //     const guard$ = authService
+            //         .isAuthenticatedGuard()
+            //         .pipe(mergeMap((profile) => completedService.isProfileCompleteGuard(profile)));
+
+            //     return guard$;
+            // },
         ],
         children: [
             {

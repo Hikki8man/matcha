@@ -32,7 +32,7 @@ export class CompleteProfileTagsComponent implements OnInit {
         private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
-        this._profile = _authenticationService.getProfile();
+        this._profile = _authenticationService.profileValue!;
         this.tagsChosen = this._profile.tags;
     }
 

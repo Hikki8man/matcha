@@ -34,20 +34,21 @@ export class ApiService implements IApiService {
     // }
 
     public callApi<T>(url: string, method: string, body?: any): Observable<T> {
-        const req = this._http.request<T>(method, environment.apiBaseUrl + '/' + url, {
+        return this._http.request<T>(method, environment.apiBaseUrl + '/' + url, {
+            body,
+        });
+    }
+
+    public callApiWithCredentials<T>(url: string, method: string, body?: any): Observable<T> {
+        return this._http.request<T>(method, environment.apiBaseUrl + '/' + url, {
             body,
             withCredentials: true,
         });
-
-        return req;
     }
 
     public callApiAvatar<T>(url: string): Observable<T> {
-        const req = this._http.get<T>(environment.apiBaseUrl + '/' + url, {
-            withCredentials: true,
+        return this._http.get<T>(environment.apiBaseUrl + '/' + url, {
             responseType: 'blob' as 'json', // Set the responseType to 'blob'
         });
-
-        return req;
     }
 }

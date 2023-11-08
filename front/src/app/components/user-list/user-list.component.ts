@@ -10,15 +10,14 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent {
+    public profiles$: Observable<PublicProfileModel[]>;
+    public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
+
     constructor(
         private _apiService: IApiService,
-        private _profileService: IProfileService,
-    ) {}
-
-    public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
-    public profiles$: Observable<PublicProfileModel[]> = this._apiService
-        .callApi<ProfileModel[]>('profile', 'GET')
-        .pipe(
+        private _profileService: IProfileService, // private _auth: IAuthenticationService,
+    ) {
+        this.profiles$ = this._apiService.callApi<ProfileModel[]>('profile', 'GET').pipe(
             map((profiles) => {
                 return profiles.map((profile) => ({
                     id: profile.id,
@@ -29,4 +28,5 @@ export class UserListComponent {
                 }));
             }),
         );
+    }
 }

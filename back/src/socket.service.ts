@@ -26,7 +26,7 @@ class SocketService {
     const tokenPairs = cookie.split('; ');
     tokenPairs.forEach((pair) => {
       const [key, value] = pair.split('=');
-      if (key === 'access_token') {
+      if (key === 'refresh_token') {
         payload = authService.verifyToken(value);
       }
     });

@@ -20,7 +20,7 @@ export class CompleteProfileNameComponent implements OnInit {
         private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
-        this._profile = _authenticationService.getProfile();
+        this._profile = _authenticationService.profileValue!;
         this.nameControl = new FormControl(this._profile.name, {
             validators: [Validators.required],
             nonNullable: true,
