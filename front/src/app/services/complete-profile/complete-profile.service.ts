@@ -6,6 +6,7 @@ import { IApiService } from '../api/iapi.service';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { ICompleteProfileService } from './icomplete-profile.service';
 import { Observable, of } from 'rxjs';
+import { IAuthenticationService } from '../authentication/iauthentication.service';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +15,7 @@ export class CompleteProfileService implements ICompleteProfileService {
     constructor(
         private _router: Router,
         private _apiService: IApiService,
+        private _authService: IAuthenticationService,
     ) {}
 
     public completeName(name: string): Observable<void> {
@@ -39,18 +41,16 @@ export class CompleteProfileService implements ICompleteProfileService {
         return this._apiService.callApi('profile/complete/bio', 'POST', { bio });
     }
 
-    public isProfileCompleteGuard(profile: ProfileModel | undefined): Observable<boolean> {
+    public isProfileCompleteGuard(): boolean {
+        const profile = this._authService.profileValue;
         if (!profile || profile.completed_steps !== CompletedSteps.Completed) {
             if (profile) {
                 this._router.navigate([
                     AppPathEnum.CompleteProfile + '/' + profile.completed_steps,
                 ]);
             }
-
-            return of(false);
+            return false;
         }
-
-        console.log('Profile Complete Guard', profile);
-        return of(profile.completed_steps === CompletedSteps.Completed);
+        return true;
     }
 }
