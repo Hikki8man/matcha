@@ -18,20 +18,26 @@ class SocketService {
     });
   }
 
-  private validToken(cookie: string | undefined): MyJwtPayload | undefined {
-    if (!cookie) {
-      return undefined;
+  private validToken(authHeader: string | undefined): MyJwtPayload | undefined {
+    const access_token = authService.extractAccessToken(authHeader);
+    if (access_token) {
+      return authService.verifyToken(access_token);
     }
-    let payload: MyJwtPayload | undefined;
-    const tokenPairs = cookie.split('; ');
-    tokenPairs.forEach((pair) => {
-      const [key, value] = pair.split('=');
-      if (key === 'refresh_token') {
-        payload = authService.verifyToken(value);
-      }
-    });
-    return payload;
+    return undefined;
   }
+  // if (!cookie) {
+  //   return undefined;
+  // }
+  // let payload: MyJwtPayload | undefined;
+  // const tokenPairs = cookie.split('; ');
+  // tokenPairs.forEach((pair) => {
+  //   const [key, value] = pair.split('=');
+  //   if (key === 'refresh_token') {
+  //     payload = authService.verifyToken(value);
+  //   }
+  // });
+  // return payload;
+  // }
 
   private onJoinConversations(
     socket: AuthenticatedSocket,
@@ -79,8 +85,9 @@ class SocketService {
 
   public listen() {
     SocketService.server.on('connection', (socket: AuthenticatedSocket) => {
-      socket.user_id = this.validToken(socket.handshake.headers.cookie)?.id;
-      console.log('hi', socket.user_id);
+      socket.user_id = this.validToken(socket.handshake.headers.authorization)
+        ?.id;
+      console.log('hi', socket.user_id, socket.id);
       this.onDisconnect(socket);
       if (socket.user_id === undefined) {
         return socket.disconnect();

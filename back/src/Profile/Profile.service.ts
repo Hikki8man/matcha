@@ -5,8 +5,6 @@ import conversationService from '../Chat/Conversation.service';
 
 class ProfileService {
   async get_by_id(id: number) {
-    // return await db<Profile>('profile').select('*').where('id', id).first();
-    console.log('get by id', id);
     try {
       return await db<Profile>('profile')
         .select('profile.*', 'photo.path as avatar_path')

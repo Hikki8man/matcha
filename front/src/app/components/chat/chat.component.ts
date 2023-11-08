@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { INotificationService } from 'src/app/services/notification/inotification.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 export interface Message {
     content: string;
@@ -27,7 +27,7 @@ export interface Conversation {
 })
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
-        private _socket: Socket,
+        private _socketService: ISocketService,
         private _apiService: IApiService,
         private _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
@@ -61,7 +61,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onNewMessageEvent(): Subscription {
-        return this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
+        return this._socketService.onNewMessage().subscribe((message) => {
             if (this.Chat && this.Chat.id === message.conv_id) {
                 this.Chat.messages.push(message);
                 this.scrollDown();

@@ -14,6 +14,7 @@ class NotificationService {
     try {
       return await db<Notification>('notification')
         .where({ sender_id: sender_id, receiver_id: receiver_id })
+        .andWhere('type', NotificationType.Message)
         .del();
     } catch (err) {
       return undefined;
@@ -28,10 +29,6 @@ class NotificationService {
     const socketsInConv = (await SocketService.getServer
       .in(`conversation-${conversation_id}`)
       .fetchSockets()) as unknown as AuthenticatedSocket[];
-
-    socketsInConv.forEach((socket) => {
-      console.log('socket in conv: ', socket.user_id);
-    });
     const receiverIsInConv = socketsInConv.some(
       (socket) => socket.user_id === receiver_id,
     );
@@ -45,7 +42,6 @@ class NotificationService {
             type: NotificationType.Message,
           })
           .returning('*');
-        console.log('sending notif');
         SocketService.getServer
           .to(`user-${receiver_id}`)
           .emit('NewNotification', notification);

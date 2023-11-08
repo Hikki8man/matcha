@@ -54,13 +54,11 @@ class ChatController {
     const user_1: number = req.user_id!;
     const user_2: number = req.body.id;
     const conv = await convService.createConv(user_1, user_2);
-    console.log('conv', conv);
     res.send(conv);
   };
 
   getConvById = async (req: MyRequest, res: Response) => {
     const conv = await convService.getBydId(req.params.id!);
-    console.log('get conv by id', conv);
     if (conv) {
       const sender_id =
         conv.user_1.id === req.user_id! ? conv.user_2.id : conv.user_1.id;

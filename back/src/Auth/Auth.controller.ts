@@ -97,7 +97,7 @@ class AuthController {
     }
 
     const access_token = authService.signAccessToken(user_account.id);
-    console.log('access token refreshed: ', access_token);
+    // console.log('access token refreshed: ', access_token);
     res.send({ user_account, profile, access_token });
   };
 

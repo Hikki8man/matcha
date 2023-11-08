@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
@@ -7,6 +6,7 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
 import { Message } from '../chat/chat.component';
 import { Subscription, map } from 'rxjs';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 @Component({
     selector: 'chats-list',
@@ -24,8 +24,8 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     @Output() public OnChatSelected: EventEmitter<number> = new EventEmitter<number>();
 
     constructor(
-        private _socket: Socket,
         private _apiService: IApiService,
+        private _socketService: ISocketService,
         // private readonly _authenticationService: IAuthenticationService,
         private _profileService: IProfileService,
     ) {
@@ -52,12 +52,12 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         console.log('chat list component init');
         this._onNewMessageSub = this.subscribeToNewMessages();
-        this._socket.emit('JoinConversations');
+        this._socketService.socket.emit('JoinConversations');
     }
 
     ngOnDestroy(): void {
         console.log('chat list component destroy');
-        this._socket.emit('LeaveConversations');
+        this._socketService.socket.emit('LeaveConversations');
         this._onNewMessageSub.unsubscribe();
     }
 
@@ -73,7 +73,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToNewMessages() {
-        return this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
+        return this._socketService.onNewMessage().subscribe((message) => {
             const conversation = this.Chats.find((chat) => chat.id === message.conv_id);
             if (conversation) {
                 conversation.last_message_content = message.content;

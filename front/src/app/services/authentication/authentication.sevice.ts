@@ -6,7 +6,9 @@ import { IApiService } from '../api/iapi.service';
 import { IAuthenticationService } from './iauthentication.service';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
+import { Socket, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environment/environment';
+import { ISocketService } from '../socket/isocket.service';
 
 export interface Credentials {
     email: string;
@@ -24,7 +26,7 @@ export class AuthenticationService implements IAuthenticationService {
     constructor(
         private _router: Router,
         private _apiService: IApiService,
-        private _socket: Socket,
+        private _socketService: ISocketService,
     ) {
         this._userSubject = new BehaviorSubject<UserModel | undefined>(undefined);
         this.user = this._userSubject.asObservable();
@@ -49,6 +51,11 @@ export class AuthenticationService implements IAuthenticationService {
                 map((user) => {
                     this._userSubject.next(user);
                     this.startRefreshTokenTimer(user.access_token);
+                    const config: SocketIoConfig = {
+                        url: environment.apiBaseUrl,
+                        options: { extraHeaders: { authorization: `Bearer ${user.access_token}` } },
+                    };
+                    this._socketService.connect(user.access_token);
                     return user;
                 }),
             );

@@ -27,10 +27,12 @@ import { NotificationService } from './services/notification/notification.servic
 import { JwtInterceptor } from './services/api/jwt.interceptor';
 import { appInitializer } from './app.initializer';
 import { ErrorInterceptor } from './services/api/error.interceptor';
+import { SocketService } from './services/socket/socket.service';
+import { ISocketService } from './services/socket/isocket.service';
 
 const config: SocketIoConfig = {
-    url: environment.apiBaseUrl!,
-    options: { withCredentials: true, autoConnect: true },
+    url: '',
+    options: { autoConnect: false },
 };
 
 @NgModule({
@@ -56,9 +58,10 @@ const config: SocketIoConfig = {
             provide: APP_INITIALIZER,
             useFactory: appInitializer,
             multi: true,
-            deps: [IAuthenticationService],
+            deps: [IAuthenticationService, ISocketService],
         },
         { provide: IApiService, useClass: ApiService },
+        { provide: ISocketService, useClass: SocketService },
         { provide: IAuthenticationService, useClass: AuthenticationService },
         { provide: IProfileService, useClass: ProfileService },
         { provide: ICompleteProfileService, useClass: CompleteProfileService },
