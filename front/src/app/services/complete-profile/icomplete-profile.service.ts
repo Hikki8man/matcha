@@ -9,5 +9,5 @@ export abstract class ICompleteProfileService {
     public abstract completeTags(tags: Tag[]): Observable<void>;
     public abstract completeBio(bio: string): Observable<void>;
 
-    public abstract isProfileCompleteGuard(profile: ProfileModel | undefined): Observable<boolean>;
+    public abstract isProfileCompleteGuard(): boolean;
 }

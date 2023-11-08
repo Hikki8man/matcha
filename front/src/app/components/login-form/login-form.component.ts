@@ -56,13 +56,13 @@ export class LoginFormComponent {
             };
 
             this._authenticationService.login(credentials).subscribe({
-                next: (user) => {
-                    this._authenticationService.setProfile(user.profile);
+                next: () => {
+                    // this._authenticationService.setProfile(user.profile);
                     this._router.navigate([AppPathEnum.Search]);
                     this.IsLoading = false;
                 },
                 error: (err) => {
-                    console.log(err);
+                    console.log('err at login', err);
                     this.InvalidCredentials = true;
                     this.IsLoading = false;
                 },

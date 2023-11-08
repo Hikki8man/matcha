@@ -32,13 +32,17 @@ class PhotoService {
         avatar: true,
       });
     } catch (err) {
+      await fs.unlink(file.path);
       console.log('err', err);
     }
   }
 
   async getProfilePhotos(id: number) {
     try {
-      return await db<Photo>('photo').select('*').where('user_id', id);
+      return await db<Photo>('photo')
+        .select('*')
+        .where('user_id', id)
+        .andWhere('avatar', false);
     } catch (err) {
       console.log(err);
       return undefined;

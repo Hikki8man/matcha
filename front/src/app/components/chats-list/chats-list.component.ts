@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { ProfileModel } from 'src/app/models/profile.model';
@@ -26,10 +26,10 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     constructor(
         private _socket: Socket,
         private _apiService: IApiService,
-        private readonly _authenticationService: IAuthenticationService,
+        // private readonly _authenticationService: IAuthenticationService,
         private _profileService: IProfileService,
     ) {
-        this.CurrentUser = this._authenticationService.getProfile();
+        this.CurrentUser = inject(IAuthenticationService).profileValue!;
         this._apiService
             .callApi<ConversationModel[]>('chat/conversation', 'GET')
             .pipe(
@@ -75,7 +75,6 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     private subscribeToNewMessages() {
         return this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
             const conversation = this.Chats.find((chat) => chat.id === message.conv_id);
-            console.log('chat = ', conversation);
             if (conversation) {
                 conversation.last_message_content = message.content;
                 conversation.last_message_created_at = message.created_at;

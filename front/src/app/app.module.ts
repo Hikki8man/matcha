@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environment/environment';
@@ -25,6 +24,9 @@ import { ICompleteProfileService } from './services/complete-profile/icomplete-p
 import { CompleteProfileService } from './services/complete-profile/complete-profile.service';
 import { INotificationService } from './services/notification/inotification.service';
 import { NotificationService } from './services/notification/notification.service';
+import { JwtInterceptor } from './services/api/jwt.interceptor';
+import { appInitializer } from './app.initializer';
+import { ErrorInterceptor } from './services/api/error.interceptor';
 
 const config: SocketIoConfig = {
     url: environment.apiBaseUrl!,
@@ -50,11 +52,19 @@ const config: SocketIoConfig = {
         CompleteProfileModule,
     ],
     providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializer,
+            multi: true,
+            deps: [IAuthenticationService],
+        },
         { provide: IApiService, useClass: ApiService },
         { provide: IAuthenticationService, useClass: AuthenticationService },
         { provide: IProfileService, useClass: ProfileService },
         { provide: ICompleteProfileService, useClass: CompleteProfileService },
         { provide: INotificationService, useClass: NotificationService },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
     bootstrap: [AppComponent],
 })

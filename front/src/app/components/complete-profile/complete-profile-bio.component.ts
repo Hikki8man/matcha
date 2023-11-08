@@ -20,7 +20,7 @@ export class CompleteProfileBioComponent implements OnInit {
         private _completeProfileService: ICompleteProfileService,
         private _router: Router,
     ) {
-        this._profile = _authenticationService.getProfile();
+        this._profile = _authenticationService.profileValue!;
         this.bioControl = new FormControl(this._profile.bio, {
             validators: [Validators.required],
             nonNullable: true,
