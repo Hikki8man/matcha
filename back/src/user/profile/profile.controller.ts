@@ -68,7 +68,7 @@ class ProfileController {
     // res.setHeader(
     //   'Content-Disposition',
     //   `attachment; filename=${avatar.filename}`,
-    // );
+    // );alo
     const dirname = path.resolve() + '/';
     res.sendFile(dirname + avatar.path, (err) => {
       if (err && res.headersSent == false) {

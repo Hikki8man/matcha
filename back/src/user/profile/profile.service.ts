@@ -6,13 +6,13 @@ import SocketService from '../../socket.service';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
-  public likeRepo = () => db<Like>('like');
+  public likeRepo = () => db<Like>('likes');
 
   async get_by_id(id: number) {
     try {
       return await this.profileRepo()
         .select('profile.*', 'photo.path as avatar_path')
-        // .select(db.raw('MAX(photo.path) as photo_path'))
+        // .select(db.raw('MAX(photo.path) as photo_path'))alo
         .select(
           db.raw(`
             CASE
