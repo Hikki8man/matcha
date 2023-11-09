@@ -101,8 +101,8 @@ class AuthController {
     res.send({ user_account, profile, access_token });
   };
 
-  logout = async (req: Request, res: Response) => {
-    console.log('loging out');
+  logout = (req: Request, res: Response) => {
+    console.log('logged out');
     res.clearCookie('refresh_token');
     res.end();
   };

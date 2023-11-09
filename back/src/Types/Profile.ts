@@ -20,6 +20,8 @@ export interface Profile {
   bio: string;
   gender: Gender;
   completed_steps: CompletedSteps;
+  online: boolean;
+  last_online: Date;
 }
 
 export interface Like {

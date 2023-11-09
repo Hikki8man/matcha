@@ -47,6 +47,8 @@ export const createDb = async () => {
       'tags',
       'completed',
     ]);
+    table.boolean('online').defaultTo(false);
+    table.timestamp('last_online').defaultTo(null);
   });
 
   // Create likes table

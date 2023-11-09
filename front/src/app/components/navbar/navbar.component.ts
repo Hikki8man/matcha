@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription, map } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { NotificationType } from 'src/app/models/notification.model';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { INotificationService } from 'src/app/services/notification/inotification.service';
 
 @Component({
@@ -12,8 +13,22 @@ import { INotificationService } from 'src/app/services/notification/inotificatio
 export class NavbarComponent implements OnDestroy {
     private _msgSubscription: Subscription;
     public notificationsCount: number;
+    public UserIconUrl: string = IconUrlEnum.User;
+    public UsersIconUrl: string = IconUrlEnum.Users;
+    public MessageIconUrl: string = IconUrlEnum.Message;
+    public SettingsIconUrl: string = IconUrlEnum.Settings;
 
-    constructor(private _notificationService: INotificationService) {
+    public LogoutIconUrl: string = IconUrlEnum.Logout;
+    public LogoutIconStyle: Record<string, string> = {
+        display: 'flex',
+        width: '23px',
+    };
+    public IconStyle: Record<string, string> = { display: 'flex', height: '22px', width: '22px' };
+
+    constructor(
+        private _notificationService: INotificationService,
+        private authService: IAuthenticationService,
+    ) {
         this._msgSubscription = this._notificationService
             .getNotifications()
             .pipe(
@@ -29,13 +44,9 @@ export class NavbarComponent implements OnDestroy {
         this._msgSubscription.unsubscribe();
     }
 
-    public UserIconUrl: string = IconUrlEnum.User;
-    public UsersIconUrl: string = IconUrlEnum.Users;
-    public MessageIconUrl: string = IconUrlEnum.Message;
-    public SettingsIconUrl: string = IconUrlEnum.Settings;
-
-    public IconStyle: Record<string, string> = { display: 'flex', height: '22px', width: '22px' };
-
+    public logout(): void {
+        this.authService.logout();
+    }
     public isCurrentPage(page: string): boolean {
         return window.location.href.includes(page);
     }

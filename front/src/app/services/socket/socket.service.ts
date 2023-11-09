@@ -33,6 +33,10 @@ export class SocketService implements ISocketService {
         this._socket = new Socket(config);
     }
 
+    public disconnect(): void {
+        this._socket.disconnect();
+    }
+
     public onNewMessage(): Observable<Message> {
         return this._socket.fromEvent<Message>('NewMessage');
     }

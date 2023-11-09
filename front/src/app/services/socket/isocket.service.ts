@@ -6,6 +6,7 @@ import { Notification } from 'src/app/models/notification.model';
 export abstract class ISocketService {
     public abstract get socket(): Socket;
     public abstract connect(token: string): void;
+    public abstract disconnect(): void;
     public abstract sendMessage(msg: string): void;
     public abstract onNewNotification(): Observable<Notification>;
     public abstract onNewMessage(): Observable<Message>;

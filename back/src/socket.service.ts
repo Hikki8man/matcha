@@ -7,6 +7,7 @@ import db from './Database/connection';
 import { Conversation } from './Types/Chat';
 import { MyJwtPayload } from './Types/JwtPayload';
 import { AuthenticatedSocket } from './Types/AuthenticatedSocket';
+import profileService from './Profile/Profile.service';
 
 class SocketService {
   private static server: Server;
@@ -25,19 +26,6 @@ class SocketService {
     }
     return undefined;
   }
-  // if (!cookie) {
-  //   return undefined;
-  // }
-  // let payload: MyJwtPayload | undefined;
-  // const tokenPairs = cookie.split('; ');
-  // tokenPairs.forEach((pair) => {
-  //   const [key, value] = pair.split('=');
-  //   if (key === 'refresh_token') {
-  //     payload = authService.verifyToken(value);
-  //   }
-  // });
-  // return payload;
-  // }
 
   private onJoinConversations(
     socket: AuthenticatedSocket,
@@ -50,7 +38,7 @@ class SocketService {
         .orWhere('user_2', socket.user_id)
         .then((data) => {
           data.forEach((conv) => {
-            console.log('join conversation ' + conv.id);
+            console.log(socket.user_id + ' join conversation ' + conv.id);
             socket.join(`conversation-${conv.id}`);
           });
         });
@@ -69,7 +57,7 @@ class SocketService {
         .orWhere('user_2', socket.user_id)
         .then((data) => {
           data.forEach((conv) => {
-            console.log('join conversation ' + conv.id);
+            console.log(socket.user_id + ' left conversation ' + conv.id);
             socket.leave(`conversation-${conv.id}`);
           });
         });
@@ -79,6 +67,9 @@ class SocketService {
 
   private onDisconnect(socket: AuthenticatedSocket) {
     socket.on('disconnect', () => {
+      if (socket.user_id) {
+        profileService.setOffline(socket.user_id);
+      }
       console.log('user ' + socket.user_id + ' disconnected');
     });
   }
@@ -92,6 +83,7 @@ class SocketService {
       if (socket.user_id === undefined) {
         return socket.disconnect();
       }
+      profileService.setOnline(socket.user_id);
       let chatJoined: boolean = false;
       socket.join(`user-${socket.user_id}`);
       this.onJoinConversations(socket, chatJoined);

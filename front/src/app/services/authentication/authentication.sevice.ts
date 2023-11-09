@@ -63,7 +63,9 @@ export class AuthenticationService implements IAuthenticationService {
 
     public logout(): void {
         this._userSubject.next(undefined);
+        this._apiService.callApiWithCredentials('auth/logout', 'POST').subscribe();
         this.stopRefreshTokenTimer();
+        this._socketService.disconnect();
         this._router.navigate([AppPathEnum.Login]);
     }
 

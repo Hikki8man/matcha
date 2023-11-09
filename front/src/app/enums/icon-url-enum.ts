@@ -1,5 +1,4 @@
 export class IconUrlEnum {
-
     private static readonly _baseUrl: string = 'assets/icons/';
 
     public static readonly Heart: string = `${this._baseUrl}heart.svg`;
@@ -13,4 +12,5 @@ export class IconUrlEnum {
     public static readonly Users: string = `${this._baseUrl}users.svg`;
     public static readonly Visibility: string = `${this._baseUrl}visibility.svg`;
     public static readonly VisibilityOff: string = `${this._baseUrl}visibility-off.svg`;
+    public static readonly Logout: string = `${this._baseUrl}logout.svg`;
 }

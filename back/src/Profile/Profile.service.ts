@@ -101,30 +101,40 @@ class ProfileService {
     }
   }
 
-  async like(liker_id: number, liked_id: number) {
-    var liker: Like | undefined = undefined;
-    var liked: Like | undefined = undefined;
+  async setOnline(id: number) {
+    try {
+      return await db<Profile>('profile')
+        .update({ online: true })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating steps', e.message);
+      return undefined;
+    }
+  }
 
+  async setOffline(id: number) {
+    try {
+      return await db<Profile>('profile')
+        .update({ online: false, last_online: db.fn.now() })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating steps', e.message);
+      return undefined;
+    }
+  }
+
+  async like(liker_id: number, liked_id: number) {
     const existingLike: Like[] = await db<Like>('likes')
       .select('*')
       .where({ liker_id, liked_id })
       .orWhere({ liker_id: liked_id, liked_id: liker_id });
 
-    if (existingLike.length === 1) {
-      if (existingLike[0].liker_id === liker_id) {
-        liker = existingLike[0];
-      } else {
-        liked = existingLike[0];
-      }
-    } else if (existingLike.length === 2) {
-      if (existingLike[0].liker_id === liker_id) {
-        liker = existingLike[0];
-        liked = existingLike[1];
-      } else {
-        liker = existingLike[1];
-        liked = existingLike[2];
-      }
-    }
+    const liker: Like | undefined = existingLike.find(
+      (like) => like.liker_id === liker_id,
+    );
+    const liked: Like | undefined = existingLike.find(
+      (like) => like.liked_id === liked_id,
+    );
 
     // if liker didnt like already
     if (!liker) {
@@ -139,9 +149,8 @@ class ProfileService {
         await conversationService.createConv(liker_id, liked_id);
       }
       return like;
-    }
-    // else unlike
-    else {
+    } else {
+      // unlike
       await db<Like>('likes').del().where('id', liker.id);
       // if liked then Unmatch
       return; //SUCCES unlike
