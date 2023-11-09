@@ -1,6 +1,6 @@
-import { Photo } from '../types/photo';
-import db from '../database/connection';
-import HttpError from '../utils/HttpError';
+import { Photo } from '../../types/photo';
+import db from '../../database/connection';
+import HttpError from '../../utils/HttpError';
 import { validateMIMEType } from 'validate-image-type';
 import fs from 'fs/promises';
 

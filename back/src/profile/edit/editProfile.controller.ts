@@ -1,18 +1,18 @@
-import express, { Response, NextFunction } from 'express';
-import profileService from './Profile.service';
-import HttpError from '../utils/HttpError';
-import photoService from './Photo.service';
-import jwtStrategy from '../auth/jwt.strategy';
-import photoStorage from '../user/profile/photos/photoStorage';
-import asyncWrapper from '../utils/middleware/asyncWrapper';
-import { MyRequest } from '../types/request';
-import { body, check, param } from 'express-validator';
-import CheckValidation from '../utils/validations/checkValidationResult';
-import { CompletedSteps, Gender } from '../types/profile';
-import tagsService from '../tags/tags.service';
+import express, { Request, Response, NextFunction } from 'express';
+import profileService from '../profile.service';
+import HttpError from '../../utils/HttpError';
+import photoService from '../photos/photo.service';
+import jwtStrategy from '../../auth/jwt.strategy';
+import photoStorage from '../../user/profile/photos/photoStorage';
+import asyncWrapper from '../../utils/middleware/asyncWrapper';
+import { MyRequest } from '../../types/request';
+import { body } from 'express-validator';
+import CheckValidation from '../../utils/validations/checkValidationResult';
+import { Gender } from '../../types/profile';
+import tagsService from '../../tags/tags.service';
 
-class CompleteProfileController {
-  public path = '/profile/complete';
+class EditProfileController {
+  public path = '/profile/edit';
   public router = express.Router();
 
   constructor() {
@@ -37,19 +37,19 @@ class CompleteProfileController {
     );
 
     this.router.post(
-      this.path + '/bio',
-      jwtStrategy,
-      body('bio').isString(),
-      CheckValidation,
-      asyncWrapper(this.bio),
-    );
-
-    this.router.post(
       this.path + '/tags',
       jwtStrategy,
       [body('tags').exists(), body('tags.*.id').isInt()],
       CheckValidation,
       this.tags,
+    );
+
+    this.router.post(
+      this.path + '/bio',
+      jwtStrategy,
+      body('bio').isString(),
+      CheckValidation,
+      asyncWrapper(this.bio),
     );
 
     this.router.post(
@@ -65,7 +65,6 @@ class CompleteProfileController {
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
     await photoService.uploadAvatar(req.user_id!, req.file);
-    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Tags);
     res.end();
   };
 
@@ -75,7 +74,6 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Gender);
     res.end();
   };
 
@@ -88,7 +86,6 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Photo);
     res.end();
   };
 
@@ -98,7 +95,6 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Completed);
     res.end();
   };
 
@@ -108,9 +104,8 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    profileService.updateCompteteSteps(req.user_id!, CompletedSteps.Bio);
     res.end();
   };
 }
 
-export default CompleteProfileController;
+export default EditProfileController;
