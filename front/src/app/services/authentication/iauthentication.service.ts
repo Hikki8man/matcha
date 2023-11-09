@@ -9,6 +9,8 @@ export abstract class IAuthenticationService {
     public abstract register(form: any): Observable<UserModel>;
     public abstract login(credentials: Credentials): Observable<UserModel>;
     public abstract logout(): void;
-    public abstract refreshToken(): Observable<UserModel>;
+    public abstract refreshToken(): Observable<{ access_token: string }>;
+    public abstract refreshPage(): Observable<UserModel>;
     public abstract isAuthenticatedGuard(): boolean;
+    public abstract setUser(user: UserModel): void;
 }

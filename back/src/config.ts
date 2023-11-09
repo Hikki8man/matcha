@@ -1,3 +1,3 @@
-import {loadEnv} from "./Types/env";
+import { loadEnv } from './types/env';
 
 export const env = loadEnv();

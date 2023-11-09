@@ -5,6 +5,7 @@ import { environment } from 'src/environment/environment';
 import { Message } from 'src/app/components/chat/chat.component';
 import { Observable } from 'rxjs';
 import { Notification } from 'src/app/models/notification.model';
+import { ConversationModel } from 'src/app/models/conversation.model';
 
 @Injectable({
     providedIn: 'root',
@@ -43,6 +44,14 @@ export class SocketService implements ISocketService {
 
     public onNewNotification(): Observable<Notification> {
         return this._socket.fromEvent<Notification>('NewNotification');
+    }
+
+    public onUnmatch(): Observable<ConversationModel> {
+        return this._socket.fromEvent<ConversationModel>('Unmatch');
+    }
+
+    public onMatch(): Observable<ConversationModel> {
+        return this._socket.fromEvent<ConversationModel>('Match');
     }
 
     public sendMessage(msg: string): void {

@@ -2,12 +2,13 @@ import http from 'http';
 import { Server, Socket } from 'socket.io';
 import { env } from './config';
 import { JwtPayload } from 'jsonwebtoken';
-import authService from './Auth/Auth.service';
-import db from './Database/connection';
-import { Conversation } from './Types/Chat';
-import { MyJwtPayload } from './Types/JwtPayload';
-import { AuthenticatedSocket } from './Types/AuthenticatedSocket';
-import profileService from './Profile/Profile.service';
+import authService from './auth/auth.service';
+import db from './database/connection';
+import { Conversation, ConversationLoaded, Message } from './types/chat';
+import { MyJwtPayload } from './types/jwtPayload';
+import { AuthenticatedSocket } from './types/authenticatedSocket';
+import profileService from './user/profile/profile.service';
+import { Notification } from './types/notification';
 
 class SocketService {
   private static server: Server;
@@ -25,6 +26,36 @@ class SocketService {
       return authService.verifyToken(access_token);
     }
     return undefined;
+  }
+
+  public static sendMessage(message: Message) {
+    this.server
+      ?.to(`conversation-${message.conv_id}`)
+      .emit('NewMessage', message);
+  }
+
+  public static sendMatch(conversation: ConversationLoaded) {
+    this.server
+      ?.to([`user-${conversation.user_1.id}`, `user-${conversation.user_2.id}`])
+      .emit('Match', conversation);
+  }
+
+  public static sendUnmatch(conversation: Conversation) {
+    this.server
+      ?.to([`user-${conversation.user_1}`, `user-${conversation.user_2}`])
+      .emit('Unmatch', conversation);
+  }
+
+  public static sendNotification(notification: Notification) {
+    this.server
+      ?.to(`user-${notification.receiver_id}`)
+      .emit('NewNotification', notification);
+  }
+
+  public static fetchSocketFromRoom(roomId: number) {
+    return this.server
+      ?.in(`conversation-${roomId}`)
+      .fetchSockets() as unknown as Promise<AuthenticatedSocket[]>;
   }
 
   private onJoinConversations(
@@ -89,10 +120,6 @@ class SocketService {
       this.onJoinConversations(socket, chatJoined);
       this.onLeaveConversations(socket, chatJoined);
     });
-  }
-
-  public static get getServer(): Server {
-    return SocketService.server;
   }
 }
 

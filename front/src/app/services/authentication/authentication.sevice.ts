@@ -21,7 +21,7 @@ export interface Credentials {
 export class AuthenticationService implements IAuthenticationService {
     private _userSubject: BehaviorSubject<UserModel | undefined>;
     private _refreshTokenTimeout?: NodeJS.Timeout;
-    public user: Observable<UserModel | undefined>;
+    // public user: Observable<UserModel | undefined>;
 
     constructor(
         private _router: Router,
@@ -29,7 +29,7 @@ export class AuthenticationService implements IAuthenticationService {
         private _socketService: ISocketService,
     ) {
         this._userSubject = new BehaviorSubject<UserModel | undefined>(undefined);
-        this.user = this._userSubject.asObservable();
+        // this.user = this._userSubject.asObservable();
     }
 
     public get userValue(): UserModel | undefined {
@@ -69,15 +69,36 @@ export class AuthenticationService implements IAuthenticationService {
         this._router.navigate([AppPathEnum.Login]);
     }
 
-    public refreshToken(): Observable<UserModel> {
-        return this._apiService.callApiWithCredentials<UserModel>('auth/refresh', 'GET').pipe(
+    public refreshToken(): Observable<{ access_token: string }> {
+        return this._apiService
+            .callApiWithCredentials<{ access_token: string }>('auth/refresh-token', 'GET')
+            .pipe(
+                map((token) => {
+                    if (this._userSubject.value) {
+                        this._userSubject.next({
+                            ...this._userSubject.value,
+                            access_token: token.access_token,
+                        });
+                        this.startRefreshTokenTimer(token.access_token);
+                    }
+                    // this._userSubject.next(user);
+                    return token;
+                }),
+            );
+    }
+
+    public refreshPage(): Observable<UserModel> {
+        return this._apiService.callApiWithCredentials<UserModel>('auth/refresh-page', 'GET').pipe(
             map((user) => {
-                console.log('Token refreshed');
                 this._userSubject.next(user);
                 this.startRefreshTokenTimer(user.access_token);
                 return user;
             }),
         );
+    }
+
+    public setUser(user: UserModel): void {
+        this._userSubject.next(user);
     }
 
     public isAuthenticatedGuard(): boolean {

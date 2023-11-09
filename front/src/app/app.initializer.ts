@@ -7,7 +7,7 @@ export function appInitializer(
     socketService: ISocketService,
 ) {
     return () =>
-        authenticationService.refreshToken().pipe(
+        authenticationService.refreshPage().pipe(
             tap((user) => {
                 console.log('refresh');
                 socketService.connect(user.access_token);

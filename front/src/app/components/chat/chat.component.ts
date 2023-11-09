@@ -35,18 +35,25 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public ChatId: number | null = null;
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
-    public Chat: Conversation;
+    public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
     private _interlocutor_id: number;
     private _onNewMessageSubscription: Subscription;
+    private _onUnmatchSub: Subscription;
 
     ngOnInit(): void {
         this.CurrentUser = this._authenticationService.profileValue;
         this._onNewMessageSubscription = this.onNewMessageEvent();
+        this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
+            if (this.Chat && this.Chat.id === conv.id) {
+                this.Chat = undefined;
+            }
+        });
     }
 
     ngOnDestroy(): void {
         this._onNewMessageSubscription.unsubscribe();
+        this._onUnmatchSub.unsubscribe();
         console.log('Chat Component destroy');
     }
 
@@ -96,7 +103,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             receiver_id: this._interlocutor_id,
             content,
         };
-
         this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();
     }
 }
