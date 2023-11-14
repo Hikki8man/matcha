@@ -9,6 +9,12 @@ export class Validation {
   async run(builder: Builder, value: any) {
     try {
       const result = await this.validator(value);
+      console.log(
+        'Result of',
+        builder.field,
+        ": value: '" + value + "' valid:",
+        result,
+      );
       if (!result) {
         builder.addError(this.message);
       }

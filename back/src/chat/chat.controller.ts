@@ -1,14 +1,14 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { MyRequest } from '../types/request';
 import jwtStrategy from '../auth/jwt.strategy';
-import { body, param } from 'express-validator';
 import convService from './conversation.service';
 import messageService from './message.service';
 import asyncWrapper from '../utils/middleware/asyncWrapper';
 import { Message } from '../types/chat';
-import CheckValidation from '../utils/validations/checkValidationResult';
+import CheckValidation from '../utils/middleware/validator/checkValidationResult';
 import SocketService from '../socket.service';
 import notificationService from '../notification/notification.service';
+import { body, param } from '../utils/middleware/validator/check';
 
 class ChatController {
   public path = '/chat';
@@ -35,17 +35,18 @@ class ChatController {
 
     this.router.get(
       this.path + '/conversation/:id',
+      jwtStrategy,
       param('id').isInt(),
       CheckValidation,
-      jwtStrategy,
       this.getConvByIdWithMessages,
     );
 
     this.router.post(
       this.path + '/message/create',
+      jwtStrategy,
       body('receiver_id').isInt(),
       body('content').isString().notEmpty(),
-      jwtStrategy,
+      CheckValidation,
       asyncWrapper(this.createMessage),
     );
   }

@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import accountService from './account.service';
 import jwtStrategy from '../../auth/jwt.strategy';
 import { MyRequest } from '../../types/request';
+import { param } from '../../utils/middleware/validator/check';
+import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
 
 class AccountController {
   public path = '/user';
@@ -12,7 +14,13 @@ class AccountController {
   }
 
   public initializeRoutes() {
-    this.router.get(this.path + '/:id', jwtStrategy, this.getUserById);
+    this.router.get(
+      this.path + '/:id',
+      jwtStrategy,
+      param('id').isNumeric(),
+      CheckValidation,
+      this.getUserById,
+    );
   }
 
   getUserById = async (req: MyRequest, res: Response) => {

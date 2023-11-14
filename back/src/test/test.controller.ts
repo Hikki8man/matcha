@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 // import { body, isString } from '../utils/middleware/validator';
-import CheckValidation from '../utils/validations/checkValidationResult';
-import { body } from '../utils/middleware/validator/body';
+import CheckValidation from '../utils/middleware/validator/checkValidationResult';
 import { body as bodyExpress } from 'express-validator';
+import { body } from '../utils/middleware/validator/check';
 
 class TestController {
   public path = '/test';

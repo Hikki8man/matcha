@@ -8,4 +8,8 @@ export interface IValidators<Return> {
   isInt(): Return;
   isLength(options: MinMaxOptions): Return;
   isDate(): Return;
+  isNumeric(): Return;
+  notEmpty(): Return;
+  exists(): Return;
+  isArray(): Return;
 }

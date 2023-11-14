@@ -6,8 +6,8 @@ import path from 'path';
 import jwtStrategy from '../../auth/jwt.strategy';
 import asyncWrapper from '../../utils/middleware/asyncWrapper';
 import { MyRequest } from '../../types/request';
-import { body, param } from 'express-validator';
-import CheckValidation from '../../utils/validations/checkValidationResult';
+import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
+import { body, param } from '../../utils/middleware/validator/check';
 
 class ProfileController {
   public path = '/profile';
@@ -22,14 +22,14 @@ class ProfileController {
     this.router.get(
       this.path + '/:id',
       jwtStrategy,
-      param('id').isInt(),
+      param('id').isNumeric(),
       CheckValidation,
       asyncWrapper(this.getById),
     );
     this.router.get(
       this.path + '/:id/avatar',
       jwtStrategy,
-      param('id').isInt(),
+      param('id').isNumeric(),
       CheckValidation,
       asyncWrapper(this.sendAvatar),
     );

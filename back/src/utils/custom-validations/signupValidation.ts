@@ -1,6 +1,6 @@
 // import { body } from 'express-validator';
 import userService from '../../user/account/account.service';
-import { body } from '../middleware/validator/body';
+import { body } from '../middleware/validator/check';
 // import {
 //   body,
 //   custom,

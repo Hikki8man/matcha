@@ -6,11 +6,13 @@ import jwtStrategy from '../../../auth/jwt.strategy';
 import photoStorage from '../photos/photoStorage';
 import asyncWrapper from '../../../utils/middleware/asyncWrapper';
 import { MyRequest } from '../../../types/request';
-import { body } from 'express-validator';
-import CheckValidation from '../../../utils/validations/checkValidationResult';
+import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
 import { Gender } from '../../../types/profile';
 import tagsService from '../../../tags/tags.service';
 import editProfileService from './editProfile.service';
+import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
+import { body } from '../../../utils/middleware/validator/check';
+// import { body } from 'express-validator';
 
 class EditProfileController {
   public path = '/profile/edit';
@@ -40,7 +42,7 @@ class EditProfileController {
     this.router.post(
       this.path + '/tags',
       jwtStrategy,
-      [body('tags').exists(), body('tags.*.id').isInt()],
+      tagsValidation,
       CheckValidation,
       this.tags,
     );
@@ -56,9 +58,7 @@ class EditProfileController {
     this.router.post(
       this.path + '/gender',
       jwtStrategy,
-      body('gender').custom((gender) => {
-        return Object.values(Gender).includes(gender);
-      }),
+      body('gender').custom((gender) => Object.values(Gender).includes(gender)),
       CheckValidation,
       asyncWrapper(this.gender),
     );

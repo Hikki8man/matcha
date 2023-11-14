@@ -36,6 +36,10 @@ export class Validators<Chain> implements IValidators<Chain> {
     return this.custom((value) => Number.isInteger(value));
   }
 
+  isNumeric() {
+    return this.custom((value) => !isNaN(parseFloat(value)) && isFinite(value));
+  }
+
   isLength(options: MinMaxOptions) {
     const { min, max } = options;
 
@@ -65,5 +69,17 @@ export class Validators<Chain> implements IValidators<Chain> {
   isEmail() {
     const emailRegex = /\S+@\S+\.\S+/;
     return this.custom((value) => emailRegex.test(value));
+  }
+
+  notEmpty() {
+    return this.custom((value) => value.length > 0);
+  }
+
+  exists() {
+    return this.custom((value) => (value ? true : false));
+  }
+
+  isArray() {
+    return this.custom((value) => Array.isArray(value));
   }
 }

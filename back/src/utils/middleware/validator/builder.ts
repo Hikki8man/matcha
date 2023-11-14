@@ -6,7 +6,7 @@ export class Builder {
   private errors: ValidationError[] = [];
 
   constructor(
-    private field: string,
+    public field: string, //TODO to change
     private location: Location,
   ) {}
 
@@ -22,6 +22,9 @@ export class Builder {
     const value = req[this.location][this.field];
     for (const validation of this.validations) {
       await validation.run(this, value);
+      if (this.errors.length) {
+        break;
+      }
     }
     if (req.errors) {
       req.errors = req.errors.concat(this.errors);

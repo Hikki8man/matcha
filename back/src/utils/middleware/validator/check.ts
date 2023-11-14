@@ -20,3 +20,7 @@ export function check(field: string, location: Location): ValidationChain {
     // { builder },
   );
 }
+
+export const body = (field: string) => check(field, 'body');
+
+export const param = (field: string) => check(field, 'params');

@@ -4,8 +4,8 @@ import { MyRequest } from '../types/request';
 import accountService from '../user/account/account.service';
 import HttpError from '../utils/HttpError';
 import asyncWrapper from '../utils/middleware/asyncWrapper';
-import CheckValidation from '../utils/validations/checkValidationResult';
-import registerValidation from '../utils/validations/signupValidation';
+import CheckValidation from '../utils/middleware/validator/checkValidationResult';
+import registerValidation from '../utils/custom-validations/signupValidation';
 import authService from './auth.service';
 import jwtRefreshStrategy from './jwtRefresh.strategy';
 
