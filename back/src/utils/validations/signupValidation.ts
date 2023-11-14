@@ -1,18 +1,24 @@
-import { body } from 'express-validator';
+// import { body } from 'express-validator';
 import userService from '../../user/account/account.service';
+import { body } from '../middleware/validator/body';
+// import {
+//   body,
+//   custom,
+//   isDate,
+//   isEmail,
+//   isLength,
+//   isString,
+// } from '../middleware/validator';
 
-// const emailNotTaken = (email: string) => {
-//   const userfound = userService.get_by_email(email);
-//   console.log('mail taken', userfound);
-//   console.log('ret', userfound !== undefined ? false : true);
-//   return userfound ? false : true;
-// };
+const emailNotTaken = async (email: string) => {
+  const userfound = await userService.get_by_email(email);
+  return userfound ? false : true;
+};
 
-// const usernameNotTaken = async (username: string) => {
-//   const userfound = await userService.get_by_username(username);
-//   console.log('user taken', userfound);
-//   return userfound ? false : true;
-// };
+const usernameNotTaken = async (username: string) => {
+  const userfound = await userService.get_by_username(username);
+  return userfound ? false : true;
+};
 
 const isOverEighteen = (birth_date: Date) => {
   const birthDate = new Date(birth_date);
@@ -30,30 +36,14 @@ const registerValidation = [
     .isString()
     .isLength({ min: 1 })
     .withMessage('User must be at least 1 char long')
-    .custom(async (username) => {
-      const userfound = await userService.get_by_username(username);
-      console.log('mail taken', userfound);
-      console.log('ret', userfound !== undefined ? false : true);
-      if (userfound) {
-        return Promise.reject();
-      }
-      return true;
-    })
+    .custom(usernameNotTaken)
     .withMessage('Username already taken'),
   body('firstname').isString(),
   body('lastname').isString(),
   body('email')
     .isEmail()
     .withMessage('Enter a valid email')
-    .custom(async (email) => {
-      const userfound = await userService.get_by_email(email);
-      console.log('mail taken', userfound);
-      console.log('ret', userfound !== undefined ? false : true);
-      if (userfound) {
-        return Promise.reject();
-      }
-      return true;
-    })
+    .custom(emailNotTaken)
     .withMessage('Email already exist'),
   body('password')
     .isString()
@@ -65,5 +55,48 @@ const registerValidation = [
     .custom(isOverEighteen)
     .withMessage('You must be at least 18 years old.'),
 ];
+
+// const registerValidation = [
+//   body('username', [
+//     isString(),
+//     isLength({ min: 1 }, 'Username must be at least 1 char long'),
+//     custom({
+//       validator: async (username: string) => {
+//         const userfound = await userService.get_by_username(username);
+//         if (userfound) {
+//           return false;
+//         }
+//         return true;
+//       },
+//       message: 'Username already taken',
+//     }),
+//   ]),
+//   body('firstname', [isString()]),
+//   body('lastname', [isString()]),
+//   body('email', [
+//     isEmail(),
+//     custom({
+//       validator: async (email: string) => {
+//         const userfound = await userService.get_by_email(email);
+//         if (userfound) {
+//           return false;
+//         }
+//         return true;
+//       },
+//       message: 'Email already taken',
+//     }),
+//   ]),
+//   body('password', [
+//     isString(),
+//     isLength({ min: 3 }, 'Password must be at least 3 chars long'),
+//   ]),
+//   body('birth_date', [
+//     isDate(),
+//     custom({
+//       validator: isOverEighteen,
+//       message: 'You must be at least 18 years old.',
+//     }),
+//   ]),
+// ];
 
 export default registerValidation;

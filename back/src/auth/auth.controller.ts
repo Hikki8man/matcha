@@ -112,6 +112,8 @@ class AuthController {
       throw new HttpError(400, 'User not found');
     }
 
+    console.log('ip: ', req.ip);
+
     const access_token = authService.signAccessToken(account.id);
     // console.log('access token refreshed: ', access_token);
     res.send({ account, profile, access_token });

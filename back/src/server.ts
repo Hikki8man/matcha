@@ -12,6 +12,7 @@ import EditProfileController from './user/profile/edit/editProfile.controller';
 import TagsController from './tags/tags.controller';
 import CompleteProfileController from './user/profile/complete/completeProfile.controller';
 import NotificationController from './notification/notification.controller';
+import TestController from './test/test.controller';
 
 dotenv.config({ path: './env' });
 
@@ -45,6 +46,7 @@ const main = async () => {
         new ChatController(),
         new TagsController(),
         new NotificationController(),
+        new TestController(),
       ],
       8080,
     );

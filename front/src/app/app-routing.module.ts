@@ -15,12 +15,17 @@ import { CompleteProfileAvatarComponent } from './components/complete-profile/co
 import { CompleteProfileBioComponent } from './components/complete-profile/complete-profile-bio.component';
 import { CompleteProfileTagsComponent } from './components/complete-profile/complete-profile-tags.component';
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+import { CompleteProfileLocationComponent } from './components/complete-profile/complete-profile-location';
 
 const routes: Routes = [
     {
         path: '',
         redirectTo: AppPathEnum.Profile,
         pathMatch: 'full',
+    },
+    {
+        path: 'location',
+        component: CompleteProfileLocationComponent,
     },
     {
         path: AppPathEnum.Login,

@@ -4,15 +4,15 @@ import SocketService from '../socket.service';
 import { NotificationType, Notification } from '../types/notification';
 
 class NotificationService {
+  public notificationRepo = () => db<Notification>('notification');
+
   getAll(user_id: number) {
-    return db<Notification>('notification')
-      .select('*')
-      .where('receiver_id', user_id);
+    return this.notificationRepo().select('*').where('receiver_id', user_id);
   }
 
   async deleteMessagesNotif(receiver_id: number, sender_id: number) {
     try {
-      return await db<Notification>('notification')
+      return await this.notificationRepo()
         .where({ sender_id: sender_id, receiver_id: receiver_id })
         .andWhere('type', NotificationType.Message)
         .del();
@@ -26,10 +26,6 @@ class NotificationService {
     receiver_id: number,
     conversation_id: number,
   ) {
-    // const socketsInConv = (await SocketService.getServer
-    //   ?.in(`conversation-${conversation_id}`)
-    //   .fetchSockets()) as unknown as AuthenticatedSocket[];
-
     const socketsInRoom =
       await SocketService.fetchSocketFromRoom(conversation_id);
     const receiverIsInConv = socketsInRoom.some(
@@ -38,7 +34,7 @@ class NotificationService {
 
     if (!receiverIsInConv) {
       try {
-        const [notification] = await db<Notification>('notification')
+        const [notification] = await this.notificationRepo()
           .insert({
             sender_id,
             receiver_id,

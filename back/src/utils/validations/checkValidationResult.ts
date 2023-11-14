@@ -6,18 +6,17 @@ import { NextFunction, Response } from 'express';
 //   req: MyRequest,
 //   res: Response
 // ): Result<ValidationError> | boolean => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     console.log("errors: ", errors);
-//     res.status(400).send(errors);
-//     return true;
-//   }
-//   return false;
-// };
+function CheckValidation(req: any, res: Response, next: NextFunction) {
+  // const errors = validationResult(req);
+  // if (errors.isEmpty()) {
+  //   next();
+  // } else {
+  //   console.log('errors: ', errors);
+  //   res.status(400).send(errors);
+  // }
 
-function CheckValidation(req: MyRequest, res: Response, next: NextFunction) {
-  const errors = validationResult(req);
-  if (errors.isEmpty()) {
+  const errors = req.errors as ValidationError[];
+  if (!errors || (errors && errors.length === 0)) {
     next();
   } else {
     console.log('errors: ', errors);

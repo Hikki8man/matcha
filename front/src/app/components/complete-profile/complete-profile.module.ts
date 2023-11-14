@@ -7,6 +7,7 @@ import { CompleteProfileAvatarComponent } from './complete-profile-avatar.compon
 import { CompleteProfileBioComponent } from './complete-profile-bio.component';
 import { CompleteProfileTagsComponent } from './complete-profile-tags.component';
 import { InterestTagModule } from '../interest-tag/interest-tag.module';
+import { CompleteProfileLocationComponent } from './complete-profile-location';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { InterestTagModule } from '../interest-tag/interest-tag.module';
         CompleteProfileAvatarComponent,
         CompleteProfileBioComponent,
         CompleteProfileTagsComponent,
+        CompleteProfileLocationComponent,
     ],
     imports: [CommonModule, ReactiveFormsModule, InterestTagModule],
 })
