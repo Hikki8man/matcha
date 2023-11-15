@@ -4,9 +4,16 @@ export enum Gender {
   Other = 'other',
 }
 
+export enum SexualOrientation {
+  Heterosexual = 'heterosexual',
+  Homosexual = 'homosexual',
+  Bisexual = 'bisexual',
+}
+
 export enum CompletedSteps {
   Name = 'name',
   Gender = 'gender',
+  SexualOrientation = 'sexual_orientation',
   Photo = 'photo',
   Tags = 'tags',
   Bio = 'bio',
@@ -19,6 +26,7 @@ export interface Profile {
   birth_date: Date;
   bio: string;
   gender: Gender;
+  sexual_orientation: SexualOrientation;
   completed_steps: CompletedSteps;
   online: boolean;
   last_online: Date;

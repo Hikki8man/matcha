@@ -16,6 +16,7 @@ import { CompleteProfileBioComponent } from './components/complete-profile/compl
 import { CompleteProfileTagsComponent } from './components/complete-profile/complete-profile-tags.component';
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileLocationComponent } from './components/complete-profile/complete-profile-location';
+import { CompleteProfileSexualOrientationComponent } from './components/complete-profile/complete-profile-orientation.component';
 
 const routes: Routes = [
     {
@@ -53,6 +54,10 @@ const routes: Routes = [
             {
                 path: 'gender',
                 component: CompleteProfileGenderComponent,
+            },
+            {
+                path: 'sexual-orientation',
+                component: CompleteProfileSexualOrientationComponent,
             },
             {
                 path: 'avatar',

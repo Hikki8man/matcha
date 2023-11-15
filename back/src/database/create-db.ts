@@ -42,11 +42,15 @@ export const createDb = async () => {
     table.enum('completed_steps', [
       'name',
       'gender',
+      'sexual_orientation',
       'photo',
       'bio',
       'tags',
       'completed',
     ]);
+    table
+      .enum('sexual_orientation', ['heterosexual', 'homosexual', 'bisexual'])
+      .defaultTo('bisexual');
     table.boolean('online').defaultTo(false);
     table.timestamp('last_online').defaultTo(null);
   });

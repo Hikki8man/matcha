@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { GenderEnum } from '../enums/gender-enum';
+import { SexualOrientation } from '../enums/sexual-orientation-enum';
 
 export enum CompletedSteps {
     Name = 'name',
@@ -19,6 +20,7 @@ export interface ProfileModel {
     id: number;
     name: string;
     birth_date: Date;
+    sexual_orientation: SexualOrientation;
     bio: string;
     gender: GenderEnum;
     tags: Tag[];

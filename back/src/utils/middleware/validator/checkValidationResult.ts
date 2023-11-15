@@ -19,6 +19,7 @@ function CheckValidation(req: any, res: Response, next: NextFunction) {
   //   res.status(400).send(errors);
   // }
 
+  //TODO remove validation result
   const errors = validationResult(req);
   const errors2 = req.errors as ValidationError[];
   if (!errors.isEmpty()) {

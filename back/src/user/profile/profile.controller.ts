@@ -19,6 +19,7 @@ class ProfileController {
 
   public initializeRoutes() {
     this.router.get(this.path, jwtStrategy, this.getAll);
+    this.router.get(this.path + '/filter', jwtStrategy, this.getAllFiltered);
     this.router.get(
       this.path + '/:id',
       jwtStrategy,
@@ -55,6 +56,11 @@ class ProfileController {
 
   getAll = async (req: MyRequest, res: Response) => {
     const user = await profileService.get_all(req.user_id!);
+    res.send(user);
+  };
+
+  getAllFiltered = async (req: MyRequest, res: Response) => {
+    const user = await profileService.get_all_filtered(req.user_id!);
     res.send(user);
   };
 

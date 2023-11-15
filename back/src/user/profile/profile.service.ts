@@ -1,4 +1,10 @@
-import { CompletedSteps, Gender, Like, Profile } from '../../types/profile';
+import {
+  CompletedSteps,
+  Gender,
+  Like,
+  Profile,
+  SexualOrientation,
+} from '../../types/profile';
 import HttpError from '../../utils/HttpError';
 import db from '../../database/connection';
 import conversationService from '../../chat/conversation.service';
@@ -11,7 +17,8 @@ class ProfileService {
   async get_by_id(id: number) {
     try {
       return await this.profileRepo()
-        .select('profile.*', 'photo.path as avatar_path')
+        .select('profile.*')
+        // .select('photo.path as avatar_path')
         // .select(db.raw('MAX(photo.path) as photo_path'))alo
         .select(
           db.raw(`
@@ -24,14 +31,14 @@ class ProfileService {
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
-        .leftJoin('photo as photo', function () {
-          this.on('profile.id', '=', 'photo.user_id').andOn(
-            db.raw('photo.avatar = true'),
-          );
-        })
+        // .leftJoin('photo as photo', function () {
+        //   this.on('profile.id', '=', 'photo.user_id').andOn(
+        //     db.raw('photo.avatar = true'),
+        //   );
+        // })
         .where('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id', 'photo.path')
+        .groupBy('profile.id' /*, 'photo.path'*/)
         .first();
     } catch (e: any) {
       console.log('Error', e.message);
@@ -55,6 +62,66 @@ class ProfileService {
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
         .whereNot('profile.id', id)
+        .andWhere('acc.verified', true)
+        .groupBy('profile.id');
+    } catch (e: any) {
+      console.log('error in getting all profile', e.message);
+      return undefined;
+    }
+  }
+
+  async get_all_filtered(id: number) {
+    try {
+      let orientation: SexualOrientation[] = [];
+      let gender_to_match: Gender[] = [];
+      const [profile] = await this.profileRepo()
+        .select('gender', 'sexual_orientation')
+        .where('id', id);
+      if (profile.sexual_orientation === SexualOrientation.Heterosexual) {
+        orientation.push(SexualOrientation.Heterosexual);
+        orientation.push(SexualOrientation.Bisexual);
+        if (profile.gender === Gender.Male) {
+          gender_to_match.push(Gender.Female);
+        } else if (profile.gender === Gender.Female) {
+          gender_to_match.push(Gender.Male);
+        } else {
+          gender_to_match.push(Gender.Other);
+        }
+      } else if (profile.sexual_orientation === SexualOrientation.Homosexual) {
+        orientation.push(SexualOrientation.Homosexual);
+        orientation.push(SexualOrientation.Bisexual);
+        gender_to_match.push(profile.gender);
+      } else {
+        orientation.push(SexualOrientation.Bisexual);
+        gender_to_match.push(Gender.Male);
+        gender_to_match.push(Gender.Female);
+      }
+      console.log(
+        'my gender:' + profile.gender + ' gender to match:',
+        gender_to_match,
+      );
+      console.log(
+        'my orientation ' +
+          profile.sexual_orientation +
+          ' orientation to match:',
+        orientation,
+      );
+      return await this.profileRepo()
+        .select('profile.*')
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+            END as tags
+          `),
+        )
+        .leftJoin('account as acc', 'profile.id', 'acc.id')
+        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
+        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .whereIn('profile.gender', gender_to_match)
+        .whereIn('profile.sexual_orientation', orientation)
+        .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
         .groupBy('profile.id');
     } catch (e: any) {

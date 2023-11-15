@@ -7,7 +7,7 @@ import photoStorage from '../photos/photoStorage';
 import asyncWrapper from '../../../utils/middleware/asyncWrapper';
 import { MyRequest } from '../../../types/request';
 import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
-import { Gender } from '../../../types/profile';
+import { Gender, SexualOrientation } from '../../../types/profile';
 import tagsService from '../../../tags/tags.service';
 import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
@@ -62,6 +62,16 @@ class EditProfileController {
       CheckValidation,
       asyncWrapper(this.gender),
     );
+
+    this.router.post(
+      this.path + '/sexual-orientation',
+      jwtStrategy,
+      body('orientation').custom((orientation) =>
+        Object.values(SexualOrientation).includes(orientation),
+      ),
+      CheckValidation,
+      asyncWrapper(this.sexualOrientation),
+    );
   }
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
@@ -86,6 +96,18 @@ class EditProfileController {
     const updated = await editProfileService.editGender(
       req.user_id!,
       req.body.gender,
+    );
+    if (!updated) {
+      throw new HttpError(400, 'Bad request');
+    }
+    res.end();
+  };
+
+  sexualOrientation = async (req: MyRequest, res: Response) => {
+    console.log('edit body: ', req.body);
+    const updated = await editProfileService.editSexualOrientation(
+      req.user_id!,
+      req.body.orientation,
     );
     if (!updated) {
       throw new HttpError(400, 'Bad request');

@@ -36,7 +36,7 @@ class ChatController {
     this.router.get(
       this.path + '/conversation/:id',
       jwtStrategy,
-      param('id').isInt(),
+      param('id').isNumeric(),
       CheckValidation,
       this.getConvByIdWithMessages,
     );

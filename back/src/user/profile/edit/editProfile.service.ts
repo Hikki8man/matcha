@@ -1,4 +1,8 @@
-import { Gender, CompletedSteps } from '../../../types/profile';
+import {
+  Gender,
+  CompletedSteps,
+  SexualOrientation,
+} from '../../../types/profile';
 import profileService from '../profile.service';
 
 class EditProfileService {
@@ -31,6 +35,17 @@ class EditProfileService {
       return await profileService
         .profileRepo()
         .update({ gender: gender })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating name', e.message);
+      return undefined;
+    }
+  }
+  async editSexualOrientation(id: number, orientation: SexualOrientation) {
+    try {
+      return await profileService
+        .profileRepo()
+        .update({ sexual_orientation: orientation })
         .where('id', id);
     } catch (e: any) {
       console.log('error updating name', e.message);
