@@ -30,6 +30,10 @@ export interface Profile {
   completed_steps: CompletedSteps;
   online: boolean;
   last_online: Date;
+  country: string;
+  city: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface Like {

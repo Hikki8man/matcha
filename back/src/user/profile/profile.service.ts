@@ -70,39 +70,82 @@ class ProfileService {
     }
   }
 
+  toRadians(degree: number): number {
+    // Math library in JavaScript/TypeScript
+    // defines the constant
+    // Math.PI as the value of
+    // pi accurate to 15 digits
+    const oneDeg: number = Math.PI / 180;
+    return oneDeg * degree;
+  }
+
+  distance(lat1: number, long1: number, lat2: number, long2: number): number {
+    // Convert the latitudes
+    // and longitudes
+    // from degree to radians.
+    lat1 = this.toRadians(lat1);
+    long1 = this.toRadians(long1);
+    lat2 = this.toRadians(lat2);
+    long2 = this.toRadians(long2);
+
+    // Haversine Formula
+    const dLong: number = long2 - long1;
+    const dLat: number = lat2 - lat1;
+
+    let ans: number =
+      Math.pow(Math.sin(dLat / 2), 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLong / 2), 2);
+
+    ans = 2 * Math.asin(Math.sqrt(ans));
+
+    // Radius of Earth in
+    // Kilometers, R = 6371
+    // Use R = 3956 for miles
+    const R: number = 6371;
+
+    // Calculate the result
+    ans = ans * R;
+
+    return ans;
+  }
+
   async get_all_filtered(id: number) {
+    const offset = 0;
+    const max_dist = 300;
     try {
       let orientation: SexualOrientation[] = [];
       let gender_to_match: Gender[] = [];
-      const [profile] = await this.profileRepo()
-        .select('gender', 'sexual_orientation')
+      const [my_profile] = await this.profileRepo()
+        .select('gender', 'sexual_orientation', 'latitude', 'longitude')
         .where('id', id);
-      if (profile.sexual_orientation === SexualOrientation.Heterosexual) {
+      if (my_profile.sexual_orientation === SexualOrientation.Heterosexual) {
         orientation.push(SexualOrientation.Heterosexual);
         orientation.push(SexualOrientation.Bisexual);
-        if (profile.gender === Gender.Male) {
+        if (my_profile.gender === Gender.Male) {
           gender_to_match.push(Gender.Female);
-        } else if (profile.gender === Gender.Female) {
+        } else if (my_profile.gender === Gender.Female) {
           gender_to_match.push(Gender.Male);
         } else {
           gender_to_match.push(Gender.Other);
         }
-      } else if (profile.sexual_orientation === SexualOrientation.Homosexual) {
+      } else if (
+        my_profile.sexual_orientation === SexualOrientation.Homosexual
+      ) {
         orientation.push(SexualOrientation.Homosexual);
         orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(profile.gender);
+        gender_to_match.push(my_profile.gender);
       } else {
         orientation.push(SexualOrientation.Bisexual);
         gender_to_match.push(Gender.Male);
         gender_to_match.push(Gender.Female);
       }
       console.log(
-        'my gender:' + profile.gender + ' gender to match:',
+        'my gender:' + my_profile.gender + ' gender to match:',
         gender_to_match,
       );
       console.log(
         'my orientation ' +
-          profile.sexual_orientation +
+          my_profile.sexual_orientation +
           ' orientation to match:',
         orientation,
       );
@@ -123,7 +166,25 @@ class ProfileService {
         .whereIn('profile.sexual_orientation', orientation)
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id');
+        .groupBy('profile.id')
+        .offset(offset)
+        .limit(10, { skipBinding: true })
+        .then((profiles: Profile[]) => {
+          return profiles.filter((profile) => {
+            const dist = this.distance(
+              my_profile.latitude,
+              my_profile.longitude,
+              profile.latitude,
+              profile.longitude,
+            );
+            console.log(
+              'distance between me and ' + profile.name + ' : ' + dist,
+            );
+            if (dist <= max_dist) {
+              return profile;
+            }
+          });
+        });
     } catch (e: any) {
       console.log('error in getting all profile', e.message);
       return undefined;

@@ -6,7 +6,7 @@ export const initDb = async () => {
   const dbService = new DbService();
 
   await dbService.insertTags();
-  const profiles = await dbService.insertFakeUser({
+  await dbService.insertFakeUser({
     email: 'johan.c@outlook.fr',
     password: 'mdpdefou',
     username: 'chakito',
@@ -14,10 +14,10 @@ export const initDb = async () => {
     lastname: 'Papou',
     birth_date: new Date('1996-09-15'),
     gender: Gender.Male,
-    sexual_orientation: SexualOrientation.Homosexual,
+    sexual_orientation: SexualOrientation.Heterosexual,
     bio: 'HALLOOO',
   });
-  await dbService.createFakeUser(20);
+  await dbService.createFakeUsers(40);
   await profileService.like(1, 3);
   await profileService.like(3, 1);
   await profileService.like(1, 6);

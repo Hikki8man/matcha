@@ -14,6 +14,7 @@ import { female_names } from './fake-user-data/female-names';
 import { male_names } from './fake-user-data/male-names';
 import { last_names } from './fake-user-data/last-names';
 import { interestTags } from './interest-tags';
+import { locations } from './fake-user-data/locatation';
 
 const MAX_TAG_PER_USER = 10;
 
@@ -36,7 +37,7 @@ class DbService {
     await db('tags').insert(interestTags);
   }
 
-  getRandomDate() {
+  private getRandomDate() {
     const startDate = new Date('1980-01-01');
     const endDate = new Date('2004-12-31');
     const startTimestamp = startDate.getTime();
@@ -45,6 +46,11 @@ class DbService {
       startTimestamp + Math.random() * (endTimestamp - startTimestamp);
     const randomDate = new Date(randomTimestamp);
     return randomDate;
+  }
+
+  private getRandomLocation() {
+    const randomIndex = Math.floor(Math.random() * locations.length);
+    return locations[randomIndex];
   }
 
   async insertFakeUser(user: FakeUser) {
@@ -62,6 +68,7 @@ class DbService {
         ['*'],
       );
 
+      const location = this.getRandomLocation();
       const [profile] = await db<Profile>('profile')
         .insert({
           id: account.id,
@@ -70,6 +77,10 @@ class DbService {
           gender: user.gender,
           sexual_orientation: user.sexual_orientation,
           completed_steps: CompletedSteps.Completed,
+          country: location.country,
+          city: location.city,
+          latitude: location.latitude,
+          longitude: location.longitude,
           bio: user.bio,
         })
         .returning('*');
@@ -82,7 +93,7 @@ class DbService {
   private getRandomNameAndGender() {
     let gender: Gender;
     let firstname: string;
-    let coin = Math.floor(Math.random() * 2);
+    const coin = Math.floor(Math.random() * 2);
 
     if (coin === 0) {
       gender = Gender.Female;
@@ -110,13 +121,13 @@ class DbService {
   }
 
   private getUsernameAndEmail(firstname: string, lastname: string) {
-    const randomNumber = Math.floor(Math.random() * 5000);
+    const randomNumber = Math.floor(Math.random() * 7000);
     const username = firstname + randomNumber;
     const email = firstname + '.' + lastname + randomNumber + '@example.com';
     return { username, email };
   }
 
-  async createFakeUser(nb: number) {
+  async createFakeUsers(nb: number) {
     console.log(nb + ' FAKE USER ARE BEING CREATED...');
     for (let i = 0; i < nb; ++i) {
       const { firstname, lastname, gender } = this.getRandomNameAndGender();
@@ -158,11 +169,11 @@ class DbService {
     let filePath = 'src/database/fake-user-data/';
     let filename;
     if (gender === Gender.Female) {
-      const randomIndex = Math.floor(Math.random() * 10 + 1);
+      const randomIndex = Math.floor(Math.random() * 20 + 1);
       filePath += 'female-avatars/';
       filename = `female${randomIndex}.png`;
     } else {
-      const randomIndex = Math.floor(Math.random() * 10 + 1);
+      const randomIndex = Math.floor(Math.random() * 20 + 1);
       filePath += 'male-avatars/';
       filename = `male${randomIndex}.png`;
     }

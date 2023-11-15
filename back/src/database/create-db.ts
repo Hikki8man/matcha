@@ -51,6 +51,10 @@ export const createDb = async () => {
     table
       .enum('sexual_orientation', ['heterosexual', 'homosexual', 'bisexual'])
       .defaultTo('bisexual');
+    table.string('country');
+    table.string('city');
+    table.double('latitude');
+    table.double('longitude');
     table.boolean('online').defaultTo(false);
     table.timestamp('last_online').defaultTo(null);
   });

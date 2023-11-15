@@ -199,7 +199,6 @@ export const last_names = [
   'PASQUIER',
   'CARLIER',
   'LAPORTE',
-
   'GROS',
   'BUISSON',
   'OLLIVIER',
