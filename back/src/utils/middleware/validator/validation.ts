@@ -8,14 +8,12 @@ export class Validation {
 
   async run(builder: Builder, value: any) {
     try {
+      let can_fail = false;
+      if (builder.isOptional() && (value === undefined || value === null)) {
+        can_fail = true;
+      }
       const result = await this.validator(value);
-      // console.log(
-      //   'Result of',
-      //   builder.field,
-      //   ": value: '" + value + "' valid:",
-      //   result,
-      // );
-      if (!result) {
+      if (!result && !can_fail) {
         builder.addError(this.message);
       }
     } catch (err) {

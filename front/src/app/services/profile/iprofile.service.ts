@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { GenderEnum } from 'src/app/enums/gender-enum';
-import { Tag } from 'src/app/models/profile.model';
+import { FiltersModel } from 'src/app/models/filters.model';
+import { PublicProfileModel, Tag } from 'src/app/models/profile.model';
 
 export abstract class IProfileService {
     public abstract editName(name: string): Observable<void>;
@@ -10,4 +11,5 @@ export abstract class IProfileService {
     public abstract getAvatar(id: number): Observable<string>;
     public abstract getAllTags(): Observable<Tag[]>;
     public abstract editTags(tags: Tag[]): Observable<void>;
+    public abstract getProfilesFiltered(filter: FiltersModel): Observable<PublicProfileModel[]>;
 }

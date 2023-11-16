@@ -28,6 +28,11 @@ export class Validators<Chain> implements IValidators<Chain> {
     return this.addValidator(new Validation(validator));
   }
 
+  optional() {
+    this.builder.setOptional(true);
+    return this.chain;
+  }
+
   isString() {
     return this.custom((value) => typeof value === 'string');
   }

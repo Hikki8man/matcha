@@ -29,6 +29,8 @@ import { appInitializer } from './app.initializer';
 import { ErrorInterceptor } from './services/api/error.interceptor';
 import { SocketService } from './services/socket/socket.service';
 import { ISocketService } from './services/socket/isocket.service';
+import { SearchFilterService } from './services/search-filter/search-filter.service';
+import { ISearchFilterService } from './services/search-filter/isearch-filter.service';
 
 const config: SocketIoConfig = {
     url: '',
@@ -66,6 +68,7 @@ const config: SocketIoConfig = {
         { provide: IProfileService, useClass: ProfileService },
         { provide: ICompleteProfileService, useClass: CompleteProfileService },
         { provide: INotificationService, useClass: NotificationService },
+        { provide: ISearchFilterService, useClass: SearchFilterService },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],

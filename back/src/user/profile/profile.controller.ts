@@ -21,10 +21,16 @@ class ProfileController {
 
   public initializeRoutes() {
     this.router.get(this.path, jwtStrategy, this.getAll);
-    this.router.get(
+    this.router.post(
       this.path + '/filter',
       jwtStrategy,
       body('max_dist').isInt(),
+      body('min_age').isInt(),
+      body('max_age').isInt(),
+      body('offset').isInt(),
+      body('order_by').custom((order) =>
+        Object.values(OrderBy).includes(order),
+      ),
       tagsValidation('common_tags'),
       CheckValidation,
       this.getAllFiltered,
@@ -69,13 +75,7 @@ class ProfileController {
   };
 
   getAllFiltered = async (req: MyRequest, res: Response) => {
-    console.log('body', req.body);
-    const filter: Filter = {
-      common_tags: [],
-      offset: 0,
-      order_by: OrderBy.AgeYounger,
-      max_dist: 600,
-    };
+    // console.log('body', req.body);
     const user = await profileService.get_all_filtered(req.user_id!, req.body);
     res.send(user);
   };

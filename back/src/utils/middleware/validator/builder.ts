@@ -4,14 +4,23 @@ import { Validation } from './validation';
 export class Builder {
   private validations: Validation[] = [];
   private errors: ValidationError[] = [];
+  private optional: boolean = false;
 
   constructor(
-    public field: string, //TODO to change
+    private field: string,
     private location: Location,
   ) {}
 
   addValidator(validator: Validation) {
     this.validations.push(validator);
+  }
+
+  isOptional() {
+    return this.optional;
+  }
+
+  setOptional(value: boolean) {
+    this.optional = value;
   }
 
   addError(message: string) {

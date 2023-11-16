@@ -12,4 +12,5 @@ export interface IValidators<Return> {
   notEmpty(): Return;
   exists(): Return;
   isArray(): Return;
+  optional(): Return;
 }

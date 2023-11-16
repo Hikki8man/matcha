@@ -32,7 +32,13 @@ export interface PublicProfileModel {
     name: string;
     age: number;
     bio: string;
-    // gender: GenderEnum;
-    // tags: Tag[];
+    tags: Tag[];
+    gender: GenderEnum;
+    sexual_orientation: SexualOrientation;
+    country: string;
+    city: string;
+    distance: number;
+    online: boolean;
+    last_online?: Date;
     avatar: Observable<string>;
 }

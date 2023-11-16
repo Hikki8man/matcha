@@ -124,6 +124,7 @@ class ProfileService {
             END as tags
           `),
         )
+
         .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
         .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
         .where('profile.id', id)
@@ -137,8 +138,18 @@ class ProfileService {
           my_profile.gender,
         );
 
-      const profileQuery = this.profileRepo()
-        .select('profile.*')
+      const profilesQuery = this.profileRepo()
+        .select(
+          'profile.id',
+          'profile.name',
+          'profile.bio',
+          'profile.gender',
+          'profile.sexual_orientation',
+          'profile.country',
+          'profile.city',
+          'profile.online',
+          'profile.last_online',
+        )
         .select(
           db.raw(`
             CASE
@@ -152,6 +163,11 @@ class ProfileService {
             `COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) as matching_tags_count`,
             [my_tags],
           ),
+        )
+        .select(
+          db.raw(`
+              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+          `),
         )
         .select(
           db.raw(
@@ -174,40 +190,55 @@ class ProfileService {
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
         .andWhere('profile.completed_steps', CompletedSteps.Completed)
-        .andWhereRaw(
+        .andHaving(
+          db.raw('EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date)) >= ?', [
+            filter.min_age,
+          ]),
+        );
+      if (filter.max_dist < 1000) {
+        profilesQuery.andWhereRaw(
           `
-          ROUND(
-            ST_DistanceSphere(
-              ST_MakePoint(?, ?),
-              ST_MakePoint(profile.longitude, profile.latitude)
-            ) / 1000
-          )::INTEGER <= ?
-        `,
+            ROUND(
+              ST_DistanceSphere(
+                ST_MakePoint(?, ?),
+                ST_MakePoint(profile.longitude, profile.latitude)
+              ) / 1000
+            )::INTEGER <= ?
+          `,
           [my_profile.longitude, my_profile.latitude, filter.max_dist],
         );
+      }
+
+      if (filter.max_age < 60) {
+        profilesQuery.andHaving(
+          db.raw('EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date)) <= ?', [
+            filter.max_age,
+          ]),
+        );
+      }
 
       if (common_tags.length > 0) {
-        profileQuery.havingRaw(
+        profilesQuery.havingRaw(
           'COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) > 0',
           [common_tags],
         );
       }
 
       switch (filter.order_by) {
-        case OrderBy.AgeOlder:
-          profileQuery.orderBy('birth_date', 'asc');
+        case OrderBy.Oldest:
+          profilesQuery.orderBy('birth_date', 'asc');
           break;
-        case OrderBy.AgeYounger:
-          profileQuery.orderBy('birth_date', 'desc');
+        case OrderBy.Youngest:
+          profilesQuery.orderBy('birth_date', 'desc');
           break;
         case OrderBy.CommonTags:
-          profileQuery.orderBy('matching_tags_count', 'desc');
+          profilesQuery.orderBy('matching_tags_count', 'desc');
           break;
         default:
-          profileQuery.orderBy('distance', 'asc');
+          profilesQuery.orderBy('distance', 'asc');
       }
 
-      return await profileQuery
+      return await profilesQuery
         .groupBy('profile.id')
         .offset(filter.offset)
         .limit(10, { skipBinding: true });
