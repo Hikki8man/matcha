@@ -4,6 +4,8 @@ import db from './connection';
 export const createDb = async () => {
   console.log('INITIALISATION OF DATABASE');
 
+  let db_exist: boolean = false;
+
   // Table creation function
   const createTableIfNotExists = async (
     tableName: string,
@@ -12,6 +14,8 @@ export const createDb = async () => {
     const tableExists = await db.schema.hasTable(tableName);
     if (!tableExists) {
       await db.schema.createTable(tableName, callback);
+    } else {
+      db_exist = true;
     }
   };
 
@@ -166,4 +170,5 @@ export const createDb = async () => {
     table.enum('type', ['message']);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
+  return db_exist;
 };

@@ -42,7 +42,7 @@ class EditProfileController {
     this.router.post(
       this.path + '/tags',
       jwtStrategy,
-      tagsValidation,
+      tagsValidation('tags'),
       CheckValidation,
       this.tags,
     );

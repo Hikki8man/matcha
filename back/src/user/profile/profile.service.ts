@@ -9,6 +9,9 @@ import HttpError from '../../utils/HttpError';
 import db from '../../database/connection';
 import conversationService from '../../chat/conversation.service';
 import SocketService from '../../socket.service';
+import { Tag } from '../../types/tag';
+import { ProfileTag } from '../../types/profileTag';
+import { Filter, OrderBy } from '../../types/filter';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
@@ -70,86 +73,48 @@ class ProfileService {
     }
   }
 
-  toRadians(degree: number): number {
-    // Math library in JavaScript/TypeScript
-    // defines the constant
-    // Math.PI as the value of
-    // pi accurate to 15 digits
-    const oneDeg: number = Math.PI / 180;
-    return oneDeg * degree;
+  private getOrientationAndGenderToMatch(
+    sexual_orientation: SexualOrientation,
+    gender: Gender,
+  ) {
+    let orientation: SexualOrientation[] = [];
+    let gender_to_match: Gender[] = [];
+
+    switch (sexual_orientation) {
+      case SexualOrientation.Heterosexual:
+        orientation.push(
+          SexualOrientation.Heterosexual,
+          SexualOrientation.Bisexual,
+        );
+        gender_to_match.push(
+          gender === Gender.Male
+            ? Gender.Female
+            : gender === Gender.Female
+            ? Gender.Male
+            : Gender.Other,
+        );
+        break;
+
+      case SexualOrientation.Homosexual:
+        orientation.push(
+          SexualOrientation.Homosexual,
+          SexualOrientation.Bisexual,
+        );
+        gender_to_match.push(gender);
+        break;
+
+      default:
+        orientation.push(SexualOrientation.Bisexual);
+        gender_to_match.push(Gender.Male, Gender.Female);
+        break;
+    }
+    return { orientation, gender_to_match };
   }
 
-  distance(lat1: number, long1: number, lat2: number, long2: number): number {
-    // Convert the latitudes
-    // and longitudes
-    // from degree to radians.
-    lat1 = this.toRadians(lat1);
-    long1 = this.toRadians(long1);
-    lat2 = this.toRadians(lat2);
-    long2 = this.toRadians(long2);
-
-    // Haversine Formula
-    const dLong: number = long2 - long1;
-    const dLat: number = lat2 - lat1;
-
-    let ans: number =
-      Math.pow(Math.sin(dLat / 2), 2) +
-      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dLong / 2), 2);
-
-    ans = 2 * Math.asin(Math.sqrt(ans));
-
-    // Radius of Earth in
-    // Kilometers, R = 6371
-    // Use R = 3956 for miles
-    const R: number = 6371;
-
-    // Calculate the result
-    ans = ans * R;
-
-    return ans;
-  }
-
-  async get_all_filtered(id: number) {
-    const offset = 0;
-    const max_dist = 300;
+  async get_all_filtered(id: number, filter: Filter) {
+    const common_tags = filter.common_tags.map((tag) => tag.id);
     try {
-      let orientation: SexualOrientation[] = [];
-      let gender_to_match: Gender[] = [];
-      const [my_profile] = await this.profileRepo()
-        .select('gender', 'sexual_orientation', 'latitude', 'longitude')
-        .where('id', id);
-      if (my_profile.sexual_orientation === SexualOrientation.Heterosexual) {
-        orientation.push(SexualOrientation.Heterosexual);
-        orientation.push(SexualOrientation.Bisexual);
-        if (my_profile.gender === Gender.Male) {
-          gender_to_match.push(Gender.Female);
-        } else if (my_profile.gender === Gender.Female) {
-          gender_to_match.push(Gender.Male);
-        } else {
-          gender_to_match.push(Gender.Other);
-        }
-      } else if (
-        my_profile.sexual_orientation === SexualOrientation.Homosexual
-      ) {
-        orientation.push(SexualOrientation.Homosexual);
-        orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(my_profile.gender);
-      } else {
-        orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(Gender.Male);
-        gender_to_match.push(Gender.Female);
-      }
-      console.log(
-        'my gender:' + my_profile.gender + ' gender to match:',
-        gender_to_match,
-      );
-      console.log(
-        'my orientation ' +
-          my_profile.sexual_orientation +
-          ' orientation to match:',
-        orientation,
-      );
-      return await this.profileRepo()
+      const my_profile = await this.profileRepo()
         .select('profile.*')
         .select(
           db.raw(`
@@ -159,32 +124,93 @@ class ProfileService {
             END as tags
           `),
         )
+        .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
+        .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
+        .where('profile.id', id)
+        .groupBy('profile.id')
+        .first();
+
+      const my_tags = my_profile.tags.map((tag: Tag) => tag.id);
+      const { orientation, gender_to_match } =
+        this.getOrientationAndGenderToMatch(
+          my_profile.sexual_orientation,
+          my_profile.gender,
+        );
+
+      const profileQuery = this.profileRepo()
+        .select('profile.*')
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+            END as tags
+          `),
+        )
+        .select(
+          db.raw(
+            `COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) as matching_tags_count`,
+            [my_tags],
+          ),
+        )
+        .select(
+          db.raw(
+            `
+            ROUND(
+              ST_DistanceSphere(
+                ST_MakePoint(?, ?),
+                ST_MakePoint(profile.longitude, profile.latitude)
+              ) / 1000
+            )::INTEGER as distance
+          `,
+            [my_profile.longitude, my_profile.latitude],
+          ),
+        )
         .leftJoin('account as acc', 'profile.id', 'acc.id')
-        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
-        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
+        .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
         .whereIn('profile.gender', gender_to_match)
         .whereIn('profile.sexual_orientation', orientation)
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
+        .andWhere('profile.completed_steps', CompletedSteps.Completed)
+        .andWhereRaw(
+          `
+          ROUND(
+            ST_DistanceSphere(
+              ST_MakePoint(?, ?),
+              ST_MakePoint(profile.longitude, profile.latitude)
+            ) / 1000
+          )::INTEGER <= ?
+        `,
+          [my_profile.longitude, my_profile.latitude, filter.max_dist],
+        );
+
+      if (common_tags.length > 0) {
+        profileQuery.havingRaw(
+          'COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) > 0',
+          [common_tags],
+        );
+      }
+
+      switch (filter.order_by) {
+        case OrderBy.AgeOlder:
+          profileQuery.orderBy('birth_date', 'asc');
+          break;
+        case OrderBy.AgeYounger:
+          profileQuery.orderBy('birth_date', 'desc');
+          break;
+        case OrderBy.CommonTags:
+          profileQuery.orderBy('matching_tags_count', 'desc');
+          break;
+        default:
+          profileQuery.orderBy('distance', 'asc');
+      }
+
+      return await profileQuery
         .groupBy('profile.id')
-        .offset(offset)
-        .limit(10, { skipBinding: true })
-        .then((profiles: Profile[]) => {
-          return profiles.filter((profile) => {
-            const dist = this.distance(
-              my_profile.latitude,
-              my_profile.longitude,
-              profile.latitude,
-              profile.longitude,
-            );
-            console.log(
-              'distance between me and ' + profile.name + ' : ' + dist,
-            );
-            if (dist <= max_dist) {
-              return profile;
-            }
-          });
-        });
+        .offset(filter.offset)
+        .limit(10, { skipBinding: true });
     } catch (e: any) {
       console.log('error in getting all profile', e.message);
       return undefined;

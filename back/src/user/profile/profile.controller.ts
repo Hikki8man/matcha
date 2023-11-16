@@ -8,6 +8,8 @@ import asyncWrapper from '../../utils/middleware/asyncWrapper';
 import { MyRequest } from '../../types/request';
 import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
 import { body, param } from '../../utils/middleware/validator/check';
+import { Filter, OrderBy } from '../../types/filter';
+import { tagsValidation } from '../../utils/custom-validations/tagsValidation';
 
 class ProfileController {
   public path = '/profile';
@@ -19,7 +21,14 @@ class ProfileController {
 
   public initializeRoutes() {
     this.router.get(this.path, jwtStrategy, this.getAll);
-    this.router.get(this.path + '/filter', jwtStrategy, this.getAllFiltered);
+    this.router.get(
+      this.path + '/filter',
+      jwtStrategy,
+      body('max_dist').isInt(),
+      tagsValidation('common_tags'),
+      CheckValidation,
+      this.getAllFiltered,
+    );
     this.router.get(
       this.path + '/:id',
       jwtStrategy,
@@ -60,7 +69,14 @@ class ProfileController {
   };
 
   getAllFiltered = async (req: MyRequest, res: Response) => {
-    const user = await profileService.get_all_filtered(req.user_id!);
+    console.log('body', req.body);
+    const filter: Filter = {
+      common_tags: [],
+      offset: 0,
+      order_by: OrderBy.AgeYounger,
+      max_dist: 600,
+    };
+    const user = await profileService.get_all_filtered(req.user_id!, req.body);
     res.send(user);
   };
 

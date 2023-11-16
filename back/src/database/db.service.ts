@@ -4,7 +4,7 @@ import {
   Profile,
   SexualOrientation,
 } from '../types/profile';
-import { Tag } from '../types/Tag';
+import { Tag } from '../types/tag';
 import db from './connection';
 import bcrypt from 'bcrypt';
 import tagsService from '../tags/tags.service';

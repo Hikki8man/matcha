@@ -1,6 +1,6 @@
 import db from '../database/connection';
 import { ProfileTag } from '../types/profileTag';
-import { Tag } from '../types/Tag';
+import { Tag } from '../types/tag';
 
 class TagsService {
   public tagRepo = () => db<Tag>('tags');
