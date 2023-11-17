@@ -75,7 +75,7 @@ class ProfileController {
   };
 
   getAllFiltered = async (req: MyRequest, res: Response) => {
-    // console.log('body', req.body);
+    console.log('body', req.body);
     const user = await profileService.get_all_filtered(req.user_id!, req.body);
     res.send(user);
   };

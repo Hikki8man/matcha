@@ -31,6 +31,5 @@ export class SearchFiltersComponent {
 
     public handleFiltersUpdate() {
         this._searchFilterService.updateFilters(this.Filters);
-        console.log('filters updated !');
     }
 }

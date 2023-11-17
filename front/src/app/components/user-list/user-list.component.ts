@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
@@ -9,9 +9,10 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss'],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
     public profiles$: Observable<PublicProfileModel[]>;
     public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
+    private profileSub: Subscription;
 
     constructor(
         private _profileService: IProfileService,
@@ -19,9 +20,13 @@ export class UserListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._searchFilterService.filters.subscribe((filter) => {
+        this.profileSub = this._searchFilterService.filters.subscribe((filter) => {
             console.log('filter update: ', filter);
             this.profiles$ = this._profileService.getProfilesFiltered(filter);
         });
+    }
+
+    ngOnDestroy(): void {
+        this.profileSub.unsubscribe();
     }
 }
