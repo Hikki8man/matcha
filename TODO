@@ -1,2 +1,5 @@
 add boolean to revoke token on logout and check in jwtstrategy/refreshstrategy if user is valid
 isProfileComplete middleware
+Strong password validation
+cant connect if acc is not verified
+when like/view notification done, exclude blocked

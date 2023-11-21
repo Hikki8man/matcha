@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OrderBy } from 'src/app/enums/order-by-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
 
@@ -11,6 +12,7 @@ export class SearchFiltersComponent {
     constructor(private _searchFilterService: ISearchFilterService) {}
 
     public Filters: FiltersModel = new FiltersModel();
+    public OrderByEnum = OrderBy;
 
     public formatAgeLabel(value: number) {
         if (value === 60) {
@@ -27,6 +29,11 @@ export class SearchFiltersComponent {
         } else {
             return `${value.toString()}km`;
         }
+    }
+
+    public setOrderBy(order: OrderBy) {
+        this.Filters.OrderBy = order;
+        this.handleFiltersUpdate();
     }
 
     public handleFiltersUpdate() {

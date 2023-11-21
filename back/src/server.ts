@@ -12,7 +12,7 @@ import EditProfileController from './user/profile/edit/editProfile.controller';
 import TagsController from './tags/tags.controller';
 import CompleteProfileController from './user/profile/complete/completeProfile.controller';
 import NotificationController from './notification/notification.controller';
-import TestController from './test/test.controller';
+import BlockController from './user/profile/block/block.controller';
 
 dotenv.config({ path: './env' });
 
@@ -27,7 +27,7 @@ async function checkDatabaseConnection(): Promise<boolean> {
 
 const main = async () => {
   const connected = await checkDatabaseConnection();
-  // await dropTable();
+  await dropTable();
   if (connected) {
     console.log('Connected to database');
     try {
@@ -48,7 +48,7 @@ const main = async () => {
         new ChatController(),
         new TagsController(),
         new NotificationController(),
-        new TestController(),
+        new BlockController(),
       ],
       8080,
     );

@@ -1,6 +1,6 @@
 export enum OrderBy {
     Youngest = 'youngest',
     Oldest = 'oldest',
-    Ditstance = 'distance',
+    Distance = 'distance',
     CommonTags = 'common_tags',
 }

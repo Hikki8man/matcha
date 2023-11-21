@@ -29,5 +29,12 @@
                 <interest-tag [Tag]="tag"></interest-tag>
             </div>
         </div>
+        <span class="filter-name">Order by:</span>
+        <div class="sort-container">
+            <button (click)="setOrderBy(OrderByEnum.Youngest)">Youngest</button>
+            <button (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
+            <button (click)="setOrderBy(OrderByEnum.Distance)">Distance</button>
+            <button (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
+        </div>
     </div>
 </div>

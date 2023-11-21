@@ -170,5 +170,22 @@ export const createDb = async () => {
     table.enum('type', ['message']);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
+
+  // Create blocked table
+  await createTableIfNotExists('blocked', (table) => {
+    table.increments('id').primary();
+    table
+      .integer('blocker_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table
+      .integer('blocked_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table.timestamp('created_at').defaultTo(db.fn.now());
+    table.unique(['blocker_id', 'blocked_id']);
+  });
   return db_exist;
 };

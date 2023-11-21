@@ -12,6 +12,7 @@ import SocketService from '../../socket.service';
 import { Tag } from '../../types/tag';
 import { ProfileTag } from '../../types/profileTag';
 import { Filter, OrderBy } from '../../types/filter';
+import blockService from './block/block.service';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
@@ -131,6 +132,11 @@ class ProfileService {
         .groupBy('profile.id')
         .first();
 
+      const blocked_list = blockService
+        .blockRepo()
+        .select('blocked_id')
+        .where('blocker_id', id);
+
       const my_tags = my_profile.tags.map((tag: Tag) => tag.id);
       const { orientation, gender_to_match } =
         this.getOrientationAndGenderToMatch(
@@ -187,6 +193,7 @@ class ProfileService {
         .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
         .whereIn('profile.gender', gender_to_match)
         .whereIn('profile.sexual_orientation', orientation)
+        .whereNotIn('profile.id', blocked_list)
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
         .andWhere('profile.completed_steps', CompletedSteps.Completed)

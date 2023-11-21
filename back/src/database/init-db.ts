@@ -14,10 +14,10 @@ export const initDb = async () => {
     lastname: 'Papou',
     birth_date: new Date('1996-09-15'),
     gender: Gender.Male,
-    sexual_orientation: SexualOrientation.Heterosexual,
+    sexual_orientation: SexualOrientation.Bisexual,
     bio: 'HALLOOO',
   });
-  await dbService.createFakeUsers(40);
+  await dbService.createFakeUsers(100);
   await profileService.like(1, 3);
   await profileService.like(3, 1);
   await profileService.like(1, 6);
