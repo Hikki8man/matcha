@@ -1,13 +1,16 @@
-import { ProfileModel } from 'src/app/models/profile.model';
 import { UserModel } from 'src/app/models/user.model';
 import { Credentials } from './authentication.sevice';
+import { Observable } from 'rxjs';
+import { ProfileModel } from 'src/app/models/profile.model';
 
 export abstract class IAuthenticationService {
-    public abstract register(form: any): Promise<UserModel>;
-    public abstract login(credentials: Credentials): Promise<UserModel>;
-    public abstract refreshToken(): Promise<UserModel>;
-    public abstract getProfile(): ProfileModel | null;
-    public abstract setProfile(profile: ProfileModel): void;
-
-    public abstract isAuthenticatedGuard(): Promise<boolean>;
+    public abstract get userValue(): UserModel | undefined;
+    public abstract get profileValue(): ProfileModel | undefined;
+    public abstract register(form: any): Observable<UserModel>;
+    public abstract login(credentials: Credentials): Observable<UserModel>;
+    public abstract logout(): void;
+    public abstract refreshToken(): Observable<{ access_token: string }>;
+    public abstract refreshPage(): Observable<UserModel>;
+    public abstract isAuthenticatedGuard(): boolean;
+    public abstract setUser(user: UserModel): void;
 }

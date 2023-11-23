@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environment/environment';
@@ -21,10 +20,21 @@ import { IAuthenticationService } from './services/authentication/iauthenticatio
 import { IProfileService } from './services/profile/iprofile.service';
 import { ProfileService } from './services/profile/profile.service';
 import { RegisterModule } from './pages/register/register.module';
+import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+import { CompleteProfileService } from './services/complete-profile/complete-profile.service';
+import { INotificationService } from './services/notification/inotification.service';
+import { NotificationService } from './services/notification/notification.service';
+import { JwtInterceptor } from './services/api/jwt.interceptor';
+import { appInitializer } from './app.initializer';
+import { ErrorInterceptor } from './services/api/error.interceptor';
+import { SocketService } from './services/socket/socket.service';
+import { ISocketService } from './services/socket/isocket.service';
+import { SearchFilterService } from './services/search-filter/search-filter.service';
+import { ISearchFilterService } from './services/search-filter/isearch-filter.service';
 
 const config: SocketIoConfig = {
-    url: environment.apiBaseUrl!,
-    options: { withCredentials: true, autoConnect: true },
+    url: '',
+    options: { autoConnect: false },
 };
 
 @NgModule({
@@ -46,9 +56,21 @@ const config: SocketIoConfig = {
         CompleteProfileModule,
     ],
     providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializer,
+            multi: true,
+            deps: [IAuthenticationService, ISocketService],
+        },
         { provide: IApiService, useClass: ApiService },
+        { provide: ISocketService, useClass: SocketService },
         { provide: IAuthenticationService, useClass: AuthenticationService },
         { provide: IProfileService, useClass: ProfileService },
+        { provide: ICompleteProfileService, useClass: CompleteProfileService },
+        { provide: INotificationService, useClass: NotificationService },
+        { provide: ISearchFilterService, useClass: SearchFilterService },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
     bootstrap: [AppComponent],
 })

@@ -1,12 +1,12 @@
-<div class="user-list">
+<div class="user-list" *ngIf="profiles$ | async as profiles">
     <div class="items-container">
-        <div *ngIf="Users.length === 0" class="empty-container">
+        <div *ngIf="profiles.length === 0" class="empty-container">
             <img src="https://media.tenor.com/h1jmVbHLV6QAAAAM/vincent.gif" alt="">
             <span class="empty-text">Aucun résultat</span>
         </div>
-        <div *ngFor="let user of Users" class="user-item">
+        <div *ngFor="let user of profiles" class="user-item">
             <div class="user-photo-container">
-                <img class="user-photo" [src]="user.avatar">
+                <img class="user-photo" [src]="(user.avatar | async) || defaultAvatar">
             </div>
             <div class="user-infos">
                 <span class="user-name">{{ user.name }}, {{ user.age }}</span>

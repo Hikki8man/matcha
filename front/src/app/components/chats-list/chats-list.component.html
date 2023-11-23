@@ -7,7 +7,7 @@
             [class.selected]="SelectedChatId === chat.id">
             <div class="left-content">
                 <div class="chat-photo-container">
-                    <img class="chat-photo" src="assets/images/detective_squirrel.png">
+                    <img class="chat-photo" [src]="(chat.avatar | async) || defaultAvatar">
                 </div>
                 <div class="chat-infos">
                     <span class="chat-name">{{ getUserName(chat) }}</span>

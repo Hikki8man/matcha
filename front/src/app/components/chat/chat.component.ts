@@ -1,9 +1,13 @@
 import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
+import { INotificationService } from 'src/app/services/notification/inotification.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 export interface Message {
     content: string;
@@ -24,43 +28,50 @@ export interface Conversation {
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit, OnChanges {
 
-    public Avatar = 'assets/images/detective_squirrel.png';
-    public Chat: Conversation;
-    public CurrentUser: ProfileModel | null;
-    public IsMobileView: boolean = false;
-
-    public IconBackUrl: string = IconUrlEnum.ArrowBack;
-    public IconBackStyle: Record<string, string> = { display: 'flex', height: '24px', width: '24px' };
+export class ChatComponent implements OnInit, OnChanges, OnDestroy {
+    constructor(
+        private _socketService: ISocketService,
+        private _apiService: IApiService,
+        private _notificationService: INotificationService,
+        private readonly _authenticationService: IAuthenticationService,
+    ) {}
 
     @Input() public ChatId: number | null = null;
-
     @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
-
-    constructor(
-        private _socket: Socket,
-        private _apiService: IApiService,
-        private readonly _authenticationService: IAuthenticationService,
-    ) { }
+  
+    public IsMobileView: boolean = false;
+    public DefaultAvatar = 'assets/images/detective_squirrel.png';
+    public Chat: Conversation | undefined;
+    public CurrentUser: ProfileModel | undefined;
+    private _interlocutor_id: number;
+    private _onNewMessageSubscription: Subscription;
+    private _onUnmatchSub: Subscription;
 
     ngOnInit(): void {
-        this.listenNewMessageEvent();
-        this.init();
+        this.CurrentUser = this._authenticationService.profileValue;
         this.IsMobileView = window.innerWidth <= 600;
+        this._onNewMessageSubscription = this.onNewMessageEvent();
+        this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
+            if (this.Chat && this.Chat.id === conv.id) {
+                this.Chat = undefined;
+            }
+        });
     }
 
-    private async init() {
-        this.CurrentUser = await this._authenticationService.getProfile();
-    }
-    
-    @HostListener('window:resize', ['$event'])
-    public handleResize(event: any) {
-        this.IsMobileView = event.target.innerWidth <= 600;
+    ngOnDestroy(): void {
+        this._onNewMessageSubscription.unsubscribe();
+        this._onUnmatchSub.unsubscribe();
+        console.log('Chat Component destroy');
     }
 
     public handleBackArrowClick(): void {
         this.BackArrowClicked.emit();
+    }
+  
+  @HostListener('window:resize', ['$event'])
+    public handleResize(event: any) {
+        this.IsMobileView = event.target.innerWidth <= 600;
     }
     
     scrollDown() {
@@ -73,9 +84,8 @@ export class ChatComponent implements OnInit, OnChanges {
         }
     }
 
-    listenNewMessageEvent() {
-        this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
-            console.log('message received, Chat defined: ', this.Chat ? true : false);
+    onNewMessageEvent(): Subscription {
+        return this._socketService.onNewMessage().subscribe((message) => {
             if (this.Chat && this.Chat.id === message.conv_id) {
                 this.Chat.messages.push(message);
                 this.scrollDown();
@@ -92,29 +102,25 @@ export class ChatComponent implements OnInit, OnChanges {
     }
 
 
-    async ngOnChanges(): Promise<void> {
-        console.log('chat id', this.ChatId);
+    ngOnChanges() {
         if (!this.ChatId) return;
-        try {
-            const conv = await this._apiService.callApi<Conversation>(
-                `chat/conversation/${this.ChatId}`,
-                'GET',
-            );
-            this.Chat = conv;
-        } catch (err) {
-            console.log('error', err);
-        }
+        this._apiService
+            .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
+            .subscribe((conv) => {
+                this.Chat = conv;
+                this._interlocutor_id =
+                    this.Chat.user_1.id === this.CurrentUser?.id
+                        ? this.Chat.user_2.id
+                        : this.Chat.user_1.id;
+                this._notificationService.deleteNotificationsBySenderId(this._interlocutor_id);
+            });
     }
 
-    public async sendMessage(content: string): Promise<void> {
+    public sendMessage(content: string): void {
         const message = {
-            conv_id: this.ChatId,
+            receiver_id: this._interlocutor_id,
             content,
         };
-        try {
-            await this._apiService.callApi<Conversation>('chat/message/create', 'POST', message);
-        } catch (err) {
-            console.log('error', err);
-        }
+        this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();
     }
 }

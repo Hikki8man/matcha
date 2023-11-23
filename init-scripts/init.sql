@@ -1,7 +1,7 @@
 CREATE TYPE Gender AS ENUM ('male', 'female');
 CREATE TYPE CompletedSteps AS ENUM ('name', 'gender', 'photo', 'bio', 'completed');
 
-CREATE TABLE IF NOT EXISTS user_account (
+CREATE TABLE IF NOT EXISTS account (
     id SERIAL PRIMARY KEY,
     email VARCHAR UNIQUE,
     password VARCHAR,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS profile (
     birth_date DATE,
     gender Gender NOT NULL,
     completed_steps CompletedSteps,
-    FOREIGN KEY (user_id) REFERENCES user_account (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS photo (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS photo (
     path VARCHAR,
     size BIGINT,
     created_at TIMESTAMP DEFAULT NOW(),
-    FOREIGN KEY (user_id) REFERENCES user_account (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS conversation (
@@ -51,11 +51,11 @@ CREATE TABLE IF NOT EXISTS likes (
     liker_id INT DEFAULT NULL,
     liked_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    FOREIGN KEY (liker_id) REFERENCES user_account (id),
-    FOREIGN KEY (liked_id) REFERENCES user_account (id)
+    FOREIGN KEY (liker_id) REFERENCES account (id),
+    FOREIGN KEY (liked_id) REFERENCES account (id)
 );
 
-INSERT INTO user_account (email, password)
+INSERT INTO account (email, password)
 VALUES ('chaf@example.com', 'hashed_password_for_chaf'),
        ('sawako@example.com', 'hashed_password_for_sawako'),
        ('rico@example.com', 'hashed_password_for_rico'),
