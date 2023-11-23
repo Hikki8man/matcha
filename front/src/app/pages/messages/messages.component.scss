@@ -10,3 +10,12 @@
         width: 60%;
     }
 }
+
+@media screen and (max-width: 600px) {
+    .messages-page {
+        height: calc(86vh - 25px);
+        .left-content {
+            width: 100%;
+        }
+    }
+}

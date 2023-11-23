@@ -19,7 +19,49 @@
             cursor: pointer;
             border-radius: 10px;
             width: 18%;
-            max-height: 130px;
+            max-height: 180px;
+        }
+    }
+}
+
+@media screen and (max-width: 1700px) {
+    .user-photos {
+        .photos-container {
+            .user-photo {
+                max-height: 170px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1580px) {
+    .user-photos {
+        .photos-container {
+            .user-photo {
+                max-height: 160px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1480px) {
+    .user-photos {
+        .photos-container {
+            .user-photo {
+                max-height: 130px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width:  600px) {
+    .user-photos {
+        padding: 10px;
+        .photos-container {
+            margin-top: 10px;
+            .user-photo {
+                max-height: 70px;
+            }
         }
     }
 }

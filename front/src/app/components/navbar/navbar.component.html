@@ -1,22 +1,22 @@
 <div id="navbar">
-    <a routerLink="profile" class="navbar-button" [class.selected]="isCurrentPage('profile')">
-        <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span>Mon profil</span>
+    <a routerLink="search" class="navbar-button" [class.selected]="isCurrentPage('search')">
+        <svg-icon class="navbar-icon" [Src]="UsersIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="navbar-details">Match !</span>
     </a>
     <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
         <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span>Messages</span>
+        <span class="navbar-details">Messages</span>
         <div class="unread-messages-count" *ngIf="notificationsCount > 0">
             <span>{{ notificationsCount > 99 ? '99+' : notificationsCount }}</span>
         </div>
     </a>
-    <a routerLink="search" class="navbar-button" [class.selected]="isCurrentPage('search')">
-        <svg-icon class="navbar-icon" [Src]="UsersIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span>Utilisateurs</span>
+    <a routerLink="profile" class="navbar-button" [class.selected]="isCurrentPage('profile')">
+        <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="navbar-details">Mon profil</span>
     </a>
     <a routerLink="settings" class="navbar-button" [class.selected]="isCurrentPage('settings')">
         <svg-icon class="navbar-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span>Paramètres</span>
+        <span class="navbar-details">Paramètres</span>
     </a>
 
     <div class="navbar-button" (click)="logout()">

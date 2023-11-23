@@ -1,8 +1,21 @@
 <div class="messages-page">
-    <div class="left-content">
-        <chats-list [SelectedChatId]="SelectedChatId" (OnChatSelected)="handleChatSelectionChange($event)"></chats-list>
-    </div>
-    <div class="right-content">
-        <chat [ChatId]="SelectedChatId"></chat>
-    </div>
+    <ng-container *ngIf="IsMobileView">
+        <div *ngIf="!SelectedChatId" class="left-content">
+            <chats-list [SelectedChatId]="SelectedChatId"
+                (OnChatSelected)="handleChatSelectionChange($event)"></chats-list>
+        </div>
+        <div *ngIf="SelectedChatId" class="left-content">
+            <chat [ChatId]="SelectedChatId" (BackArrowClicked)="handleBackArrowClick()"></chat>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="!IsMobileView">
+        <div class="left-content">
+            <chats-list [SelectedChatId]="SelectedChatId"
+                (OnChatSelected)="handleChatSelectionChange($event)"></chats-list>
+        </div>
+        <div class="right-content">
+            <chat [ChatId]="SelectedChatId"></chat>
+        </div>
+    </ng-container>
 </div>

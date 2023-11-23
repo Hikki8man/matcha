@@ -1,3 +1,6 @@
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ProfileModel } from 'src/app/models/profile.model';
@@ -25,6 +28,7 @@ export interface Conversation {
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
+
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socketService: ISocketService,
@@ -34,6 +38,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     ) {}
 
     @Input() public ChatId: number | null = null;
+    @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
+  
+    public IsMobileView: boolean = false;
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
@@ -43,6 +50,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit(): void {
         this.CurrentUser = this._authenticationService.profileValue;
+        this.IsMobileView = window.innerWidth <= 600;
         this._onNewMessageSubscription = this.onNewMessageEvent();
         this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
             if (this.Chat && this.Chat.id === conv.id) {
@@ -57,6 +65,15 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         console.log('Chat Component destroy');
     }
 
+    public handleBackArrowClick(): void {
+        this.BackArrowClicked.emit();
+    }
+  
+  @HostListener('window:resize', ['$event'])
+    public handleResize(event: any) {
+        this.IsMobileView = event.target.innerWidth <= 600;
+    }
+    
     scrollDown() {
         const bodyDiv = document.querySelector('.chat-body');
         // Body div null at first fetch, LOLO fix
@@ -83,6 +100,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     isFrom(sender_id: number): boolean {
         return this.CurrentUser?.id !== sender_id;
     }
+
 
     ngOnChanges() {
         if (!this.ChatId) return;

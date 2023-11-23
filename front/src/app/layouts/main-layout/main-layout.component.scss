@@ -16,3 +16,12 @@
         }
     }
 }
+
+@media screen and (max-width: 600px) {
+    #main-layout {
+        #app-content {
+            flex-direction: column;
+        }
+        padding-bottom: 40px;
+    }
+}

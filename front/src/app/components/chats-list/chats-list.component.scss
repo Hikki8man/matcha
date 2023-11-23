@@ -76,3 +76,9 @@
         }
     }
 }
+
+@media screen and (max-width: 600px) {
+    .chats-list {
+        border-radius: 15px;
+    }
+}

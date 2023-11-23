@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatComponent } from './chat.component';
 import { MessageInputModule } from '../message-input/message-input.module';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 
 
 
@@ -11,7 +12,8 @@ import { MessageInputModule } from '../message-input/message-input.module';
 	],
 	imports: [
 		CommonModule,
-		MessageInputModule
+		MessageInputModule,
+		SvgIconComponentModule,
 	],
 	exports: [
 		ChatComponent

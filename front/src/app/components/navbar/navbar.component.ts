@@ -19,7 +19,7 @@ export class NavbarComponent implements OnDestroy {
     public SettingsIconUrl: string = IconUrlEnum.Settings;
     public LogoutIconUrl: string = IconUrlEnum.Logout;
     public IconStyle: Record<string, string> = { display: 'flex', height: '22px', width: '22px' };
-
+  
     constructor(
         private _notificationService: INotificationService,
         private authService: IAuthenticationService,

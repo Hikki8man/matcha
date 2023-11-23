@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
 @Component({
 	selector: 'message-input',
@@ -8,6 +9,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class MessageInputComponent {
 
 	public Value: string = '';
+
+	public SendIconUrl: string = IconUrlEnum.Send;
+	public SendIconStyle: Record<string, string> = { display: 'flex', height: '24px', width: '24px', fill: 'var(--color-text-secondary)' };
 
 	@Output() public OnMessageSent: EventEmitter<string> = new EventEmitter<string>();
 
