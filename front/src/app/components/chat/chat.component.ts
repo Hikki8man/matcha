@@ -1,8 +1,6 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
-import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -40,6 +38,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public ChatId: number | null = null;
     @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
   
+    public IconBackUrl = IconUrlEnum.ArrowBack;
+    public IconBackStyle: Record<string, string> = {
+        display: 'flex',
+        height: '20px',
+        width: '20px',
+    };
+
     public IsMobileView: boolean = false;
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation | undefined;
