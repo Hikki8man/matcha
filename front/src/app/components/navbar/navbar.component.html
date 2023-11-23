@@ -18,5 +18,10 @@
         <svg-icon class="navbar-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span>Paramètres</span>
     </a>
+
+    <div class="navbar-button" (click)="logout()">
+        <svg-icon class="navbar-icon" [Src]="LogoutIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Logout</span>
+    </div>
     
 </div>

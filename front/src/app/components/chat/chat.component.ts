@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { INotificationService } from 'src/app/services/notification/inotification.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 export interface Message {
     content: string;
@@ -27,7 +27,7 @@ export interface Conversation {
 })
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
-        private _socket: Socket,
+        private _socketService: ISocketService,
         private _apiService: IApiService,
         private _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
@@ -35,18 +35,25 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public ChatId: number | null = null;
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
-    public Chat: Conversation;
+    public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
     private _interlocutor_id: number;
     private _onNewMessageSubscription: Subscription;
+    private _onUnmatchSub: Subscription;
 
     ngOnInit(): void {
         this.CurrentUser = this._authenticationService.profileValue;
         this._onNewMessageSubscription = this.onNewMessageEvent();
+        this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
+            if (this.Chat && this.Chat.id === conv.id) {
+                this.Chat = undefined;
+            }
+        });
     }
 
     ngOnDestroy(): void {
         this._onNewMessageSubscription.unsubscribe();
+        this._onUnmatchSub.unsubscribe();
         console.log('Chat Component destroy');
     }
 
@@ -61,7 +68,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onNewMessageEvent(): Subscription {
-        return this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
+        return this._socketService.onNewMessage().subscribe((message) => {
             if (this.Chat && this.Chat.id === message.conv_id) {
                 this.Chat.messages.push(message);
                 this.scrollDown();
@@ -96,7 +103,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             receiver_id: this._interlocutor_id,
             content,
         };
-
         this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();
     }
 }

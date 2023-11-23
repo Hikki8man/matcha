@@ -6,7 +6,9 @@ import { IApiService } from '../api/iapi.service';
 import { IAuthenticationService } from './iauthentication.service';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
+import { Socket, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environment/environment';
+import { ISocketService } from '../socket/isocket.service';
 
 export interface Credentials {
     email: string;
@@ -19,15 +21,15 @@ export interface Credentials {
 export class AuthenticationService implements IAuthenticationService {
     private _userSubject: BehaviorSubject<UserModel | undefined>;
     private _refreshTokenTimeout?: NodeJS.Timeout;
-    public user: Observable<UserModel | undefined>;
+    // public user: Observable<UserModel | undefined>;
 
     constructor(
         private _router: Router,
         private _apiService: IApiService,
-        private _socket: Socket,
+        private _socketService: ISocketService,
     ) {
         this._userSubject = new BehaviorSubject<UserModel | undefined>(undefined);
-        this.user = this._userSubject.asObservable();
+        // this.user = this._userSubject.asObservable();
     }
 
     public get userValue(): UserModel | undefined {
@@ -49,6 +51,11 @@ export class AuthenticationService implements IAuthenticationService {
                 map((user) => {
                     this._userSubject.next(user);
                     this.startRefreshTokenTimer(user.access_token);
+                    const config: SocketIoConfig = {
+                        url: environment.apiBaseUrl,
+                        options: { extraHeaders: { authorization: `Bearer ${user.access_token}` } },
+                    };
+                    this._socketService.connect(user.access_token);
                     return user;
                 }),
             );
@@ -56,19 +63,42 @@ export class AuthenticationService implements IAuthenticationService {
 
     public logout(): void {
         this._userSubject.next(undefined);
+        this._apiService.callApiWithCredentials('auth/logout', 'POST').subscribe();
         this.stopRefreshTokenTimer();
+        this._socketService.disconnect();
         this._router.navigate([AppPathEnum.Login]);
     }
 
-    public refreshToken(): Observable<UserModel> {
-        return this._apiService.callApiWithCredentials<UserModel>('auth/refresh', 'GET').pipe(
+    public refreshToken(): Observable<{ access_token: string }> {
+        return this._apiService
+            .callApiWithCredentials<{ access_token: string }>('auth/refresh-token', 'GET')
+            .pipe(
+                map((token) => {
+                    if (this._userSubject.value) {
+                        this._userSubject.next({
+                            ...this._userSubject.value,
+                            access_token: token.access_token,
+                        });
+                        this.startRefreshTokenTimer(token.access_token);
+                    }
+                    // this._userSubject.next(user);
+                    return token;
+                }),
+            );
+    }
+
+    public refreshPage(): Observable<UserModel> {
+        return this._apiService.callApiWithCredentials<UserModel>('auth/refresh-page', 'GET').pipe(
             map((user) => {
-                console.log('Token refreshed');
                 this._userSubject.next(user);
                 this.startRefreshTokenTimer(user.access_token);
                 return user;
             }),
         );
+    }
+
+    public setUser(user: UserModel): void {
+        this._userSubject.next(user);
     }
 
     public isAuthenticatedGuard(): boolean {

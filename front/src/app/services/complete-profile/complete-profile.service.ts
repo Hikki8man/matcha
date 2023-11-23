@@ -7,6 +7,7 @@ import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { ICompleteProfileService } from './icomplete-profile.service';
 import { Observable, of } from 'rxjs';
 import { IAuthenticationService } from '../authentication/iauthentication.service';
+import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
 
 @Injectable({
     providedIn: 'root',
@@ -25,6 +26,12 @@ export class CompleteProfileService implements ICompleteProfileService {
 
     public completeGender(gender: GenderEnum): Observable<void> {
         return this._apiService.callApi('profile/complete/gender', 'POST', { gender });
+    }
+
+    public completeSexualOrientation(orientation: SexualOrientation): Observable<void> {
+        return this._apiService.callApi('profile/complete/sexual-orientation', 'POST', {
+            orientation,
+        });
     }
 
     public completeAvatar(file: File): Observable<void> {

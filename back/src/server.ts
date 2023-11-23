@@ -1,17 +1,18 @@
-import ProfileController from './Profile/Profile.controller';
-import UserAccountController from './UserAccount/UserAccount.controller';
+import ProfileController from './user/profile/profile.controller';
+import AccountController from './user/account/account.controller';
 import App from './app';
-import db from './Database/connection';
+import db from './database/connection';
 import dotenv from 'dotenv';
-import AuthController from './Auth/Auth.controller';
-import ChatController from './Chat/Chat.controller';
-import { createDb } from './Database/create-db';
-import { initDb } from './Database/init-db';
-import { dropTable } from './Database/drop-tables';
-import EditProfileController from './Profile/EditProfile.controller';
-import TagsController from './Tags/tags.controller';
-import CompleteProfileController from './Profile/CompleteProfile.controller';
-import NotificationController from './Notification/notification.controller';
+import AuthController from './auth/auth.controller';
+import ChatController from './chat/chat.controller';
+import { createDb } from './database/create-db';
+import { initDb } from './database/init-db';
+import { dropTable } from './database/drop-tables';
+import EditProfileController from './user/profile/edit/editProfile.controller';
+import TagsController from './tags/tags.controller';
+import CompleteProfileController from './user/profile/complete/completeProfile.controller';
+import NotificationController from './notification/notification.controller';
+import BlockController from './user/profile/block/block.controller';
 
 dotenv.config({ path: './env' });
 
@@ -30,14 +31,16 @@ const main = async () => {
   if (connected) {
     console.log('Connected to database');
     try {
-      await createDb();
-      await initDb();
+      const db_exist = await createDb();
+      if (!db_exist) {
+        await initDb();
+      }
     } catch (err) {
       // console.error('Database init error: ', err);
     }
     const app = new App(
       [
-        new UserAccountController(),
+        new AccountController(),
         new ProfileController(),
         new EditProfileController(),
         new CompleteProfileController(),
@@ -45,6 +48,7 @@ const main = async () => {
         new ChatController(),
         new TagsController(),
         new NotificationController(),
+        new BlockController(),
       ],
       8080,
     );

@@ -43,7 +43,7 @@ export class CompleteProfileGenderComponent implements OnInit {
             this._completeProfileService.completeGender(this.genderControl.value).subscribe({
                 complete: () => {
                     this._profile.gender = this.genderControl.value;
-                    this._router.navigate(['complete-profile/avatar']);
+                    this._router.navigate(['complete-profile/sexual-orientation']);
                 },
                 error: (error) => {
                     console.error('Error:', error);

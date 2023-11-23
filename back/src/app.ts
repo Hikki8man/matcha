@@ -1,9 +1,8 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import errorHandler from './Utils/errorHandler';
+import errorHandler from './utils/middleware/errorHandler';
 import http from 'http';
-import { Server } from 'socket.io';
 import { env } from './config';
 import SocketService from './socket.service';
 

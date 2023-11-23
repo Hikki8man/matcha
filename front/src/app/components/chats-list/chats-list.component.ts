@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { Message } from '../chat/chat.component';
-import { Subscription, map } from 'rxjs';
+import { Subscription, map, pipe } from 'rxjs';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 @Component({
     selector: 'chats-list',
@@ -18,14 +18,16 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     public CurrentUser: ProfileModel;
     public defaultAvatar = 'assets/images/detective_squirrel.png';
     private _onNewMessageSub: Subscription;
+    private _onUnmatchSub: Subscription;
+    private _onMatchSub: Subscription;
 
     @Input() public SelectedChatId: number | null = null;
 
     @Output() public OnChatSelected: EventEmitter<number> = new EventEmitter<number>();
 
     constructor(
-        private _socket: Socket,
         private _apiService: IApiService,
+        private _socketService: ISocketService,
         // private readonly _authenticationService: IAuthenticationService,
         private _profileService: IProfileService,
     ) {
@@ -52,13 +54,30 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         console.log('chat list component init');
         this._onNewMessageSub = this.subscribeToNewMessages();
-        this._socket.emit('JoinConversations');
+        this._socketService.socket.emit('JoinConversations');
+        this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
+            this.Chats = this.Chats.filter((chat) => chat.id !== conv.id);
+        });
+        this._onMatchSub = this._socketService
+            .onMatch()
+            .pipe(
+                map((conv) => {
+                    this._socketService.socket.emit('JoinConversations');
+                    const interlocutor_id =
+                        conv.user_1.id === this.CurrentUser.id ? conv.user_2.id : conv.user_1.id;
+                    return { ...conv, avatar: this._profileService.getAvatar(interlocutor_id) };
+                }),
+            )
+            .subscribe((conv) => {
+                this.Chats.push(conv);
+            });
     }
 
     ngOnDestroy(): void {
         console.log('chat list component destroy');
-        this._socket.emit('LeaveConversations');
+        this._socketService.socket.emit('LeaveConversations');
         this._onNewMessageSub.unsubscribe();
+        this._onUnmatchSub.unsubscribe();
     }
 
     public getUserName(conversation: ConversationModel): string {
@@ -73,7 +92,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToNewMessages() {
-        return this._socket.fromEvent<Message>('NewMessage').subscribe((message) => {
+        return this._socketService.onNewMessage().subscribe((message) => {
             const conversation = this.Chats.find((chat) => chat.id === message.conv_id);
             if (conversation) {
                 conversation.last_message_content = message.content;
