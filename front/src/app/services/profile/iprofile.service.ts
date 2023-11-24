@@ -12,4 +12,5 @@ export abstract class IProfileService {
     public abstract getAllTags(): Observable<Tag[]>;
     public abstract editTags(tags: Tag[]): Observable<void>;
     public abstract getProfilesFiltered(filter: FiltersModel): Observable<PublicProfileModel[]>;
+    public abstract getById(id: number): Observable<PublicProfileModel>;
 }

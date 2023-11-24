@@ -1,7 +1,6 @@
 .user-profile-card {
     background-color: var(--background-color-accent);
     display: flex;
-    //height: 280px;
     border-radius: 10px;
 
     .left-content {
@@ -16,6 +15,7 @@
     }
 
     .right-content {
+        width: 70%;
         padding: 20px;
         display: flex;
         flex-direction: column;
@@ -23,21 +23,27 @@
 
         .header-content {
 
-            .user-name-container {
-                font-size: 20px;
-                font-weight: 550;
-                display: flex;
-            }
+            display: flex;
+            justify-content: space-between;
 
-            .user-location-container {
-                display: flex;
-                margin-top: 10px;
-                color: var(--color-text-secondary);
-                font-size: 14px;
+            .left-header-content {
 
-                .user-location-icon {
-                    fill: var(--color-text-secondary);
-                    margin-right: 10px;
+                .user-name-container {
+                    font-size: 20px;
+                    font-weight: 550;
+                    display: flex;
+                }
+    
+                .user-location-container {
+                    display: flex;
+                    margin-top: 10px;
+                    color: var(--color-text-secondary);
+                    font-size: 14px;
+    
+                    .user-location-icon {
+                        fill: var(--color-text-secondary);
+                        margin-right: 10px;
+                    }
                 }
             }
         }

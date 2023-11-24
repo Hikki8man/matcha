@@ -15,7 +15,7 @@ export class CompleteProfileLocationComponent implements OnInit {
     }
 
     getLocation() {
-        const API_KEY = '';
+        // const API_KEY = '';
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {

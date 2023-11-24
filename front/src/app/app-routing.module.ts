@@ -17,11 +17,12 @@ import { CompleteProfileTagsComponent } from './components/complete-profile/comp
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileLocationComponent } from './components/complete-profile/complete-profile-location';
 import { CompleteProfileSexualOrientationComponent } from './components/complete-profile/complete-profile-orientation.component';
+import { UserComponent } from './pages/user/user.component';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: AppPathEnum.Profile,
+        redirectTo: `${AppPathEnum.Profile}/me`,
         pathMatch: 'full',
     },
     {
@@ -84,8 +85,12 @@ const routes: Routes = [
         ],
         children: [
             {
-                path: AppPathEnum.Profile,
+                path: `${AppPathEnum.Profile}/me`,
                 component: ProfileComponent,
+            },
+            {
+                path: `${AppPathEnum.Profile}/:id`,
+                component: UserComponent,
             },
             {
                 path: AppPathEnum.Messages,
@@ -112,4 +117,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

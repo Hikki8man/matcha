@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
+import { Observable, catchError, map, of } from 'rxjs';
+import { FiltersModel } from 'src/app/models/filters.model';
 import { GenderEnum } from '../../enums/gender-enum';
 import { PublicProfileModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
-import { Observable, forkJoin, map, mergeMap } from 'rxjs';
-import { FiltersModel } from 'src/app/models/filters.model';
-import { profile } from 'console';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ProfileService implements IProfileService {
-    constructor(private _apiService: IApiService) {}
+    constructor(private _apiService: IApiService) { }
 
     public editName(name: string): Observable<void> {
         return this._apiService.callApi('profile/edit/name', 'POST', { name });
+    }
+
+    public getById(id: number): Observable<PublicProfileModel> {
+        return this._apiService.callApi<PublicProfileModel>(`profile/${id}`, 'GET');
     }
 
     public editGender(gender: GenderEnum): Observable<void> {
@@ -30,7 +33,10 @@ export class ProfileService implements IProfileService {
     public getAvatar(id: number): Observable<string> {
         return this._apiService
             .callApiAvatar<Blob>(`profile/${id}/avatar`)
-            .pipe(map((avatar: Blob) => URL.createObjectURL(avatar)));
+            .pipe(
+                map((avatar: Blob) => URL.createObjectURL(avatar)),
+                catchError(() => of('https://www.w3schools.com/howto/img_avatar.png'))
+            );
     }
 
     public getAllTags(): Observable<Tag[]> {

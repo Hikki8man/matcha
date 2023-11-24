@@ -1,36 +1,36 @@
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
-import { environment } from 'src/environment/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { appInitializer } from './app.initializer';
 import { CompleteProfileModule } from './components/complete-profile/complete-profile.module';
 import { MainLayoutModule } from './layouts/main-layout/main-layout.module';
 import { LoginModule } from './pages/login/login.module';
 import { MessagesModule } from './pages/messages/messages.module';
 import { ProfileModule } from './pages/profile/profile.module';
+import { RegisterModule } from './pages/register/register.module';
 import { SearchModule } from './pages/search/search.module';
 import { SettingsModule } from './pages/settings/settings.module';
 import { ApiService } from './services/api/api.service';
+import { ErrorInterceptor } from './services/api/error.interceptor';
 import { IApiService } from './services/api/iapi.service';
+import { JwtInterceptor } from './services/api/jwt.interceptor';
 import { AuthenticationService } from './services/authentication/authentication.sevice';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
-import { IProfileService } from './services/profile/iprofile.service';
-import { ProfileService } from './services/profile/profile.service';
-import { RegisterModule } from './pages/register/register.module';
-import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileService } from './services/complete-profile/complete-profile.service';
+import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { INotificationService } from './services/notification/inotification.service';
 import { NotificationService } from './services/notification/notification.service';
-import { JwtInterceptor } from './services/api/jwt.interceptor';
-import { appInitializer } from './app.initializer';
-import { ErrorInterceptor } from './services/api/error.interceptor';
-import { SocketService } from './services/socket/socket.service';
-import { ISocketService } from './services/socket/isocket.service';
-import { SearchFilterService } from './services/search-filter/search-filter.service';
+import { IProfileService } from './services/profile/iprofile.service';
+import { ProfileService } from './services/profile/profile.service';
 import { ISearchFilterService } from './services/search-filter/isearch-filter.service';
+import { SearchFilterService } from './services/search-filter/search-filter.service';
+import { ISocketService } from './services/socket/isocket.service';
+import { SocketService } from './services/socket/socket.service';
+import { UserModule } from './pages/user/user.module';
 
 const config: SocketIoConfig = {
     url: '',
@@ -54,6 +54,7 @@ const config: SocketIoConfig = {
         LoginModule,
         RegisterModule,
         CompleteProfileModule,
+        UserModule,
     ],
     providers: [
         {

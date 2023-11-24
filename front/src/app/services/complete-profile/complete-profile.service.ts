@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { GenderEnum } from '../../enums/gender-enum';
-import { CompletedSteps, ProfileModel, Tag } from '../../models/profile.model';
-import { IApiService } from '../api/iapi.service';
+import { Observable } from 'rxjs';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
-import { ICompleteProfileService } from './icomplete-profile.service';
-import { Observable, of } from 'rxjs';
-import { IAuthenticationService } from '../authentication/iauthentication.service';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
+import { GenderEnum } from '../../enums/gender-enum';
+import { CompletedSteps, Tag } from '../../models/profile.model';
+import { IApiService } from '../api/iapi.service';
+import { IAuthenticationService } from '../authentication/iauthentication.service';
+import { ICompleteProfileService } from './icomplete-profile.service';
 
 @Injectable({
     providedIn: 'root',

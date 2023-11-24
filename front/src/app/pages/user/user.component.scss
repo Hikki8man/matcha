@@ -1,0 +1,9 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .profile-item-container {
+        margin-bottom: 15px;
+    }
+}

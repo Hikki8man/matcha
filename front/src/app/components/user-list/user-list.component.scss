@@ -35,8 +35,13 @@
                 flex-direction: column;
 
                 .user-name {
-                    //font-size: 14px;
+                    text-decoration: none;
+                    color: var(--color-text-primary);
                     font-weight: 550;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
 
                 .user-bio {

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
-import { ProfileModel, Tag } from 'src/app/models/profile.model';
+import { Tag } from 'src/app/models/profile.model';
 
 export abstract class ICompleteProfileService {
     public abstract completeName(name: string): Observable<void>;

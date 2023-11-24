@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Subscription, map } from 'rxjs';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
-import { Message } from '../chat/chat.component';
-import { Subscription, map, pipe } from 'rxjs';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISocketService } from 'src/app/services/socket/isocket.service';
 
@@ -78,6 +77,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
         this._socketService.socket.emit('LeaveConversations');
         this._onNewMessageSub.unsubscribe();
         this._onUnmatchSub.unsubscribe();
+        this._onMatchSub.unsubscribe();
     }
 
     public getUserName(conversation: ConversationModel): string {

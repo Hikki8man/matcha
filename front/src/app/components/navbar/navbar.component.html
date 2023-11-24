@@ -10,7 +10,7 @@
             <span>{{ notificationsCount > 99 ? '99+' : notificationsCount }}</span>
         </div>
     </a>
-    <a routerLink="profile" class="navbar-button" [class.selected]="isCurrentPage('profile')">
+    <a routerLink="profile/me" class="navbar-button" [class.selected]="isCurrentPage('profile/me')">
         <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Mon profil</span>
     </a>
