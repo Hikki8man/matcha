@@ -2,7 +2,7 @@
     //max-height: fit-content;
     height: 100%;
 
-    background-color: var(--background-color-accent);
+    // background-color: var(--background-color-accent);
     border-radius: 15px;
 
     display: flex;
@@ -18,19 +18,22 @@
         height: 100%;
 
         .user-item {
+            border-radius: 15px;
             display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: solid var(--color-separator);
+            background-color: var(--background-color-accent);
+            margin-bottom: 15px;
 
-            .user-photo {
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                margin-right: 15px;
+            .user-photo-container {
+                height: 200px;
+
+                .user-photo {
+                    border-radius: 15px 0px 0px 15px;
+                    max-height: 200px;
+                }
             }
 
             .user-infos {
+                padding: 15px 20px;
                 display: flex;
                 flex-direction: column;
 

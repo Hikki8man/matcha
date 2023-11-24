@@ -10,22 +10,22 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     styleUrls: ['./user-profile-card.component.scss'],
 })
 export class UserProfileCardComponent implements OnInit {
-
     @Input() public UserId: number;
     public IsOtherUser: boolean = false;
+    public IsLiked: boolean = false;
 
     public profile: PublicProfileModel;
 
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
-    ) {
-    }
+    ) {}
 
     ngOnInit(): void {
         this._profileService.getById(this.UserId).subscribe((profile) => {
             this.profile = profile;
             this.profile.avatar = this._profileService.getAvatar(this.UserId);
+            this.IsOnline = profile.online;
         });
 
         this.IsOtherUser = this.UserId !== this._authenticationService.profileValue.id;
@@ -38,6 +38,7 @@ export class UserProfileCardComponent implements OnInit {
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
 
     public handleLikeStatusChanged(isLiked: boolean) {
-        console.log(isLiked);
+        this.IsLiked = isLiked;
+        this._profileService.likeProfile(this.UserId).subscribe();
     }
 }

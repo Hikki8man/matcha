@@ -10,7 +10,7 @@ import { IProfileService } from './iprofile.service';
     providedIn: 'root',
 })
 export class ProfileService implements IProfileService {
-    constructor(private _apiService: IApiService) { }
+    constructor(private _apiService: IApiService) {}
 
     public editName(name: string): Observable<void> {
         return this._apiService.callApi('profile/edit/name', 'POST', { name });
@@ -31,12 +31,10 @@ export class ProfileService implements IProfileService {
     }
 
     public getAvatar(id: number): Observable<string> {
-        return this._apiService
-            .callApiAvatar<Blob>(`profile/${id}/avatar`)
-            .pipe(
-                map((avatar: Blob) => URL.createObjectURL(avatar)),
-                catchError(() => of('https://www.w3schools.com/howto/img_avatar.png'))
-            );
+        return this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`).pipe(
+            map((avatar: Blob) => URL.createObjectURL(avatar)),
+            catchError(() => of('https://www.w3schools.com/howto/img_avatar.png')),
+        );
     }
 
     public getAllTags(): Observable<Tag[]> {
@@ -70,5 +68,9 @@ export class ProfileService implements IProfileService {
                     }));
                 }),
             );
+    }
+
+    public likeProfile(id: number): Observable<void> {
+        return this._apiService.callApi('profile/like', 'post', { id: +id });
     }
 }

@@ -1,22 +1,38 @@
 <div class="user-profile-card">
     <div class="left-content">
-        <img class="profile-image" [src]="(profile.avatar | async)" alt="User profile image">
+        <img class="profile-image" [src]="profile.avatar | async" alt="User profile image" />
     </div>
     <div class="right-content">
         <div class="header-content">
             <div class="left-header-content">
                 <div class="user-name-container">
-                    <span class="user-name">{{ profile?.name }}</span>
+                    <div class="user-name-container">
+                        <span class="user-name">{{ profile?.name }}</span>
+                        <div
+                            class="dot"
+                            [ngClass]="IsOnline ? 'online' : 'offline'"
+                            [matTooltip]="
+                                IsOnline ? 'En ligne' : 'Dernière connection il y a 20 minutes'
+                            "
+                            matTooltipPosition="above"
+                        ></div>
+                    </div>
                     <div class="user-status" [class.online]="IsOnline"></div>
                 </div>
                 <div class="user-location-container">
-                    <svg-icon class="user-location-icon" [Src]="LocationIconUrl"
-                        [ContentStyle]="LocationIconStyle"></svg-icon>
+                    <svg-icon
+                        class="user-location-icon"
+                        [Src]="LocationIconUrl"
+                        [ContentStyle]="LocationIconStyle"
+                    ></svg-icon>
                     <span class="user-location">{{ UserLocation }}</span>
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">
-                <like-button [IsLiked]="false" (LikeStatusChanged)="handleLikeStatusChanged($event)"></like-button>
+                <like-button
+                    [IsLiked]="IsLiked"
+                    (LikeStatusChanged)="handleLikeStatusChanged($event)"
+                ></like-button>
             </div>
         </div>
         <div class="user-bio-container">
