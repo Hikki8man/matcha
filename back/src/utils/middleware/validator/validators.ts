@@ -63,11 +63,11 @@ export class Validators<Chain> implements IValidators<Chain> {
   }
 
   isDate() {
+    const iso8601Regex =
+      /^(\d{4})-(\d{2})-(\d{2})(T(\d{2}):(\d{2}):(\d{2})(\.\d{1,}))?(Z|([+-]\d{2}):(\d{2}))?$/;
+
     return this.custom((value) => {
-      if (!value) {
-        return false;
-      }
-      return value.isDate();
+      return iso8601Regex.test(value);
     });
   }
 
