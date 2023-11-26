@@ -37,9 +37,6 @@
     }
 
     .right-content {
-        display: flex;
-        align-items: center;
-        position: relative;
 
         .avatar-container {
 
@@ -53,20 +50,6 @@
                 width: 35px;
                 height: 35px;
             }
-        }
-
-        .notifications-button {
-            .notification-dot {
-                position: absolute;
-                width: 8px;
-                height: 8px;
-                border-radius: 4px;
-                right: 49px;
-                top: 7px;
-                background-color: #91d18b;
-            }
-
-            cursor: pointer;
         }
     }
 }

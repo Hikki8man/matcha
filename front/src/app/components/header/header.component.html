@@ -6,10 +6,6 @@
         </div>
     </div>
     <div class="right-content">
-        <div class="notifications-button" (click)="showNotifications()">
-            <div *ngIf="HasNotifications" class="notification-dot"></div>
-            <svg-icon class="notifications-icon" [Src]="NotificationIconUrl" [ContentStyle]="NotificationIconStyle"></svg-icon>
-        </div>
         <div class="avatar-container" matRipple [matMenuTriggerFor]="settingsMenu">
             <img class="user-avatar" [src]="AvatarUrl" alt="">
         </div>
