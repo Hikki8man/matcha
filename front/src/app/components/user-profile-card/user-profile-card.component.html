@@ -1,6 +1,7 @@
 <div class="user-profile-card">
     <div class="left-content">
-        <img class="profile-image" [src]="profile.avatar | async" alt="User profile image" />
+        <div *ngIf="Loading" class="profile-image skeleton"></div>
+        <img *ngIf="!Loading" class="profile-image" [src]="profile.avatar | async" alt="User profile image" />
     </div>
     <div class="right-content">
         <div class="header-content">

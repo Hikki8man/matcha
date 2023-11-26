@@ -13,6 +13,7 @@ export class UserProfileCardComponent implements OnInit {
     @Input() public UserId: number;
     public IsOtherUser: boolean = false;
     public IsLiked: boolean = false;
+    public Loading: boolean = true;
 
     public profile: PublicProfileModel;
 
@@ -26,6 +27,7 @@ export class UserProfileCardComponent implements OnInit {
             this.profile = profile;
             this.profile.avatar = this._profileService.getAvatar(this.UserId);
             this.IsOnline = profile.online;
+            this.Loading = false;
         });
 
         this.IsOtherUser = this.UserId !== this._authenticationService.profileValue.id;
