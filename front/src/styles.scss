@@ -42,6 +42,12 @@ mat-slider {
     animation: skeleton-loading 0.7s linear infinite alternate;
 }
 
+.skeleton-text {
+    width: 100px;
+    height: 16px;
+    border-radius: 7px;
+}
+
 @keyframes skeleton-loading {
     0% {
         background-color: #e6e6e6;

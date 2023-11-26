@@ -1,0 +1,22 @@
+.settings-menu {
+    padding: 5px 10px;
+
+    a {
+        text-decoration: none;
+    }
+
+    .settings-menu-item {
+        display: flex;
+        align-items: center;
+        color: var(--color-text-primary);
+        cursor: pointer;
+
+        .menu-icon {
+            margin-right: 10px;
+        }
+
+        &:first-child {
+            margin-bottom: 10px;
+        }
+    }
+}

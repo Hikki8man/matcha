@@ -11,15 +11,17 @@ import { INotificationService } from 'src/app/services/notification/inotificatio
     styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnDestroy {
-    private _msgSubscription: Subscription;
-    public notificationsCount: number;
+
+    public UnreadMessagesCount: number;
     public UserIconUrl: string = IconUrlEnum.User;
-    public UsersIconUrl: string = IconUrlEnum.Users;
+    public HeartIconUrl: string = IconUrlEnum.Heart;
+    public HeartEmptyIconUrl: string = IconUrlEnum.HeartEmpty;
     public MessageIconUrl: string = IconUrlEnum.Message;
-    public SettingsIconUrl: string = IconUrlEnum.Settings;
-    public LogoutIconUrl: string = IconUrlEnum.Logout;
+    public NotificationsIconUrl: string = IconUrlEnum.Notification;
     public IconStyle: Record<string, string> = { display: 'flex', height: '22px', width: '22px' };
-  
+
+    private _msgSubscription: Subscription;
+
     constructor(
         private _notificationService: INotificationService,
         private authService: IAuthenticationService,
@@ -32,7 +34,7 @@ export class NavbarComponent implements OnDestroy {
                 ),
                 map((filteredNotifications) => filteredNotifications.length),
             )
-            .subscribe((count) => (this.notificationsCount = count));
+            .subscribe((count) => (this.UnreadMessagesCount = count));
     }
 
     ngOnDestroy(): void {

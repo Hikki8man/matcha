@@ -10,6 +10,12 @@
             <div *ngIf="HasNotifications" class="notification-dot"></div>
             <svg-icon class="notifications-icon" [Src]="NotificationIconUrl" [ContentStyle]="NotificationIconStyle"></svg-icon>
         </div>
-        <img class="user-avatar" [src]="AvatarUrl" alt="">
+        <div class="avatar-container" matRipple [matMenuTriggerFor]="settingsMenu">
+            <img class="user-avatar" [src]="AvatarUrl" alt="">
+        </div>
     </div>
 </div>
+
+<mat-menu #settingsMenu xPosition="before">
+    <settings-menu></settings-menu>
+</mat-menu>

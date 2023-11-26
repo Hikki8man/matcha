@@ -41,11 +41,18 @@
         align-items: center;
         position: relative;
 
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 25px;
+        .avatar-container {
+
             margin-left: 10px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+
+            .user-avatar {
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+            }
         }
 
         .notifications-button {
