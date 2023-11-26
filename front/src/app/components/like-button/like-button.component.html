@@ -1,0 +1,4 @@
+<div class="like-button" [class.liked]="IsLiked" (click)="handleClick()">
+    <svg-icon *ngIf="!IsLiked" class="heart-icon heart-stroke" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+    <svg-icon *ngIf="IsLiked" class="heart-icon" [Src]="HeartFullIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+</div>

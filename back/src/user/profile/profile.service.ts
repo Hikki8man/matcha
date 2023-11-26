@@ -32,6 +32,11 @@ class ProfileService {
             END as tags
           `),
         )
+        .select(
+          db.raw(`
+              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+          `),
+        )
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')

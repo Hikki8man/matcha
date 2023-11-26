@@ -5,7 +5,7 @@
 
 .interest-tag-container {
     margin-right: 7px;
-    margin-bottom: 10px;
+    margin-top: 10px;
     padding: 7px 10px;
     background-color: var(--tag-background-color);
     border-radius: 7px;
@@ -18,11 +18,11 @@
 @media screen and (max-width: 600px) {
     .interest-tag-container {
         margin-right: 3px;
-        margin-bottom: 5px;
-        padding: 3px 7px;
+        margin-top: 5px;
+        padding: 2px 6px;
 
         .interest-tag {
-            font-size: 12px;
+            font-size: 11px;
         }
     }
 }
