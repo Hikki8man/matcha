@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
@@ -10,23 +10,28 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, OnDestroy {
-    public profiles$: Observable<PublicProfileModel[]>;
     public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
-    private profileSub: Subscription;
+    public Loading: boolean = true;
+    public Profiles: PublicProfileModel[];
+
+    private _subscriptions: Subscription[] = [];
 
     constructor(
         private _profileService: IProfileService,
         private _searchFilterService: ISearchFilterService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
-        this.profileSub = this._searchFilterService.filters.subscribe((filter) => {
+        this._subscriptions.push(this._searchFilterService.filters.subscribe((filter) => {
             console.log('filter update: ', filter);
-            this.profiles$ = this._profileService.getProfilesFiltered(filter);
-        });
+            this._subscriptions.push(this._profileService.getProfilesFiltered(filter).subscribe((profiles) => {
+                this.Profiles = profiles;
+                this.Loading = false;
+            }));
+        }));
     }
 
     ngOnDestroy(): void {
-        this.profileSub.unsubscribe();
+        this._subscriptions.forEach((sub) => sub.unsubscribe());
     }
 }

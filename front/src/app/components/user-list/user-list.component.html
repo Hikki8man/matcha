@@ -1,17 +1,32 @@
-<div class="user-list" *ngIf="profiles$ | async as profiles">
+<div class="user-list">
     <div class="items-container">
-        <div *ngIf="profiles.length === 0" class="empty-container">
-            <img src="https://media.tenor.com/h1jmVbHLV6QAAAAM/vincent.gif" alt="">
-            <span class="empty-text">Aucun résultat</span>
-        </div>
-        <div *ngFor="let user of profiles" class="user-item">
-            <div class="user-photo-container">
-                <img class="user-photo" [src]="(user.avatar | async) || defaultAvatar">
+        
+        <ng-container *ngIf="!Loading">
+            <div *ngIf="Profiles.length === 0" class="empty-container">
+                <img src="https://media.tenor.com/h1jmVbHLV6QAAAAM/vincent.gif" alt="">
+                <span class="empty-text">Aucun résultat</span>
             </div>
-            <div class="user-infos">
-                <a [routerLink]="'/profile/' + user.id" class="user-name">{{ user.name }}, {{ user.age }}</a>
-                <span class="user-bio">{{ user.bio }}</span>
+            <div *ngFor="let user of Profiles" class="user-item">
+                <div class="user-photo-container">
+                    <img class="user-photo" [src]="(user.avatar | async) || defaultAvatar">
+                </div>
+                <div class="user-infos">
+                    <a [routerLink]="'/profile/' + user.id" class="user-name">{{ user.name }}, {{ user.age }}</a>
+                    <span class="user-bio">{{ user.bio }}</span>
+                </div>
             </div>
-        </div>
+        </ng-container>
+        
+        <ng-container *ngIf="Loading">
+            <div *ngFor="let i of [1,2,3,4,5]" class="user-item">
+                <div class="user-photo-container">
+                    <div class="user-photo skeleton"></div>
+                </div>
+                <div class="user-infos">
+                    <div class="user-name skeleton skeleton-text"></div>
+                    <div class="user-bio skeleton skeleton-text"></div>
+                </div>
+            </div>
+        </ng-container>
     </div>
 </div>
