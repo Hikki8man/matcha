@@ -329,6 +329,17 @@ class ProfileService {
       return; //SUCCES unlike
     }
   }
+
+  async getLikerList(id: number) {
+    try {
+      return await this.profileRepo()
+        .select('profile.id', 'profile.name', 'likes.created_at')
+        .leftJoin('likes', 'profile.id', 'likes.liker_id')
+        .where('likes.liked_id', id);
+    } catch (e) {
+      return [];
+    }
+  }
 }
 
 export default new ProfileService();

@@ -1,4 +1,4 @@
-<div class="user-profile-card">
+<div class="user-profile-card" *ngIf="profile$ | async as profile">
     <div class="left-content">
         <img class="profile-image" [src]="profile.avatar | async" alt="User profile image" />
     </div>
@@ -10,14 +10,14 @@
                         <span class="user-name">{{ profile?.name }}</span>
                         <div
                             class="dot"
-                            [ngClass]="IsOnline ? 'online' : 'offline'"
+                            [ngClass]="profile.online ? 'online' : 'offline'"
                             [matTooltip]="
-                                IsOnline ? 'En ligne' : 'Dernière connection il y a 20 minutes'
+                            profile.online ? 'En ligne' : 'Dernière connection il y a 20 minutes'
                             "
                             matTooltipPosition="above"
                         ></div>
                     </div>
-                    <div class="user-status" [class.online]="IsOnline"></div>
+                    <div class="user-status" [class.online]="profile.online"></div>
                 </div>
                 <div class="user-location-container">
                     <svg-icon
@@ -25,7 +25,7 @@
                         [Src]="LocationIconUrl"
                         [ContentStyle]="LocationIconStyle"
                     ></svg-icon>
-                    <span class="user-location">{{ UserLocation }}</span>
+                    <span class="user-location">{{ profile.country + ', ' + profile.city }}</span>
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">

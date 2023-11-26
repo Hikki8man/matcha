@@ -56,6 +56,7 @@ class ProfileController {
       CheckValidation,
       this.like,
     );
+    this.router.get(this.path + '/like/likers', jwtStrategy, this.liker_list);
   }
 
   getById = async (req: MyRequest, res: Response) => {
@@ -64,7 +65,7 @@ class ProfileController {
     if (!user) {
       res.status(404).send('User not found');
     } else {
-      console.log('user found', user);
+      // console.log('user found', user);
       res.send(user);
     }
   };
@@ -102,6 +103,12 @@ class ProfileController {
   like = async (req: MyRequest, res: Response) => {
     const like = await profileService.like(req.user_id!, req.body.id);
     res.send(like);
+  };
+
+  liker_list = async (req: MyRequest, res: Response) => {
+    const liker_list = await profileService.getLikerList(req.user_id!);
+    console.log('Getting liker list');
+    res.send(liker_list);
   };
 }
 

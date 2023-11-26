@@ -5,6 +5,8 @@ import { GenderEnum } from '../../enums/gender-enum';
 import { PublicProfileModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
+import { LikeModel } from 'src/app/models/like.model';
+import { timeAgo } from 'src/app/utils/timeAgo';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +19,16 @@ export class ProfileService implements IProfileService {
     }
 
     public getById(id: number): Observable<PublicProfileModel> {
-        return this._apiService.callApi<PublicProfileModel>(`profile/${id}`, 'GET');
+        return new Observable((observer) => {
+            this._apiService.callApi<PublicProfileModel>(`profile/${id}`, 'GET').subscribe({
+                next: (profile) => {
+                    profile.avatar = this.getAvatar(profile.id);
+                    observer.next(profile);
+                    observer.complete();
+                },
+                error: (error) => observer.error(error),
+            });
+        });
     }
 
     public editGender(gender: GenderEnum): Observable<void> {
@@ -71,6 +82,18 @@ export class ProfileService implements IProfileService {
     }
 
     public likeProfile(id: number): Observable<void> {
-        return this._apiService.callApi('profile/like', 'post', { id: +id });
+        return this._apiService.callApi('profile/like', 'POST', { id: +id });
+    }
+
+    public likerList(): Observable<LikeModel[]> {
+        return this._apiService.callApi<LikeModel[]>('profile/like/likers', 'GET').pipe(
+            map((likers) => {
+                return likers.map((liker) => ({
+                    ...liker,
+                    time_ago: timeAgo(liker.created_at),
+                    avatar: this.getAvatar(liker.id),
+                }));
+            }),
+        );
     }
 }

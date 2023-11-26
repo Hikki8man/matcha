@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
+import { LikeModel } from 'src/app/models/like.model';
 import { PublicProfileModel, Tag } from 'src/app/models/profile.model';
 
 export abstract class IProfileService {
@@ -14,4 +15,5 @@ export abstract class IProfileService {
     public abstract getProfilesFiltered(filter: FiltersModel): Observable<PublicProfileModel[]>;
     public abstract getById(id: number): Observable<PublicProfileModel>;
     public abstract likeProfile(id: number): Observable<void>;
+    public abstract likerList(): Observable<LikeModel[]>;
 }

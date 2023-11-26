@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -14,7 +15,7 @@ export class UserProfileCardComponent implements OnInit {
     public IsOtherUser: boolean = false;
     public IsLiked: boolean = false;
 
-    public profile: PublicProfileModel;
+    public profile$: Observable<PublicProfileModel>;
 
     constructor(
         private readonly _profileService: IProfileService,
@@ -22,17 +23,9 @@ export class UserProfileCardComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._profileService.getById(this.UserId).subscribe((profile) => {
-            this.profile = profile;
-            this.profile.avatar = this._profileService.getAvatar(this.UserId);
-            this.IsOnline = profile.online;
-        });
-
+        this.profile$ = this._profileService.getById(this.UserId);
         this.IsOtherUser = this.UserId !== this._authenticationService.profileValue.id;
     }
-
-    public UserLocation: string = 'Lyon, France';
-    public IsOnline: boolean = true;
 
     public LocationIconUrl: string = IconUrlEnum.Location;
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };

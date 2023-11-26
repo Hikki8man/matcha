@@ -1,14 +1,14 @@
 <div class="profile-likes">
     <span class="title">Likes du profil</span>
-    <div class="likes-container">
+    <div class="likes-container" *ngIf="Likes$ | async as Likes">
         <div class="like-item" *ngFor="let like of Likes">
             <div class="left-content">
                 <div class="like-photo-container">
-                    <img class="like-photo" [src]="like.avatar">
+                    <img class="like-photo" [src]="(like.avatar | async)">
                 </div>
                 <div class="like-info">
                     <span class="like-name">{{ like.name }}</span>
-                    <span class="like-date">{{ like.date }}</span>
+                    <span class="like-date">{{ like.time_ago }}</span>
                 </div>
             </div>
             <div class="right-content">
