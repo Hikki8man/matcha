@@ -36,6 +36,7 @@ class ProfileController {
       CheckValidation,
       this.getAllFiltered,
     );
+    this.router.get(this.path + '/views', jwtStrategy, this.profile_view_list);
     this.router.get(
       this.path + '/:id',
       jwtStrategy,
@@ -70,14 +71,17 @@ class ProfileController {
   //   }
   // };
 
+  // TODO separate route for myProfile and Other profiles?
   getProfileCardAndIsLikedById = async (req: MyRequest, res: Response) => {
-    console.log('param', req.params);
     const id = +req.params.id!;
     const profile = await profileService.get_by_id(id);
-    const isLiked = await profileService.isLiked(req.user_id!, id);
     if (!profile) {
       res.status(404).send('User not found');
     } else {
+      const isLiked = await profileService.isLiked(req.user_id!, id);
+      if (id !== req.user_id!) {
+        await profileService.addProfileView(req.user_id!, id);
+      }
       res.send({ profile, isLiked });
     }
   };
@@ -118,6 +122,11 @@ class ProfileController {
   liker_list = async (req: MyRequest, res: Response) => {
     const liker_list = await profileService.getLikerList(req.user_id!);
     res.send(liker_list);
+  };
+
+  profile_view_list = async (req: MyRequest, res: Response) => {
+    const profile_views = await profileService.getProfileViews(req.user_id!);
+    res.send(profile_views);
   };
 }
 

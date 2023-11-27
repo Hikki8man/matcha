@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, tap } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { LikeType } from 'src/app/enums/like-type-enum';
 import { LikeModel } from 'src/app/models/like.model';
@@ -14,7 +14,7 @@ import { timeAgo } from 'src/app/utils/timeAgo';
 })
 export class ProfileLikesComponent implements OnInit, OnDestroy {
     public Likes: LikeModel[] = [];
-    private _likeEventSub: Subscription;
+    private _destroy$ = new Subject<boolean>();
 
     constructor(
         private readonly _profileService: IProfileService,
@@ -22,11 +22,14 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        void this._profileService;
-        this._profileService.likerList().subscribe((likes) => (this.Likes = likes));
-        this._likeEventSub = this._socketService
+        this._profileService
+            .likerList()
+            .pipe(takeUntil(this._destroy$))
+            .subscribe((likes) => (this.Likes = likes));
+        this._socketService
             .onLikeEvent()
             .pipe(
+                takeUntil(this._destroy$),
                 tap((like) => {
                     if (like.type === LikeType.Like) {
                         like.user.avatar = this._profileService.getAvatar(like.user.id);
@@ -44,7 +47,8 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._likeEventSub.unsubscribe();
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     public HeartIconUrl: string = IconUrlEnum.HeartEmpty;

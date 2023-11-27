@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Notification } from 'src/app/models/notification.model';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { LikeEvent } from 'src/app/enums/like-type-enum';
+import { ProfileViewModel } from 'src/app/models/profile-view.model';
 
 @Injectable({
     providedIn: 'root',
@@ -61,6 +62,10 @@ export class SocketService implements ISocketService {
 
     public onLikeEvent(): Observable<LikeEvent> {
         return this._socket.fromEvent<LikeEvent>('LikeEvent');
+    }
+
+    public onProfileView(): Observable<ProfileViewModel> {
+        return this._socket.fromEvent<ProfileViewModel>('ProfileView');
     }
 
     public sendMessage(msg: string): void {
