@@ -1,6 +1,7 @@
-import { Conversation, ConversationLoaded } from '../types/chat';
+import { Conversation, ConversationLoaded, Message } from '../types/chat';
 import HttpError from '../utils/HttpError';
 import db from '../database/connection';
+import SocketService from '../socket.service';
 
 class ConversationService {
   // async isInConversation(user_id: number, conv_id: number) {
@@ -128,23 +129,29 @@ class ConversationService {
         db.raw(
           "jsonb_build_object('id', profile2.id, 'name', profile2.name) as user_2",
         ),
-        'latest_message.content as last_message_content',
-        'latest_message.created_at as last_message_created_at',
+        db.raw('"message"."content" as "last_message_content"'),
+        db.raw('"message"."created_at" as "last_message_created_at"'),
       )
-      .leftJoin(
-        db
-          .select('conv_id', 'content', 'created_at')
-          .from('message')
-          .orderBy('created_at', 'desc')
-          .limit(1)
-          .as('latest_message'),
-        'latest_message.conv_id',
-        'conversation.id',
-      )
+      .leftJoin('message', 'message.id', 'conversation.last_message')
       .leftJoin('profile as profile1', 'conversation.user_1', 'profile1.id')
       .leftJoin('profile as profile2', 'conversation.user_2', 'profile2.id')
       .where('user_1', id)
       .orWhere('user_2', id);
+  }
+
+  async updateLastMessage(msg: Message) {
+    try {
+      const [updatedConv] = await db<Conversation>('conversation')
+        .update('last_message', msg.id)
+        .where('id', msg.conv_id)
+        .returning('*');
+      SocketService.sendLastMessageUpdate(
+        updatedConv.user_1,
+        updatedConv.user_2,
+        msg,
+      );
+      console.log('updated conv', updatedConv);
+    } catch (e) {}
   }
 }
 

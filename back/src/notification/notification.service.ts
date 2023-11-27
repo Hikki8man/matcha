@@ -1,7 +1,7 @@
 import db from '../database/connection';
 import { AuthenticatedSocket } from '../types/authenticatedSocket';
 import SocketService from '../socket.service';
-import { NotificationType, Notification } from '../types/notification';
+import { Notification, NotificationType } from '../types/notification';
 
 class NotificationService {
   public notificationRepo = () => db<Notification>('notification');
@@ -34,14 +34,14 @@ class NotificationService {
 
     if (!receiverIsInConv) {
       try {
-        const [notification] = await this.notificationRepo()
+        const [notif] = await this.notificationRepo()
           .insert({
             sender_id,
             receiver_id,
             type: NotificationType.Message,
           })
           .returning('*');
-        SocketService.sendNotification(notification);
+        SocketService.sendNotification(notif);
       } catch (err) {}
     }
   }

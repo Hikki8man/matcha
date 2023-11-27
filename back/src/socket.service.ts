@@ -9,6 +9,7 @@ import { MyJwtPayload } from './types/jwtPayload';
 import { AuthenticatedSocket } from './types/authenticatedSocket';
 import profileService from './user/profile/profile.service';
 import { Notification } from './types/notification';
+import { LikeEvent } from './types/profile';
 
 class SocketService {
   private static server: Server;
@@ -32,6 +33,20 @@ class SocketService {
     this.server
       ?.to(`conversation-${message.conv_id}`)
       .emit('NewMessage', message);
+  }
+  public static sendLastMessageUpdate(
+    user_1: number,
+    user_2: number,
+    message: Message,
+  ) {
+    this.server
+      ?.to(`user-${user_1}`)
+      .to(`user-${user_2}`)
+      .emit('LastMessageUpdate', message);
+  }
+
+  public static sendLikeEvent(dest: number, likeEvent: LikeEvent) {
+    this.server?.to(`user-${dest}`).emit('LikeEvent', likeEvent);
   }
 
   public static sendMatch(conversation: ConversationLoaded) {
@@ -58,41 +73,47 @@ class SocketService {
       .fetchSockets() as unknown as Promise<AuthenticatedSocket[]>;
   }
 
-  private onJoinConversations(
-    socket: AuthenticatedSocket,
-    chatJoined: boolean,
-  ) {
-    socket.on('JoinConversations', () => {
-      db<Conversation>('conversation')
+  private onJoinConversation(socket: AuthenticatedSocket) {
+    socket.on('JoinConversation', async (conv_id: number) => {
+      if (typeof conv_id !== 'number') {
+        return;
+      }
+      const inConv = await db<Conversation>('conversation')
         .select('id')
-        .where('user_1', socket.user_id)
-        .orWhere('user_2', socket.user_id)
-        .then((data) => {
-          data.forEach((conv) => {
-            console.log(socket.user_id + ' join conversation ' + conv.id);
-            socket.join(`conversation-${conv.id}`);
-          });
-        });
-      chatJoined = true;
+        .where((builder) => {
+          builder
+            .where('user_1', socket.user_id)
+            .orWhere('user_2', socket.user_id);
+        })
+        .andWhere('id', conv_id)
+        .first();
+
+      if (inConv) {
+        console.log(socket.user_id + ' join conversation ' + conv_id);
+        socket.join(`conversation-${conv_id}`);
+      }
     });
   }
 
-  private onLeaveConversations(
-    socket: AuthenticatedSocket,
-    chatJoined: boolean,
-  ) {
-    socket.on('LeaveConversations', () => {
-      db<Conversation>('conversation')
+  private onLeaveConversation(socket: AuthenticatedSocket) {
+    socket.on('LeaveConversation', async (conv_id: number) => {
+      if (typeof conv_id !== 'number') {
+        return;
+      }
+      const inConv = await db<Conversation>('conversation')
         .select('id')
-        .where('user_1', socket.user_id)
-        .orWhere('user_2', socket.user_id)
-        .then((data) => {
-          data.forEach((conv) => {
-            console.log(socket.user_id + ' left conversation ' + conv.id);
-            socket.leave(`conversation-${conv.id}`);
-          });
-        });
-      chatJoined = false;
+        .where((builder) => {
+          builder
+            .where('user_1', socket.user_id)
+            .orWhere('user_2', socket.user_id);
+        })
+        .andWhere('id', conv_id)
+        .first();
+
+      if (inConv) {
+        console.log(socket.user_id + ' left conversation ' + conv_id);
+        socket.leave(`conversation-${conv_id}`);
+      }
     });
   }
 
@@ -115,10 +136,9 @@ class SocketService {
         return socket.disconnect();
       }
       profileService.setOnline(socket.user_id);
-      let chatJoined: boolean = false;
       socket.join(`user-${socket.user_id}`);
-      this.onJoinConversations(socket, chatJoined);
-      this.onLeaveConversations(socket, chatJoined);
+      this.onJoinConversation(socket);
+      this.onLeaveConversation(socket);
     });
   }
 }

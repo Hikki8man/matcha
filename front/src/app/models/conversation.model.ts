@@ -6,6 +6,7 @@ export interface ConversationModel {
     user_2: { id: number; name: string };
     last_message_content: string;
     last_message_created_at: Date;
+    send_at: string;
     avatar: Observable<string>;
 }
 

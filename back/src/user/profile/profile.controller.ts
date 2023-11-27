@@ -10,6 +10,7 @@ import CheckValidation from '../../utils/middleware/validator/checkValidationRes
 import { body, param } from '../../utils/middleware/validator/check';
 import { Filter, OrderBy } from '../../types/filter';
 import { tagsValidation } from '../../utils/custom-validations/tagsValidation';
+import SocketService from '../../socket.service';
 
 class ProfileController {
   public path = '/profile';
@@ -65,7 +66,6 @@ class ProfileController {
     if (!user) {
       res.status(404).send('User not found');
     } else {
-      // console.log('user found', user);
       res.send(user);
     }
   };
@@ -81,17 +81,12 @@ class ProfileController {
     res.send(user);
   };
 
-  //TODO receive Path of avatar or stay with db call to retreive path
   sendAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
     const avatar = await photoService.getProfileAvatar(req.params.id!);
     if (!avatar) {
       throw new HttpError(404, 'Avatar not found');
     }
     res.setHeader('Content-Type', avatar.content_type);
-    // res.setHeader(
-    //   'Content-Disposition',
-    //   `attachment; filename=${avatar.filename}`,
-    // );alo
     const dirname = path.resolve() + '/';
     res.sendFile(dirname + avatar.path, (err) => {
       if (err && res.headersSent == false) {
@@ -101,13 +96,15 @@ class ProfileController {
   };
 
   like = async (req: MyRequest, res: Response) => {
-    const like = await profileService.like(req.user_id!, req.body.id);
-    res.send(like);
+    const likeEvent = await profileService.like(req.user_id!, req.body.id);
+    if (likeEvent) {
+      SocketService.sendLikeEvent(req.body.id, likeEvent);
+    }
+    res.end();
   };
 
   liker_list = async (req: MyRequest, res: Response) => {
     const liker_list = await profileService.getLikerList(req.user_id!);
-    console.log('Getting liker list');
     res.send(liker_list);
   };
 }

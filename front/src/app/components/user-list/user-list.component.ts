@@ -12,7 +12,7 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
 export class UserListComponent implements OnInit, OnDestroy {
     public profiles$: Observable<PublicProfileModel[]>;
     public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
-    private profileSub: Subscription;
+    private filterSub: Subscription;
 
     constructor(
         private _profileService: IProfileService,
@@ -20,13 +20,13 @@ export class UserListComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.profileSub = this._searchFilterService.filters.subscribe((filter) => {
+        this.filterSub = this._searchFilterService.filters.subscribe((filter) => {
             console.log('filter update: ', filter);
             this.profiles$ = this._profileService.getProfilesFiltered(filter);
         });
     }
 
     ngOnDestroy(): void {
-        this.profileSub.unsubscribe();
+        this.filterSub.unsubscribe();
     }
 }

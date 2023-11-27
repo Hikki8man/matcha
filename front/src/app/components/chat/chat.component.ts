@@ -1,4 +1,13 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
@@ -26,7 +35,6 @@ export interface Conversation {
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss'],
 })
-
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private _socketService: ISocketService,
@@ -37,7 +45,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public ChatId: number | null = null;
     @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
-  
+
     public IconBackUrl = IconUrlEnum.ArrowBack;
     public IconBackStyle: Record<string, string> = {
         display: 'flex',
@@ -67,18 +75,21 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {
         this._onNewMessageSubscription.unsubscribe();
         this._onUnmatchSub.unsubscribe();
+        if (this.Chat) {
+            this._socketService.socket.emit('LeaveConversation', this.Chat.id);
+        }
         console.log('Chat Component destroy');
     }
 
     public handleBackArrowClick(): void {
         this.BackArrowClicked.emit();
     }
-  
-  @HostListener('window:resize', ['$event'])
+
+    @HostListener('window:resize', ['$event'])
     public handleResize(event: any) {
         this.IsMobileView = event.target.innerWidth <= 600;
     }
-    
+
     scrollDown() {
         const bodyDiv = document.querySelector('.chat-body');
         // Body div null at first fetch, LOLO fix
@@ -106,9 +117,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         return this.CurrentUser?.id !== sender_id;
     }
 
-
     ngOnChanges() {
         if (!this.ChatId) return;
+        if (this.Chat) {
+            this._socketService.socket.emit('LeaveConversation', this.Chat.id);
+        }
         this._apiService
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
@@ -119,6 +132,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
                         : this.Chat.user_1.id;
                 this._notificationService.deleteNotificationsBySenderId(this._interlocutor_id);
             });
+        this._socketService.socket.emit('JoinConversation', this.ChatId);
     }
 
     public sendMessage(content: string): void {

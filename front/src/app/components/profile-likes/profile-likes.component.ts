@@ -1,22 +1,48 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription, map, of } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
+import { LikeType } from 'src/app/enums/like-type-enum';
 import { LikeModel } from 'src/app/models/like.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
+import { timeAgo } from 'src/app/utils/timeAgo';
 
 @Component({
     selector: 'profile-likes',
     templateUrl: './profile-likes.component.html',
     styleUrls: ['./profile-likes.component.scss'],
 })
-export class ProfileLikesComponent implements OnInit {
+export class ProfileLikesComponent implements OnInit, OnDestroy {
     public Likes$: Observable<LikeModel[]>;
+    private _likeEventSub: Subscription;
 
-    constructor(private readonly profileService: IProfileService) {}
+    constructor(
+        private readonly _profileService: IProfileService,
+        private readonly _socketService: ISocketService,
+    ) {}
 
     ngOnInit(): void {
-        void this.profileService;
-        this.Likes$ = this.profileService.likerList();
+        void this._profileService;
+        this.Likes$ = this._profileService.likerList();
+        this._likeEventSub = this._socketService.onLikeEvent().subscribe((like) => {
+            this.Likes$.pipe(
+                map((likes) => {
+                    if (like.type === LikeType.Like) {
+                        like.user.avatar = this._profileService.getAvatar(like.user.id);
+                        like.user.time_ago = timeAgo(like.user.created_at);
+                        return [...likes, like.user];
+                    } else {
+                        return likes.filter((l) => l.id !== like.user.id);
+                    }
+                }),
+            ).subscribe((updatedLikes) => {
+                this.Likes$ = of(updatedLikes);
+            });
+        });
+    }
+
+    ngOnDestroy(): void {
+        this._likeEventSub.unsubscribe();
     }
 
     public HeartIconUrl: string = IconUrlEnum.HeartEmpty;

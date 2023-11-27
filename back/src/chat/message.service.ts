@@ -16,6 +16,7 @@ class MessageService {
         content,
       })
       .returning('*');
+    await convService.updateLastMessage(msg);
     return msg;
   }
 }

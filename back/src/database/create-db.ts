@@ -96,7 +96,7 @@ export const createDb = async () => {
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
 
-  // Create conversation table
+  //Create conversation table
   await createTableIfNotExists('conversation', (table) => {
     table.increments('id').primary();
     table
@@ -111,11 +111,12 @@ export const createDb = async () => {
       .references('id')
       .inTable('profile')
       .onDelete('CASCADE');
+    table.bigInteger('last_message');
   });
 
   // Create message table
   await createTableIfNotExists('message', (table) => {
-    table.increments('id').primary();
+    table.bigIncrements('id').primary();
     table
       .integer('sender_id')
       .notNullable()

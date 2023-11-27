@@ -42,3 +42,12 @@ export interface Like {
   liked_id: number;
   created_at: Date;
 }
+
+export enum LikeType {
+  Like,
+  Unlike,
+}
+export interface LikeEvent {
+  user: { id: number; name?: string; created_at?: Date };
+  type: LikeType;
+}

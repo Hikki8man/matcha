@@ -2,6 +2,8 @@ import {
   CompletedSteps,
   Gender,
   Like,
+  LikeEvent,
+  LikeType,
   Profile,
   SexualOrientation,
 } from '../../types/profile';
@@ -280,7 +282,10 @@ class ProfileService {
     }
   }
 
-  async like(liker_id: number, liked_id: number) {
+  async like(
+    liker_id: number,
+    liked_id: number,
+  ): Promise<LikeEvent | undefined> {
     if (liker_id == liked_id) return undefined;
     const existingLike: Like[] = await this.likeRepo()
       .select('*')
@@ -311,7 +316,15 @@ class ProfileService {
           SocketService.sendMatch(convCreated);
         }
       }
-      return like;
+      const liker_user = await this.profileRepo()
+        .select('name', 'id')
+        .where('id', liker_id)
+        .first();
+      if (liker_user) {
+        const user = { ...liker_user, created_at: like.created_at };
+        return { user, type: LikeType.Like };
+      }
+      return undefined;
     } else {
       // unlike
       await this.likeRepo().del().where('id', hasLikedAlready.id);
@@ -326,7 +339,7 @@ class ProfileService {
           SocketService.sendUnmatch(convCreated);
         }
       }
-      return; //SUCCES unlike
+      return { user: { id: liker_id }, type: LikeType.Unlike };
     }
   }
 
