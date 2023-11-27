@@ -1,14 +1,14 @@
 <div class="profile-viewers">
     <span class="title">Vues du profil</span>
     <div class="viewers-container">
-        <div class="viewer-item" *ngFor="let viewer of Viewers">
+        <div class="viewer-item" *ngFor="let view of Views">
             <div class="left-content">
                 <div class="viewer-photo-container">
-                    <img class="viewer-photo" [src]="viewer.avatar">
+                    <img class="viewer-photo" [src]="view.avatar | async">
                 </div>
                 <div class="viewer-info">
-                    <span class="viewer-name">{{ viewer.name }}</span>
-                    <span class="viewer-date">{{ viewer.date }}</span>
+                    <span class="viewer-name">{{ view.name }}</span>
+                    <span class="viewer-date">{{ view.time_ago }}</span>
                 </div>
             </div>
             <div class="right-content">

@@ -51,3 +51,14 @@ export interface LikeEvent {
   user: { id: number; name?: string; created_at?: Date };
   type: LikeType;
 }
+
+export interface ProfileView {
+  viewer_id: number;
+  viewed_id: number;
+  created_at: Date;
+}
+export interface ProfileViewEvent {
+  id: number;
+  name: string;
+  created_at: Date;
+}

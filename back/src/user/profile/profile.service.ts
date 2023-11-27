@@ -5,6 +5,7 @@ import {
   LikeEvent,
   LikeType,
   Profile,
+  ProfileView,
   SexualOrientation,
 } from '../../types/profile';
 import db from '../../database/connection';
@@ -17,6 +18,7 @@ import blockService from './block/block.service';
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
   public likeRepo = () => db<Like>('likes');
+  public profileViewRepo = () => db<ProfileView>('profile_view');
 
   async get_by_id(id: number) {
     try {
@@ -393,6 +395,34 @@ class ProfileService {
       .first();
 
     return isLiked ? true : false;
+  }
+
+  async getProfileViews(user_id: number) {
+    return this.profileRepo()
+      .select('profile.id', 'profile.name', 'profile_view.created_at')
+      .leftJoin('profile_view', 'profile.id', 'profile_view.viewer_id')
+      .where('profile_view.viewed_id', user_id);
+  }
+
+  async addProfileView(viewer_id: number, viewed_id: number) {
+    const [profile_view] = await this.profileViewRepo()
+      .insert({ viewed_id, viewer_id })
+      .onConflict(['viewed_id', 'viewer_id'])
+      .ignore()
+      .returning('*');
+
+    if (profile_view) {
+      const profile = await this.profileRepo()
+        .select('id', 'name')
+        .where('id', viewer_id)
+        .first();
+      if (profile) {
+        SocketService.sendProfileView(viewed_id, {
+          ...profile,
+          created_at: profile_view.created_at,
+        });
+      }
+    }
   }
 }
 

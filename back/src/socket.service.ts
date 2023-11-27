@@ -1,7 +1,6 @@
 import http from 'http';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { env } from './config';
-import { JwtPayload } from 'jsonwebtoken';
 import authService from './auth/auth.service';
 import db from './database/connection';
 import { Conversation, ConversationLoaded, Message } from './types/chat';
@@ -9,7 +8,7 @@ import { MyJwtPayload } from './types/jwtPayload';
 import { AuthenticatedSocket } from './types/authenticatedSocket';
 import profileService from './user/profile/profile.service';
 import { Notification } from './types/notification';
-import { LikeEvent } from './types/profile';
+import { LikeEvent, ProfileViewEvent } from './types/profile';
 
 class SocketService {
   private static server: Server;
@@ -65,6 +64,10 @@ class SocketService {
     this.server
       ?.to(`user-${notification.receiver_id}`)
       .emit('NewNotification', notification);
+  }
+
+  public static sendProfileView(viewed_id: number, profile: ProfileViewEvent) {
+    this.server?.to(`user-${viewed_id}`).emit('ProfileView', profile);
   }
 
   public static fetchSocketFromRoom(roomId: number) {

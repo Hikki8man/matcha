@@ -7,6 +7,7 @@ import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
 import { LikeModel } from 'src/app/models/like.model';
 import { timeAgo } from 'src/app/utils/timeAgo';
+import { ProfileViewModel } from 'src/app/models/profile-view.model';
 
 @Injectable({
     providedIn: 'root',
@@ -92,6 +93,17 @@ export class ProfileService implements IProfileService {
                     ...liker,
                     time_ago: timeAgo(liker.created_at),
                     avatar: this.getAvatar(liker.id),
+                }));
+            }),
+        );
+    }
+    public viewList(): Observable<ProfileViewModel[]> {
+        return this._apiService.callApi<ProfileViewModel[]>('profile/views', 'GET').pipe(
+            map((views) => {
+                return views.map((view) => ({
+                    ...view,
+                    time_ago: timeAgo(view.created_at),
+                    avatar: this.getAvatar(view.id),
                 }));
             }),
         );

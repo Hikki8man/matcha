@@ -188,5 +188,22 @@ export const createDb = async () => {
     table.timestamp('created_at').defaultTo(db.fn.now());
     table.unique(['blocker_id', 'blocked_id']);
   });
+
+  // Create profile view table
+  await createTableIfNotExists('profile_view', (table) => {
+    table.increments('id').primary();
+    table
+      .integer('viewer_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table
+      .integer('viewed_id')
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table.timestamp('created_at').defaultTo(db.fn.now());
+    table.unique(['viewer_id', 'viewed_id']);
+  });
   return db_exist;
 };
