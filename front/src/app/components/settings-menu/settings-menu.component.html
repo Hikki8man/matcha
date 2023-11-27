@@ -1,0 +1,10 @@
+<div class="settings-menu">
+    <a class="settings-menu-item" routerLink="/settings">
+        <svg-icon class="menu-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="settings-menu-item-text">Paramètres</span>
+    </a>
+    <div class="settings-menu-item" (click)="logout()">
+        <svg-icon class="menu-icon" [Src]="LogoutIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="settings-menu-item-text">Déconnection</span>
+    </div>
+</div>

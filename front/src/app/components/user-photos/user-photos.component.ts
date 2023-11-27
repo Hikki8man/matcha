@@ -18,7 +18,7 @@ export class UserPhotosComponent {
     }
 
     protected open(index: number): void {
-        this._lightbox.open(this.Album, index);
+        this._lightbox.open(this.Album, index, { centerVertically: true });
     }
 
     protected close(): void {

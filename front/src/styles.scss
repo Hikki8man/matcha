@@ -37,3 +37,23 @@ mat-slider {
 
     --mdc-slider-inactive-track-shape: 20px;
 }
+
+.skeleton {
+    animation: skeleton-loading 0.7s linear infinite alternate;
+}
+
+.skeleton-text {
+    width: 100px;
+    height: 16px;
+    border-radius: 7px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-color: #e6e6e6;
+    }
+
+    100% {
+        background-color: #A7A9AC;
+    }
+}

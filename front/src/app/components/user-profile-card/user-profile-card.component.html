@@ -1,13 +1,14 @@
 <div class="user-profile-card" *ngIf="Profile">
     <div class="left-content">
-        <img class="profile-image" [src]="Profile.avatar | async" alt="User profile image" />
+        <div *ngIf="Loading" class="profile-image skeleton"></div>
+        <img *ngIf="!Loading" class="profile-image" [src]="Profile.avatar | async" alt="User profile image" />
     </div>
     <div class="right-content">
         <div class="header-content">
             <div class="left-header-content">
                 <div class="user-name-container">
                     <div class="user-name-container">
-                        <span class="user-name">{{ Profile?.name }}</span>
+                        <span class="user-name">{{ Profile?.name }}, {{ Profile?.age }}</span>
                         <div
                             class="dot"
                             [ngClass]="Profile.online ? 'online' : 'offline'"

@@ -1,27 +1,21 @@
 <div id="navbar">
     <a routerLink="search" class="navbar-button" [class.selected]="isCurrentPage('search')">
-        <svg-icon class="navbar-icon" [Src]="UsersIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <svg-icon class="navbar-icon" [Src]="isCurrentPage('search') ? HeartIconUrl : HeartEmptyIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Match !</span>
-    </a>
-    <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
-        <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="navbar-details">Messages</span>
-        <div class="unread-messages-count" *ngIf="notificationsCount > 0">
-            <span>{{ notificationsCount > 99 ? '99+' : notificationsCount }}</span>
-        </div>
     </a>
     <a routerLink="profile/me" class="navbar-button" [class.selected]="isCurrentPage('profile/me')">
         <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Mon profil</span>
     </a>
-    <a routerLink="settings" class="navbar-button" [class.selected]="isCurrentPage('settings')">
-        <svg-icon class="navbar-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="navbar-details">Paramètres</span>
+    <a routerLink="notifications" class="navbar-button" [class.selected]="isCurrentPage('notifications')">
+        <svg-icon class="navbar-icon" [Src]="NotificationsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="navbar-details">Notifications</span>
     </a>
-
-    <div class="navbar-button" (click)="logout()">
-        <svg-icon class="navbar-icon" [Src]="LogoutIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="navbar-details">Logout</span>
-    </div>
-    
+    <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
+        <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="navbar-details">Messages</span>
+        <div class="unread-messages-count" *ngIf="UnreadMessagesCount > 0">
+            <span>{{ UnreadMessagesCount > 99 ? '99+' : UnreadMessagesCount }}</span>
+        </div>
+    </a>
 </div>
