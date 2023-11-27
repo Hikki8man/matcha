@@ -10,7 +10,6 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
     public HeartIconUrl: string = IconUrlEnum.Heart;
     public HeartIconStyle: Record<string, string> = {
         display: 'flex',
@@ -18,21 +17,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
     public AvatarUrl: string = null;
 
-    private _subscriptions: Subscription[] = [];
+    private _subscription: Subscription;
 
     constructor(
         private readonly _authenticationService: IAuthenticationService,
         private readonly _profileService: IProfileService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         const userId = this._authenticationService.profileValue.id;
-        this._subscriptions.push(this._profileService.getAvatar(userId).subscribe((avatar) => {
+        this._subscription = this._profileService.getAvatar(userId).subscribe((avatar) => {
             this.AvatarUrl = avatar;
-        }));
+        });
     }
 
     ngOnDestroy(): void {
-        this._subscriptions.forEach((sub) => sub.unsubscribe());
+        this._subscription.unsubscribe();
     }
 }

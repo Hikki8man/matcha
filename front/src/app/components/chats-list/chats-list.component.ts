@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { Subscription, map } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ConversationModel } from 'src/app/models/conversation.model';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISocketService } from 'src/app/services/socket/isocket.service';
+import { timeAgo } from 'src/app/utils/timeAgo';
 
 @Component({
     selector: 'chats-list',
@@ -16,9 +17,7 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     public Chats: ConversationModel[];
     public CurrentUser: ProfileModel;
     public defaultAvatar = 'assets/images/detective_squirrel.png';
-    private _onNewMessageSub: Subscription;
-    private _onUnmatchSub: Subscription;
-    private _onMatchSub: Subscription;
+    private _destroyed$: Subject<boolean> = new Subject();
 
     @Input() public SelectedChatId: number | null = null;
 
@@ -27,7 +26,6 @@ export class ChatsListComponent implements OnInit, OnDestroy {
     constructor(
         private _apiService: IApiService,
         private _socketService: ISocketService,
-        // private readonly _authenticationService: IAuthenticationService,
         private _profileService: IProfileService,
     ) {
         this.CurrentUser = inject(IAuthenticationService).profileValue!;
@@ -40,8 +38,10 @@ export class ChatsListComponent implements OnInit, OnDestroy {
                             conversation.user_1.id === this.CurrentUser.id
                                 ? conversation.user_2.id
                                 : conversation.user_1.id;
+                        const last_msg = conversation.last_message_created_at;
                         return {
                             ...conversation,
+                            send_at: last_msg ? timeAgo(last_msg) : undefined,
                             avatar: this._profileService.getAvatar(interlocutor_id),
                         };
                     });
@@ -52,16 +52,17 @@ export class ChatsListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log('chat list component init');
-        this._onNewMessageSub = this.subscribeToNewMessages();
-        this._socketService.socket.emit('JoinConversations');
-        this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
-            this.Chats = this.Chats.filter((chat) => chat.id !== conv.id);
-        });
-        this._onMatchSub = this._socketService
+        this._socketService
+            .onUnmatch()
+            .pipe(takeUntil(this._destroyed$))
+            .subscribe((conv) => {
+                this.Chats = this.Chats.filter((chat) => chat.id !== conv.id);
+            });
+        this._socketService
             .onMatch()
             .pipe(
+                takeUntil(this._destroyed$),
                 map((conv) => {
-                    this._socketService.socket.emit('JoinConversations');
                     const interlocutor_id =
                         conv.user_1.id === this.CurrentUser.id ? conv.user_2.id : conv.user_1.id;
                     return { ...conv, avatar: this._profileService.getAvatar(interlocutor_id) };
@@ -70,14 +71,13 @@ export class ChatsListComponent implements OnInit, OnDestroy {
             .subscribe((conv) => {
                 this.Chats.push(conv);
             });
+        this.subscribeToLastMessageUpdate();
     }
 
     ngOnDestroy(): void {
         console.log('chat list component destroy');
-        this._socketService.socket.emit('LeaveConversations');
-        this._onNewMessageSub.unsubscribe();
-        this._onUnmatchSub.unsubscribe();
-        this._onMatchSub.unsubscribe();
+        this._destroyed$.next(true);
+        this._destroyed$.complete();
     }
 
     public getUserName(conversation: ConversationModel): string {
@@ -91,13 +91,17 @@ export class ChatsListComponent implements OnInit, OnDestroy {
         this.OnChatSelected.emit(chatId);
     }
 
-    private subscribeToNewMessages() {
-        return this._socketService.onNewMessage().subscribe((message) => {
-            const conversation = this.Chats.find((chat) => chat.id === message.conv_id);
-            if (conversation) {
-                conversation.last_message_content = message.content;
-                conversation.last_message_created_at = message.created_at;
-            }
-        });
+    private subscribeToLastMessageUpdate() {
+        return this._socketService
+            .onLastMessageUpdate()
+            .pipe(takeUntil(this._destroyed$))
+            .subscribe((msg) => {
+                const conversation = this.Chats.find((chat) => chat.id === msg.conv_id);
+                if (conversation) {
+                    conversation.last_message_content = msg.content;
+                    conversation.last_message_created_at = msg.created_at;
+                    conversation.send_at = timeAgo(msg.created_at);
+                }
+            });
     }
 }

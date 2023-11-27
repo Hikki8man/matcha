@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
@@ -13,25 +13,28 @@ export class UserListComponent implements OnInit, OnDestroy {
     public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
     public Loading: boolean = true;
     public Profiles: PublicProfileModel[];
-
-    private _subscriptions: Subscription[] = [];
+    private _destroy$ = new Subject<boolean>();
 
     constructor(
         private _profileService: IProfileService,
         private _searchFilterService: ISearchFilterService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
-        this._subscriptions.push(this._searchFilterService.filters.subscribe((filter) => {
+        this._searchFilterService.filters.pipe(takeUntil(this._destroy$)).subscribe((filter) => {
             console.log('filter update: ', filter);
-            this._subscriptions.push(this._profileService.getProfilesFiltered(filter).subscribe((profiles) => {
-                this.Profiles = profiles;
-                this.Loading = false;
-            }));
-        }));
+            this._profileService
+                .getProfilesFiltered(filter)
+                .pipe(takeUntil(this._destroy$))
+                .subscribe((profiles) => {
+                    this.Profiles = profiles;
+                    this.Loading = false;
+                });
+        });
     }
 
     ngOnDestroy(): void {
-        this._subscriptions.forEach((sub) => sub.unsubscribe());
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 }

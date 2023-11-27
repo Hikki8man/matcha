@@ -2,15 +2,15 @@ import {
   CompletedSteps,
   Gender,
   Like,
+  LikeEvent,
+  LikeType,
   Profile,
   SexualOrientation,
 } from '../../types/profile';
-import HttpError from '../../utils/HttpError';
 import db from '../../database/connection';
 import conversationService from '../../chat/conversation.service';
 import SocketService from '../../socket.service';
 import { Tag } from '../../types/tag';
-import { ProfileTag } from '../../types/profileTag';
 import { Filter, OrderBy } from '../../types/filter';
 import blockService from './block/block.service';
 
@@ -22,8 +22,6 @@ class ProfileService {
     try {
       return await this.profileRepo()
         .select('profile.*')
-        // .select('photo.path as avatar_path')
-        // .select(db.raw('MAX(photo.path) as photo_path'))alo
         .select(
           db.raw(`
             CASE
@@ -40,17 +38,52 @@ class ProfileService {
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
-        // .leftJoin('photo as photo', function () {
-        //   this.on('profile.id', '=', 'photo.user_id').andOn(
-        //     db.raw('photo.avatar = true'),
-        //   );
-        // })
         .where('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id' /*, 'photo.path'*/)
+        .groupBy('profile.id')
         .first();
     } catch (e: any) {
       console.log('Error', e.message);
+      return undefined;
+    }
+  }
+  async profileCardById(id: number) {
+    try {
+      return await this.profileRepo()
+        .select(
+          'profile.id',
+          'profile.name',
+          'profile.bio',
+          'profile.gender',
+          'profile.sexual_orientation',
+          'profile.tags',
+          'profile.country',
+          'profile.city',
+          'profile.online',
+          'profile.last_online',
+        )
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+            END as tags
+          `),
+        )
+        .select(
+          db.raw(`
+              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+          `),
+        )
+        .leftJoin('account as acc', 'profile.id', 'acc.id')
+        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
+        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .where('profile.id', id)
+        .andWhere('acc.verified', true)
+        .groupBy('profile.id')
+        .first();
+    } catch (e: any) {
+      console.error('Error', e.message);
       return undefined;
     }
   }
@@ -280,7 +313,10 @@ class ProfileService {
     }
   }
 
-  async like(liker_id: number, liked_id: number) {
+  async like(
+    liker_id: number,
+    liked_id: number,
+  ): Promise<LikeEvent | undefined> {
     if (liker_id == liked_id) return undefined;
     const existingLike: Like[] = await this.likeRepo()
       .select('*')
@@ -311,7 +347,15 @@ class ProfileService {
           SocketService.sendMatch(convCreated);
         }
       }
-      return like;
+      const liker_user = await this.profileRepo()
+        .select('name', 'id')
+        .where('id', liker_id)
+        .first();
+      if (liker_user) {
+        const user = { ...liker_user, created_at: like.created_at };
+        return { user, type: LikeType.Like };
+      }
+      return undefined;
     } else {
       // unlike
       await this.likeRepo().del().where('id', hasLikedAlready.id);
@@ -326,8 +370,29 @@ class ProfileService {
           SocketService.sendUnmatch(convCreated);
         }
       }
-      return; //SUCCES unlike
+      return { user: { id: liker_id }, type: LikeType.Unlike };
     }
+  }
+
+  async getLikerList(id: number) {
+    try {
+      return await this.profileRepo()
+        .select('profile.id', 'profile.name', 'likes.created_at')
+        .leftJoin('likes', 'profile.id', 'likes.liker_id')
+        .where('likes.liked_id', id);
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async isLiked(user_id: number, liked_id: number): Promise<boolean> {
+    const isLiked = await this.likeRepo()
+      .select('id')
+      .where('liker_id', user_id)
+      .andWhere('liked_id', liked_id)
+      .first();
+
+    return isLiked ? true : false;
   }
 }
 
