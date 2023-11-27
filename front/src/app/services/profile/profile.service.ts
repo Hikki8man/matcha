@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { GenderEnum } from '../../enums/gender-enum';
-import { PublicProfileModel, Tag } from '../../models/profile.model';
+import { ProfileCardModel, PublicProfileModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
 import { LikeModel } from 'src/app/models/like.model';
@@ -18,12 +18,12 @@ export class ProfileService implements IProfileService {
         return this._apiService.callApi('profile/edit/name', 'POST', { name });
     }
 
-    public getById(id: number): Observable<PublicProfileModel> {
+    public getById(id: number): Observable<ProfileCardModel> {
         return new Observable((observer) => {
-            this._apiService.callApi<PublicProfileModel>(`profile/${id}`, 'GET').subscribe({
-                next: (profile) => {
-                    profile.avatar = this.getAvatar(profile.id);
-                    observer.next(profile);
+            this._apiService.callApi<ProfileCardModel>(`profile/${id}`, 'GET').subscribe({
+                next: (card) => {
+                    card.profile.avatar = this.getAvatar(card.profile.id);
+                    observer.next(card);
                     observer.complete();
                 },
                 error: (error) => observer.error(error),

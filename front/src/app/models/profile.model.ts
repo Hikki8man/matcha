@@ -42,3 +42,8 @@ export interface PublicProfileModel {
     last_online?: Date;
     avatar: Observable<string>;
 }
+
+export interface ProfileCardModel {
+    profile: PublicProfileModel;
+    isLiked: boolean;
+}

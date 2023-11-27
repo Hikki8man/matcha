@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -15,7 +14,7 @@ export class UserProfileCardComponent implements OnInit {
     public IsOtherUser: boolean = false;
     public IsLiked: boolean = false;
 
-    public profile$: Observable<PublicProfileModel>;
+    public Profile: PublicProfileModel;
 
     constructor(
         private readonly _profileService: IProfileService,
@@ -23,7 +22,9 @@ export class UserProfileCardComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.profile$ = this._profileService.getById(this.UserId);
+        this._profileService.getById(this.UserId).subscribe((card) => {
+            (this.Profile = card.profile), (this.IsLiked = card.isLiked);
+        });
         this.IsOtherUser = this.UserId !== this._authenticationService.profileValue.id;
     }
 

@@ -1,23 +1,23 @@
-<div class="user-profile-card" *ngIf="profile$ | async as profile">
+<div class="user-profile-card" *ngIf="Profile">
     <div class="left-content">
-        <img class="profile-image" [src]="profile.avatar | async" alt="User profile image" />
+        <img class="profile-image" [src]="Profile.avatar | async" alt="User profile image" />
     </div>
     <div class="right-content">
         <div class="header-content">
             <div class="left-header-content">
                 <div class="user-name-container">
                     <div class="user-name-container">
-                        <span class="user-name">{{ profile?.name }}</span>
+                        <span class="user-name">{{ Profile?.name }}</span>
                         <div
                             class="dot"
-                            [ngClass]="profile.online ? 'online' : 'offline'"
+                            [ngClass]="Profile.online ? 'online' : 'offline'"
                             [matTooltip]="
-                            profile.online ? 'En ligne' : 'Dernière connection il y a 20 minutes'
+                            Profile.online ? 'En ligne' : 'Dernière connection il y a 20 minutes'
                             "
                             matTooltipPosition="above"
                         ></div>
                     </div>
-                    <div class="user-status" [class.online]="profile.online"></div>
+                    <div class="user-status" [class.online]="Profile.online"></div>
                 </div>
                 <div class="user-location-container">
                     <svg-icon
@@ -25,7 +25,7 @@
                         [Src]="LocationIconUrl"
                         [ContentStyle]="LocationIconStyle"
                     ></svg-icon>
-                    <span class="user-location">{{ profile.country + ', ' + profile.city }}</span>
+                    <span class="user-location">{{ Profile.country + ', ' + Profile.city }}</span>
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">
@@ -36,10 +36,10 @@
             </div>
         </div>
         <div class="user-bio-container">
-            <span class="user-bio">{{ profile?.bio }}</span>
+            <span class="user-bio">{{ Profile?.bio }}</span>
         </div>
         <div class="user-tags-container">
-            <div *ngFor="let tag of profile?.tags">
+            <div *ngFor="let tag of Profile?.tags">
                 <interest-tag [Tag]="tag"></interest-tag>
             </div>
         </div>

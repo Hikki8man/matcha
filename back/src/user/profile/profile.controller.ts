@@ -41,7 +41,7 @@ class ProfileController {
       jwtStrategy,
       param('id').isNumeric(),
       CheckValidation,
-      asyncWrapper(this.getById),
+      asyncWrapper(this.getProfileCardAndIsLikedById),
     );
     this.router.get(
       this.path + '/:id/avatar',
@@ -60,13 +60,25 @@ class ProfileController {
     this.router.get(this.path + '/like/likers', jwtStrategy, this.liker_list);
   }
 
-  getById = async (req: MyRequest, res: Response) => {
+  // getById = async (req: MyRequest, res: Response) => {
+  //   console.log('param', req.params);
+  //   const user = await profileService.get_by_id(req.params.id!);
+  //   if (!user) {
+  //     res.status(404).send('User not found');
+  //   } else {
+  //     res.send(user);
+  //   }
+  // };
+
+  getProfileCardAndIsLikedById = async (req: MyRequest, res: Response) => {
     console.log('param', req.params);
-    const user = await profileService.get_by_id(req.params.id!);
-    if (!user) {
+    const id = +req.params.id!;
+    const profile = await profileService.get_by_id(id);
+    const isLiked = await profileService.isLiked(req.user_id!, id);
+    if (!profile) {
       res.status(404).send('User not found');
     } else {
-      res.send(user);
+      res.send({ profile, isLiked });
     }
   };
 
