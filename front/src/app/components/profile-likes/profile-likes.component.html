@@ -1,6 +1,6 @@
 <div class="profile-likes">
     <span class="title">Likes du profil</span>
-    <div class="likes-container" *ngIf="Likes$ | async as Likes">
+    <div class="likes-container" *ngIf="Likes">
         <div class="like-item" *ngFor="let like of Likes">
             <div class="left-content">
                 <div class="like-photo-container">

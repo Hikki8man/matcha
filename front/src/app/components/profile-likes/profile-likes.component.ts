@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, map, of } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { LikeType } from 'src/app/enums/like-type-enum';
 import { LikeModel } from 'src/app/models/like.model';
@@ -13,7 +13,7 @@ import { timeAgo } from 'src/app/utils/timeAgo';
     styleUrls: ['./profile-likes.component.scss'],
 })
 export class ProfileLikesComponent implements OnInit, OnDestroy {
-    public Likes$: Observable<LikeModel[]>;
+    public Likes: LikeModel[] = [];
     private _likeEventSub: Subscription;
 
     constructor(
@@ -23,22 +23,24 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         void this._profileService;
-        this.Likes$ = this._profileService.likerList();
-        this._likeEventSub = this._socketService.onLikeEvent().subscribe((like) => {
-            this.Likes$.pipe(
-                map((likes) => {
+        this._profileService.likerList().subscribe((likes) => (this.Likes = likes));
+        this._likeEventSub = this._socketService
+            .onLikeEvent()
+            .pipe(
+                tap((like) => {
                     if (like.type === LikeType.Like) {
                         like.user.avatar = this._profileService.getAvatar(like.user.id);
                         like.user.time_ago = timeAgo(like.user.created_at);
-                        return [...likes, like.user];
-                    } else {
-                        return likes.filter((l) => l.id !== like.user.id);
                     }
                 }),
-            ).subscribe((updatedLikes) => {
-                this.Likes$ = of(updatedLikes);
+            )
+            .subscribe((like) => {
+                if (like.type === LikeType.Like) {
+                    this.Likes.push(like.user);
+                } else {
+                    this.Likes = this.Likes.filter((l) => l.id !== like.user.id);
+                }
             });
-        });
     }
 
     ngOnDestroy(): void {
