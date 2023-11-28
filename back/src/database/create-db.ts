@@ -60,7 +60,7 @@ export const createDb = async () => {
     table.double('latitude');
     table.double('longitude');
     table.boolean('online').defaultTo(false);
-    table.timestamp('last_online').defaultTo(null);
+    table.timestamp('last_online').defaultTo(db.fn.now());
   });
 
   // Create likes table
