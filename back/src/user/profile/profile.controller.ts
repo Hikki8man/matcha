@@ -11,6 +11,7 @@ import { body, param } from '../../utils/middleware/validator/check';
 import { Filter, OrderBy } from '../../types/filter';
 import { tagsValidation } from '../../utils/custom-validations/tagsValidation';
 import SocketService from '../../socket.service';
+import { profileCompleteGuard } from '../../utils/middleware/profileComplete.guard';
 
 class ProfileController {
   public path = '/profile';
@@ -21,10 +22,11 @@ class ProfileController {
   }
 
   public initializeRoutes() {
-    this.router.get(this.path, jwtStrategy, this.getAll);
+    this.router.get(this.path, jwtStrategy, this.getAll); // TODO del
     this.router.post(
       this.path + '/filter',
       jwtStrategy,
+      profileCompleteGuard,
       body('max_dist').isInt(),
       body('min_age').isInt(),
       body('max_age').isInt(),
@@ -36,10 +38,16 @@ class ProfileController {
       CheckValidation,
       this.getAllFiltered,
     );
-    this.router.get(this.path + '/views', jwtStrategy, this.profile_view_list);
+    this.router.get(
+      this.path + '/views',
+      jwtStrategy,
+      profileCompleteGuard,
+      this.profile_view_list,
+    );
     this.router.get(
       this.path + '/:id',
       jwtStrategy,
+      profileCompleteGuard,
       param('id').isNumeric(),
       CheckValidation,
       asyncWrapper(this.getProfileCardAndIsLikedById),
@@ -47,6 +55,7 @@ class ProfileController {
     this.router.get(
       this.path + '/:id/avatar',
       jwtStrategy,
+      profileCompleteGuard,
       param('id').isNumeric(),
       CheckValidation,
       asyncWrapper(this.sendAvatar),
@@ -54,11 +63,17 @@ class ProfileController {
     this.router.post(
       this.path + '/like',
       jwtStrategy,
+      profileCompleteGuard,
       body('id').isInt(),
       CheckValidation,
       this.like,
     );
-    this.router.get(this.path + '/like/likers', jwtStrategy, this.liker_list);
+    this.router.get(
+      this.path + '/like/likers',
+      jwtStrategy,
+      profileCompleteGuard,
+      this.liker_list,
+    );
   }
 
   // getById = async (req: MyRequest, res: Response) => {

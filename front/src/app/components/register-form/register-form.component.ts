@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
@@ -16,7 +18,10 @@ export class RegisterFormComponent {
         width: '14px',
     };
 
-    constructor(private _authService: IAuthenticationService) {}
+    constructor(
+        private _authService: IAuthenticationService,
+        private _router: Router,
+    ) {}
 
     registerForm = new FormGroup({
         username: new FormControl('', { validators: [Validators.required] }),
@@ -41,10 +46,11 @@ export class RegisterFormComponent {
         if (this.registerForm.valid) {
             this._authService.register(this.registerForm.value).subscribe({
                 error: (err) => {
-                    console.log('error', err.error.errors);
+                    console.log('error', err.error);
                 },
                 complete: () => {
                     /*redirect*/
+                    this._router.navigate([AppPathEnum.Login]);
                 },
             });
         }

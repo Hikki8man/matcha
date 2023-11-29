@@ -9,7 +9,7 @@ import { ISocketService } from '../socket/isocket.service';
 import { IAuthenticationService } from './iauthentication.service';
 
 export interface Credentials {
-    email: string;
+    username: string;
     password: string;
 }
 

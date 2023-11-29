@@ -424,6 +424,19 @@ class ProfileService {
       }
     }
   }
+
+  async isProfileComplete(user_id: number) {
+    try {
+      const profile = await this.profileRepo()
+        .select('id')
+        .where('id', user_id)
+        .andWhere('completed_steps', CompletedSteps.Completed)
+        .first();
+      return profile ? true : false;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 export default new ProfileService();

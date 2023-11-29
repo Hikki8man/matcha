@@ -8,6 +8,7 @@ import CheckValidation from '../utils/middleware/validator/checkValidationResult
 import registerValidation from '../utils/custom-validations/signupValidation';
 import authService from './auth.service';
 import jwtRefreshStrategy from './jwtRefresh.strategy';
+import { body } from '../utils/middleware/validator/check';
 
 class AuthController {
   public path = '/auth';
@@ -24,7 +25,12 @@ class AuthController {
       CheckValidation,
       this.register,
     );
-    this.router.post(this.path + '/login', asyncWrapper(this.login));
+    this.router.post(
+      this.path + '/login',
+      body('username').isString(),
+      body('password').isString(),
+      asyncWrapper(this.login),
+    );
     this.router.post(this.path + '/validate-account', this.validateAccount);
     this.router.get(
       this.path + '/refresh-token',
@@ -51,9 +57,11 @@ class AuthController {
 
   login = async (req: Request, res: Response, next: NextFunction) => {
     console.log('body', req.body);
-    const account = await accountService.validate_login(req.body);
+    const account = await accountService.validate_login(
+      req.body.username,
+      req.body.password,
+    );
     if (!account) {
-      // return res.status(401).send("Email or Password incorrect");
       throw new HttpError(403, 'Email or Password incorrect');
     }
     const profile = await profileService.get_by_id(account.id);
@@ -63,7 +71,6 @@ class AuthController {
     }
     const { access_token, refresh_token } =
       authService.generateAccessAndRefreshToken(account.id);
-    // res.cookie('access_token', access_token, { httpOnly: true });
     res.cookie('refresh_token', refresh_token, { httpOnly: true });
 
     res.send({ account, profile, access_token });
@@ -100,7 +107,6 @@ class AuthController {
     }
 
     const access_token = authService.signAccessToken(profile.id);
-    // console.log('access token refreshed: ', access_token);
     res.send({ access_token });
   };
 
@@ -115,7 +121,6 @@ class AuthController {
     console.log('ip: ', req.ip);
 
     const access_token = authService.signAccessToken(account.id);
-    // console.log('access token refreshed: ', access_token);
     res.send({ account, profile, access_token });
   };
 

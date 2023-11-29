@@ -35,5 +35,23 @@
             display: flex;
             flex-wrap: wrap;
         }
+
+        .sort-container button {
+            padding: 5px 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+           }
+           
+           .sort-container button:hover, .sort-container button:active {
+            box-shadow: 0 0 5px #f44e63;
+           }
+           
+           .sort-container button.selected {
+            outline: none;
+            box-shadow: 0 0 5px #f44e63;
+           }
     }
 }

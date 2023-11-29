@@ -31,10 +31,11 @@
         </div>
         <span class="filter-name">Order by:</span>
         <div class="sort-container">
-            <button (click)="setOrderBy(OrderByEnum.Youngest)">Youngest</button>
-            <button (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
-            <button (click)="setOrderBy(OrderByEnum.Distance)">Distance</button>
-            <button (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
-        </div>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Distance}" (click)="setOrderBy(OrderByEnum.Distance)">Distance</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Youngest}" (click)="setOrderBy(OrderByEnum.Youngest)">Youngest</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Oldest}" (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.CommonTags}" (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
+           </div>
+        
     </div>
 </div>

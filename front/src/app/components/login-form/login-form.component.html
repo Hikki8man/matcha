@@ -11,10 +11,10 @@
     <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
 
         <div class="input-container">
-            <matcha-input Type="email" Placeholder="Email" Name="email" [FormGroup]="loginForm"
-                [HasError]="HasErrors && loginForm.get('email')?.invalid"></matcha-input>
-            <div class="error-message" *ngIf="HasErrors && loginForm.get('email')?.invalid">
-                {{getErrorMessage('email')}}
+            <matcha-input Type="text" Placeholder="Username" Name="username" [FormGroup]="loginForm"
+                [HasError]="HasErrors && loginForm.get('username')?.invalid"></matcha-input>
+            <div class="error-message" *ngIf="HasErrors && loginForm.get('username')?.invalid">
+                {{getErrorMessage('username')}}
             </div>
         </div>
 
