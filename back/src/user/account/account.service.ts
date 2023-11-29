@@ -59,37 +59,30 @@ class AccountService {
     }
   }
 
-  //TODO move to authservice
-  async validate_login(body: any) {
-    try {
-      const user = await this.accountRepo()
-        .select(
-          'id',
-          'username',
-          'firstname',
-          'lastname',
-          'email',
-          'verified',
-          'password',
-        )
-        .where('email', body.email)
-        .first();
-      if (!user) {
-        throw new HttpError(400, 'User not found');
-      }
-      // const user: Account = await db.one(
-      //   `SELECT id, email, verified, password FROM account WHERE email = $1`,
-      //   body.email
-      // );
-      const res = await bcrypt.compare(body.password, user.password!);
-      if (res === true) {
-        delete user.password;
-        return user;
-      } else {
-        return undefined;
-      }
-    } catch (e: any) {
-      // console.log(err.message);
+  async validate_login(username: string, password: string) {
+    const user = await this.accountRepo()
+      .select(
+        'id',
+        'username',
+        'firstname',
+        'lastname',
+        'email',
+        'verified',
+        'password',
+      )
+      .where('username', username)
+      .first();
+    if (!user) {
+      throw new HttpError(404, 'User not found');
+    }
+    if (user.verified === false) {
+      throw new HttpError(401, 'Account not verified');
+    }
+    const res = await bcrypt.compare(password, user.password!);
+    if (res === true) {
+      delete user.password;
+      return user;
+    } else {
       return undefined;
     }
   }

@@ -30,7 +30,7 @@ export class LoginFormComponent {
     ) {}
 
     public loginForm: FormGroup = this._formBuilder.group({
-        email: ['', [Validators.required, Validators.email]],
+        username: ['', [Validators.required]],
         password: ['', Validators.required],
     });
 
@@ -38,8 +38,6 @@ export class LoginFormComponent {
         const control = this.loginForm.get(controlName);
         if (control?.hasError('required')) {
             return `${controlName} is required`;
-        } else if (control?.hasError('email')) {
-            return 'Invalid email address';
         }
         return '';
     }
@@ -51,13 +49,12 @@ export class LoginFormComponent {
             this.IsLoading = true;
 
             const credentials: Credentials = {
-                email: this.loginForm.value.email!,
+                username: this.loginForm.value.username!,
                 password: this.loginForm.value.password!,
             };
 
             this._authenticationService.login(credentials).subscribe({
                 next: () => {
-                    // this._authenticationService.setProfile(user.profile);
                     this._router.navigate([AppPathEnum.Search]);
                     this.IsLoading = false;
                 },
