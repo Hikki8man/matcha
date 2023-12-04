@@ -1,22 +1,37 @@
 .settings-menu {
-    padding: 5px 10px;
 
-    a {
-        text-decoration: none;
+    .menu-head {
+
+        padding: 10px 15px;
+        border-bottom: solid 1px #e6e6e6;
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 550;
+            color: var(--color-text-primary);
+        }
     }
 
-    .settings-menu-item {
-        display: flex;
-        align-items: center;
-        color: var(--color-text-primary);
-        cursor: pointer;
+    .menu-body {
+        padding: 15px;
 
-        .menu-icon {
-            margin-right: 10px;
+        a {
+            text-decoration: none;
         }
 
-        &:first-child {
-            margin-bottom: 10px;
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            color: var(--color-text-primary);
+            cursor: pointer;
+
+            .menu-icon {
+                margin-right: 10px;
+            }
+
+            &:first-child {
+                margin-bottom: 20px;
+            }
         }
     }
 }

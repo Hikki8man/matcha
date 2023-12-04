@@ -48,6 +48,10 @@ mat-slider {
     border-radius: 7px;
 }
 
+.mat-mdc-menu-content{
+    padding: 0 !important;
+}
+
 @keyframes skeleton-loading {
     0% {
         background-color: #e6e6e6;
