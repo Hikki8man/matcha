@@ -16,8 +16,8 @@ class App {
     this.app = express();
     this.port = port;
     this.server = http.createServer(this.app);
-    this.app.use('uploads', express.static('uploads'));
-    this.app.use('public', express.static('public'));
+    this.app.use('/uploads', express.static('uploads'));
+    this.app.use('/public', express.static('public'));
 
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
