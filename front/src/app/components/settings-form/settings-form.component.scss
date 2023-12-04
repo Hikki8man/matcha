@@ -1,0 +1,46 @@
+.settings-form {
+    width: 800px;
+
+    .form-section {
+        padding: 20px 0px;
+
+        .title {
+            font-size: 20px;
+            font-weight: 550;
+        }
+    }
+
+    .settings-row {
+        display: flex;
+
+        .settings-column {
+            &:first-child {
+                margin-right: 10px;
+            }
+
+            flex: 1;
+        }
+    }
+
+    .settings-line {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .settings-form {
+        width: 600px;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .settings-form {
+        width: 550px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .settings-form {
+        width: 400px;
+    }
+}

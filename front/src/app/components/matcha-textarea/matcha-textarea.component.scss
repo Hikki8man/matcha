@@ -24,7 +24,8 @@
         border: none;
         background-color: inherit;
         color: var(--color-text-primary);
-        border-radius: 20px;
+        resize: none;
+        overflow: auto;
 
         width: 100%;
 
