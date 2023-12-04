@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Lightbox } from 'ngx-lightbox';
 
 @Component({
@@ -7,6 +7,9 @@ import { Lightbox } from 'ngx-lightbox';
     styleUrls: ['./user-photos.component.scss'],
 })
 export class UserPhotosComponent {
+
+    @Input() public IsEdit: boolean = false;
+ 
     public Album: any[] = [];
 
     constructor(private _lightbox: Lightbox) {

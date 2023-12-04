@@ -8,12 +8,14 @@
     .title {
         font-size: 14px;
         font-weight: 550;
+        margin-bottom: 20px;
     }
 
     .photos-container {
         display: flex;
         justify-content: space-between;
-        margin-top: 20px;
+
+        
 
         .user-photo {
             cursor: pointer;

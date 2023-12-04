@@ -11,7 +11,7 @@ import { SettingsFormComponentModule } from 'src/app/components/settings-form/se
 	],
 	imports: [
 		CommonModule,
-		SettingsFormComponentModule,
+		SettingsFormComponentModule
 	],
 	exports: [
 		SettingsComponent

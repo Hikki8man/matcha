@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserPhotosComponent } from './user-photos.component';
 import { LightboxModule } from 'ngx-lightbox';
+import { UserPhotoModule } from '../user-photo/user-photo.module';
 
 
 
@@ -11,7 +12,8 @@ import { LightboxModule } from 'ngx-lightbox';
 	],
 	imports: [
 		CommonModule,
-		LightboxModule
+		LightboxModule,
+		UserPhotoModule,
 	],
 	exports: [
 		UserPhotosComponent

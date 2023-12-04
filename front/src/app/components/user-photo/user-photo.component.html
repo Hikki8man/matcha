@@ -1,0 +1,4 @@
+<div class="user-photo-container">
+    <div *ngIf="IsEdit" class="edit-overlay" [ngStyle]="OverlayStyle" (click)="OnEditClicked.emit()"></div>
+    <img #photo class="user-photo" [src]="Src" (click)="OnPhotoClicked.emit()">
+</div>
