@@ -12,6 +12,7 @@ import tagsService from '../../../tags/tags.service';
 import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
+import { PhotoType } from '../../../types/photo';
 // import { body } from 'express-validator';
 
 class EditProfileController {
@@ -25,10 +26,13 @@ class EditProfileController {
 
   public initializeRoutes() {
     this.router.post(
-      this.path + '/avatar',
+      this.path + '/photo',
       jwtStrategy,
+      body('photo_type').custom((type) =>
+        Object.values(PhotoType).includes(type),
+      ),
       photoStorage.single('photo'),
-      asyncWrapper(this.uploadAvatar),
+      asyncWrapper(this.uploadPhoto),
     );
 
     this.router.post(
@@ -74,8 +78,8 @@ class EditProfileController {
     );
   }
 
-  uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadAvatar(req.user_id!, req.file);
+  uploadPhoto = async (req: MyRequest, res: Response, next: NextFunction) => {
+    await photoService.uploadPhoto(req.user_id!, req.body.photo_type, req.file);
     res.end();
   };
 

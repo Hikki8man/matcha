@@ -1,11 +1,15 @@
-import { Photo } from '../../../types/photo';
+import { Photo, PhotoType } from '../../../types/photo';
 import db from '../../../database/connection';
 import HttpError from '../../../utils/HttpError';
 import { validateMIMEType } from 'validate-image-type';
 import fs from 'fs/promises';
 
 class PhotoService {
-  async uploadAvatar(user_id: number, file: Express.Multer.File | undefined) {
+  async uploadPhoto(
+    user_id: number,
+    photo_type: PhotoType,
+    file: Express.Multer.File | undefined,
+  ) {
     if (!file) {
       throw new HttpError(400, 'Please upload a file');
     }
@@ -20,7 +24,7 @@ class PhotoService {
       throw new HttpError(400, 'Invalid file type');
     }
 
-    await this.removeOldAvatar(user_id);
+    await this.removeOldPhoto(user_id, photo_type);
 
     try {
       await db<Photo>('photo').insert({
@@ -29,7 +33,7 @@ class PhotoService {
         path: path,
         size: size,
         content_type: mimetype,
-        avatar: true,
+        photo_type: photo_type,
       });
     } catch (err) {
       await fs.unlink(file.path);
@@ -37,35 +41,25 @@ class PhotoService {
     }
   }
 
-  async getProfilePhotos(id: number) {
-    try {
-      return await db<Photo>('photo')
-        .select('*')
-        .where('user_id', id)
-        .andWhere('avatar', false);
-    } catch (err) {
-      console.log(err);
-      return undefined;
-    }
+  getProfilePhotos(id: number) {
+    return db<Photo>('photo')
+      .select('*')
+      .where('user_id', id)
+      .andWhereNot('photo_type', PhotoType.Avatar);
   }
 
-  async getProfileAvatar(id: number) {
-    try {
-      return await db<Photo>('photo')
-        .select('*')
-        .where('user_id', id)
-        .andWhere('avatar', true)
-        .first();
-    } catch (err) {
-      console.log(err);
-      return undefined;
-    }
+  getProfileAvatar(id: number) {
+    return db<Photo>('photo')
+      .select('*')
+      .where('user_id', id)
+      .andWhere('photo_type', PhotoType.Avatar)
+      .first();
   }
 
-  async removeOldAvatar(user_id: number) {
+  async removeOldPhoto(user_id: number, photo_type: PhotoType) {
     const [toRemove] = await db<Photo>('photo')
       .where('user_id', user_id)
-      .andWhere('avatar', true)
+      .andWhere('photo_type', photo_type)
       .del()
       .returning('*');
     console.log('toremove: ', toRemove);

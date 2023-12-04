@@ -117,13 +117,27 @@ class ProfileController {
     if (!avatar) {
       throw new HttpError(404, 'Avatar not found');
     }
-    res.setHeader('Content-Type', avatar.content_type);
+    // res.setHeader('Content-Type', avatar.content_type);
     const dirname = path.resolve() + '/';
     res.sendFile(dirname + avatar.path, (err) => {
       if (err && res.headersSent == false) {
         next(err);
       }
     });
+  };
+
+  sendPhotos = async (req: MyRequest, res: Response, next: NextFunction) => {
+    const photos = await photoService.getProfilePhotos(req.params.id!);
+    if (!photos) {
+      throw new HttpError(404, 'Photos not found');
+    }
+    // res.setHeader('Content-Type', photos.content_type);
+    // const dirname = path.resolve() + '/';
+    // res.sendFile(dirname + photos.path, (err) => {
+    //   if (err && res.headersSent == false) {
+    //     next(err);
+    //   }
+    // });
   };
 
   like = async (req: MyRequest, res: Response) => {

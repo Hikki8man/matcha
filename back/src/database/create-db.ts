@@ -88,11 +88,18 @@ export const createDb = async () => {
       .references('id')
       .inTable('profile')
       .onDelete('CASCADE');
-    table.boolean('avatar').defaultTo(false);
     table.string('content_type');
     table.string('filename');
     table.string('path');
     table.bigInteger('size');
+    table.enum('photo_type', [
+      'avatar',
+      'photo_1',
+      'photo_2',
+      'photo_3',
+      'photo_4',
+      'photo_5',
+    ]);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
 
