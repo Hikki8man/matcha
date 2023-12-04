@@ -89,7 +89,7 @@ class ProfileController {
   // TODO separate route for myProfile and Other profiles?
   getProfileCardAndIsLikedById = async (req: MyRequest, res: Response) => {
     const id = +req.params.id!;
-    const profile = await profileService.get_by_id(id);
+    const profile = await profileService.profileCardById(id);
     if (!profile) {
       res.status(404).send('User not found');
     } else {

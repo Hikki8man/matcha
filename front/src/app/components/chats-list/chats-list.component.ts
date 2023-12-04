@@ -34,15 +34,15 @@ export class ChatsListComponent implements OnInit, OnDestroy {
             .pipe(
                 map((conversations) => {
                     return conversations.map((conversation) => {
-                        const interlocutor_id =
+                        const interlocutor =
                             conversation.user_1.id === this.CurrentUser.id
-                                ? conversation.user_2.id
-                                : conversation.user_1.id;
+                                ? conversation.user_2
+                                : conversation.user_1;
                         const last_msg = conversation.last_message_created_at;
                         return {
                             ...conversation,
                             send_at: last_msg ? timeAgo(last_msg) : undefined,
-                            avatar: this._profileService.getAvatar(interlocutor_id),
+                            avatar: this._profileService.getAvatar(interlocutor.avatar),
                         };
                     });
                 }),
@@ -63,9 +63,12 @@ export class ChatsListComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this._destroyed$),
                 map((conv) => {
-                    const interlocutor_id =
-                        conv.user_1.id === this.CurrentUser.id ? conv.user_2.id : conv.user_1.id;
-                    return { ...conv, avatar: this._profileService.getAvatar(interlocutor_id) };
+                    const interlocutor =
+                        conv.user_1.id === this.CurrentUser.id ? conv.user_2 : conv.user_1;
+                    return {
+                        ...conv,
+                        avatar: this._profileService.getAvatar(interlocutor.avatar),
+                    };
                 }),
             )
             .subscribe((conv) => {

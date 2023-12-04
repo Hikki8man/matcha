@@ -63,7 +63,7 @@ class PhotoService {
       .del()
       .returning('*');
     console.log('toremove: ', toRemove);
-    if (toRemove && !toRemove.path.startsWith('src/')) {
+    if (toRemove && !toRemove.path.startsWith('public/')) {
       await fs.unlink(toRemove.path);
     }
   }

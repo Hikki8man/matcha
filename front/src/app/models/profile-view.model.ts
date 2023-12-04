@@ -1,9 +1,7 @@
-import { Observable } from 'rxjs';
-
 export interface ProfileViewModel {
     id: number;
     name: string;
     created_at: Date;
-    avatar: Observable<string>;
+    avatar: string;
     time_ago: string;
 }

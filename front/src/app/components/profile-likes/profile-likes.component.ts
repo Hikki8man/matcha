@@ -32,7 +32,7 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
                 takeUntil(this._destroy$),
                 tap((like) => {
                     if (like.type === LikeType.Like) {
-                        like.user.avatar = this._profileService.getAvatar(like.user.id);
+                        like.user.avatar = this._profileService.getAvatar(like.user.avatar);
                         like.user.time_ago = timeAgo(like.user.created_at);
                     }
                 }),

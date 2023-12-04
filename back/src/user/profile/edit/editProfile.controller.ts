@@ -1,5 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
-import profileService from '../profile.service';
+import express, { Response, NextFunction } from 'express';
 import HttpError from '../../../utils/HttpError';
 import photoService from '../photos/photo.service';
 import jwtStrategy from '../../../auth/jwt.strategy';
@@ -13,7 +12,6 @@ import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
 import { PhotoType } from '../../../types/photo';
-// import { body } from 'express-validator';
 
 class EditProfileController {
   public path = '/profile/edit';

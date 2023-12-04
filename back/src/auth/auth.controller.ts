@@ -29,6 +29,7 @@ class AuthController {
       this.path + '/login',
       body('username').isString(),
       body('password').isString(),
+      CheckValidation,
       asyncWrapper(this.login),
     );
     this.router.post(this.path + '/validate-account', this.validateAccount);

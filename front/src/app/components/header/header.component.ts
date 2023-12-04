@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
@@ -9,7 +8,7 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
     public HeartIconUrl: string = IconUrlEnum.Heart;
     public HeartIconStyle: Record<string, string> = {
         display: 'flex',
@@ -17,21 +16,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
     public AvatarUrl: string = null;
 
-    private _subscription: Subscription;
-
     constructor(
         private readonly _authenticationService: IAuthenticationService,
         private readonly _profileService: IProfileService,
     ) {}
 
     ngOnInit(): void {
-        const userId = this._authenticationService.profileValue.id;
-        this._subscription = this._profileService.getAvatar(userId).subscribe((avatar) => {
-            this.AvatarUrl = avatar;
-        });
-    }
-
-    ngOnDestroy(): void {
-        this._subscription.unsubscribe();
+        this.AvatarUrl = this._profileService.getAvatar(
+            this._authenticationService.profileValue.avatar,
+        );
     }
 }
