@@ -27,7 +27,7 @@ async function checkDatabaseConnection(): Promise<boolean> {
 
 const main = async () => {
   const connected = await checkDatabaseConnection();
-  await dropTable();
+  //await dropTable();
   if (connected) {
     console.log('Connected to database');
     try {

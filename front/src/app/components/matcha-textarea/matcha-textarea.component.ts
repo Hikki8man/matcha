@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
@@ -20,10 +20,12 @@ export class MatchaTextAreaComponent {
     }
     @Input() public Name: string;
     @Input() public HasError: boolean | undefined = false;
-    @Input() public Value: string = null;
+    @Input() public Value: any;
     @Input() public Disabled: boolean = false;
     @Input() public Title: string;
-    
+
+    @Output() public OnFocusOut: EventEmitter<string> = new EventEmitter<string>();
+
     public InputFormControl: FormControl = new FormControl();
     public IconVisibilityUrl: string = IconUrlEnum.VisibilityOff;
     public IconVisibilityStyle: Record<string, string> = {
@@ -35,8 +37,13 @@ export class MatchaTextAreaComponent {
     };
 
     private _formGroup: FormGroup;
-    
+
     public handleFocusOut(): void {
+        this.OnFocusOut.emit(this.Value);
+    }
+
+    public handleValueChange(event: Event): void {
+        this.Value = (event.target as any).value;
     }
 
     private init(): void {

@@ -18,11 +18,10 @@ export class SettingsFormComponent {
 		private readonly _apiServive: IApiService,
 		private readonly _authenticationService: IAuthenticationService,
 	) {
-		this._apiServive.callApi<AccountModel>(`user/${this._authenticationService.profileValue.id}`, 'GET')
+		this._apiServive.callApi<AccountModel>(`account`, 'GET')
 			.subscribe((res: AccountModel) => {
 				this.Email = res.email;
 			});
 		this.Profile = this._authenticationService.profileValue;
-		console.log(this.Profile);
 	}
 }
