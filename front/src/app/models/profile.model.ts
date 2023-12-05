@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { GenderEnum } from '../enums/gender-enum';
 import { SexualOrientation } from '../enums/sexual-orientation-enum';
 
@@ -24,6 +23,7 @@ export interface ProfileModel {
     bio: string;
     gender: GenderEnum;
     tags: Tag[];
+    avatar: string;
     completed_steps: CompletedSteps;
 }
 
@@ -40,7 +40,8 @@ export interface PublicProfileModel {
     distance: number;
     online: boolean;
     last_online?: Date;
-    avatar: Observable<string>;
+    // avatar: Observable<string>;
+    avatar: string;
 }
 
 export interface ProfileCardModel {

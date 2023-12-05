@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { FiltersModel } from 'src/app/models/filters.model';
+import { LikeModel } from 'src/app/models/like.model';
+import { ProfileViewModel } from 'src/app/models/profile-view.model';
+import { timeAgo } from 'src/app/utils/timeAgo';
+import { environment } from 'src/environment/environment';
 import { GenderEnum } from '../../enums/gender-enum';
 import { ProfileCardModel, PublicProfileModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
-import { LikeModel } from 'src/app/models/like.model';
-import { timeAgo } from 'src/app/utils/timeAgo';
-import { ProfileViewModel } from 'src/app/models/profile-view.model';
 
 @Injectable({
     providedIn: 'root',
@@ -23,7 +24,7 @@ export class ProfileService implements IProfileService {
         return new Observable((observer) => {
             this._apiService.callApi<ProfileCardModel>(`profile/${id}`, 'GET').subscribe({
                 next: (card) => {
-                    card.profile.avatar = this.getAvatar(card.profile.id);
+                    card.profile.avatar = this.getAvatar(card.profile.avatar);
                     observer.next(card);
                     observer.complete();
                 },
@@ -42,11 +43,10 @@ export class ProfileService implements IProfileService {
         return this._apiService.callApi('profile/edit/avatar', 'POST', formData);
     }
 
-    public getAvatar(id: number): Observable<string> {
-        return this._apiService.callApiAvatar<Blob>(`profile/${id}/avatar`).pipe(
-            map((avatar: Blob) => URL.createObjectURL(avatar)),
-            catchError(() => of('https://www.w3schools.com/howto/img_avatar.png')),
-        );
+    public getAvatar(avatarPath: string): string {
+        return avatarPath
+            ? environment.apiBaseUrl + '/' + avatarPath
+            : 'https://www.w3schools.com/howto/img_avatar.png'; //TODO replace with asset
     }
 
     public getAllTags(): Observable<Tag[]> {
@@ -76,7 +76,7 @@ export class ProfileService implements IProfileService {
                 map((profiles) => {
                     return profiles.map((profile) => ({
                         ...profile,
-                        avatar: this.getAvatar(profile.id),
+                        avatar: this.getAvatar(profile.avatar),
                     }));
                 }),
             );
@@ -92,7 +92,7 @@ export class ProfileService implements IProfileService {
                 return likers.map((liker) => ({
                     ...liker,
                     time_ago: timeAgo(liker.created_at),
-                    avatar: this.getAvatar(liker.id),
+                    avatar: this.getAvatar(liker.avatar),
                 }));
             }),
         );
@@ -103,7 +103,7 @@ export class ProfileService implements IProfileService {
                 return views.map((view) => ({
                     ...view,
                     time_ago: timeAgo(view.created_at),
-                    avatar: this.getAvatar(view.id),
+                    avatar: this.getAvatar(view.avatar),
                 }));
             }),
         );

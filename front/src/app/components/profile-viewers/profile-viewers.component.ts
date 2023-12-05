@@ -33,7 +33,7 @@ export class ProfileViewersComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this._destroy$),
                 tap((view) => {
-                    view.avatar = this._profileService.getAvatar(view.id);
+                    view.avatar = this._profileService.getAvatar(view.avatar);
                     view.time_ago = timeAgo(view.created_at);
                 }),
             )

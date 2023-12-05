@@ -8,7 +8,7 @@
             </div>
             <div *ngFor="let user of Profiles" class="user-item">
                 <div class="user-photo-container">
-                    <img class="user-photo" [src]="(user.avatar | async) || defaultAvatar">
+                    <img class="user-photo" [src]="user.avatar">
                 </div>
                 <div class="user-infos">
                     <a [routerLink]="'/profile/' + user.id" class="user-name">{{ user.name }}, {{ user.age }}</a>

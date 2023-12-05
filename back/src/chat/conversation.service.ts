@@ -2,6 +2,7 @@ import { Conversation, ConversationLoaded, Message } from '../types/chat';
 import HttpError from '../utils/HttpError';
 import db from '../database/connection';
 import SocketService from '../socket.service';
+import { PhotoType } from '../types/photo';
 
 class ConversationService {
   // async isInConversation(user_id: number, conv_id: number) {
@@ -101,17 +102,41 @@ class ConversationService {
       return await db<ConversationLoaded>('conversation')
         .select(
           'conversation.id',
-          db.raw(
-            "jsonb_build_object('id', profile1.id, 'name', profile1.name) as user_1",
-          ),
-          db.raw(
-            "jsonb_build_object('id', profile2.id, 'name', profile2.name) as user_2",
-          ),
+          db.raw(`
+            jsonb_build_object(
+              'id', profile1.id,
+              'name', profile1.name,
+              'avatar', avatar1.path
+            ) as user_1
+          `),
+          db.raw(`
+            jsonb_build_object(
+              'id', profile2.id,
+              'name', profile2.name,
+              'avatar', avatar2.path
+              ) as user_2
+          `),
         )
         .leftJoin('profile as profile1', 'conversation.user_1', 'profile1.id')
         .leftJoin('profile as profile2', 'conversation.user_2', 'profile2.id')
+        .leftJoin('photo as avatar1', function () {
+          this.on('profile1.id', '=', 'avatar1.user_id').andOn(
+            db.raw('avatar1.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
+        .leftJoin('photo as avatar2', function () {
+          this.on('profile2.id', '=', 'avatar2.user_id').andOn(
+            db.raw('avatar2.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
         .where('conversation.id', id)
-        .groupBy('conversation.id', 'profile1.id', 'profile2.id')
+        .groupBy(
+          'conversation.id',
+          'profile1.id',
+          'profile2.id',
+          'avatar1.path',
+          'avatar2.path',
+        )
         .first();
     } catch (err) {
       console.log('errror', err);
@@ -123,18 +148,36 @@ class ConversationService {
     return db<Conversation>('conversation')
       .select(
         'conversation.id',
-        db.raw(
-          "jsonb_build_object('id', profile1.id, 'name', profile1.name) as user_1",
-        ),
-        db.raw(
-          "jsonb_build_object('id', profile2.id, 'name', profile2.name) as user_2",
-        ),
+        db.raw(`
+        jsonb_build_object(
+          'id', profile1.id,
+          'name', profile1.name,
+          'avatar', avatar1.path
+        ) as user_1
+      `),
+        db.raw(`
+        jsonb_build_object(
+          'id', profile2.id,
+          'name', profile2.name,
+          'avatar', avatar2.path
+          ) as user_2
+      `),
         db.raw('"message"."content" as "last_message_content"'),
         db.raw('"message"."created_at" as "last_message_created_at"'),
       )
       .leftJoin('message', 'message.id', 'conversation.last_message')
       .leftJoin('profile as profile1', 'conversation.user_1', 'profile1.id')
       .leftJoin('profile as profile2', 'conversation.user_2', 'profile2.id')
+      .leftJoin('photo as avatar1', function () {
+        this.on('profile1.id', '=', 'avatar1.user_id').andOn(
+          db.raw('avatar1.photo_type = ?', [PhotoType.Avatar]),
+        );
+      })
+      .leftJoin('photo as avatar2', function () {
+        this.on('profile2.id', '=', 'avatar2.user_id').andOn(
+          db.raw('avatar2.photo_type = ?', [PhotoType.Avatar]),
+        );
+      })
       .where('user_1', id)
       .orWhere('user_2', id);
   }

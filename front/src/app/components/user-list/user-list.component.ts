@@ -10,7 +10,6 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, OnDestroy {
-    public defaultAvatar = 'https://www.w3schools.com/howto/img_avatar.png';
     public Loading: boolean = true;
     public Profiles: PublicProfileModel[];
     private _destroy$ = new Subject<boolean>();

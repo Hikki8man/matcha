@@ -8,7 +8,7 @@ import { Tag } from '../types/tag';
 import db from './connection';
 import bcrypt from 'bcrypt';
 import tagsService from '../tags/tags.service';
-import { Photo } from '../types/photo';
+import { Photo, PhotoType } from '../types/photo';
 import accountService from '../user/account/account.service';
 import { female_names } from './fake-user-data/female-names';
 import { male_names } from './fake-user-data/male-names';
@@ -166,15 +166,13 @@ class DbService {
   }
 
   private async addProfileAvatar(id: number, gender: Gender) {
-    let filePath = 'src/database/fake-user-data/';
+    const filePath = 'public/';
     let filename;
     if (gender === Gender.Female) {
       const randomIndex = Math.floor(Math.random() * 20 + 1);
-      filePath += 'female-avatars/';
       filename = `female${randomIndex}.png`;
     } else {
       const randomIndex = Math.floor(Math.random() * 20 + 1);
-      filePath += 'male-avatars/';
       filename = `male${randomIndex}.png`;
     }
     await db<Photo>('photo').insert({
@@ -182,7 +180,7 @@ class DbService {
       filename: filename,
       path: filePath + filename,
       content_type: 'image/png',
-      avatar: true,
+      photo_type: PhotoType.Avatar,
     });
   }
 }

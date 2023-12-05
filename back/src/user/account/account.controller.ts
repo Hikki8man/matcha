@@ -6,7 +6,7 @@ import { param } from '../../utils/middleware/validator/check';
 import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
 
 class AccountController {
-  public path = '/user';
+  public path = '/account';
   public router = express.Router();
 
   constructor() {
@@ -14,13 +14,7 @@ class AccountController {
   }
 
   public initializeRoutes() {
-    this.router.get(
-      this.path + '/:id',
-      jwtStrategy,
-      param('id').isNumeric(),
-      CheckValidation,
-      this.getUserById,
-    );
+    this.router.get(this.path, jwtStrategy, CheckValidation, this.getUserById);
   }
 
   getUserById = async (req: MyRequest, res: Response) => {

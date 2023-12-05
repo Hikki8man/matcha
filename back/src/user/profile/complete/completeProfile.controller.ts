@@ -16,6 +16,7 @@ import tagsService from '../../../tags/tags.service';
 import editProfileService from '../edit/editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
+import { PhotoType } from '../../../types/photo';
 
 class CompleteProfileController {
   public path = '/profile/complete';
@@ -30,6 +31,9 @@ class CompleteProfileController {
     this.router.post(
       this.path + '/avatar',
       jwtStrategy,
+      // body('photo_type').custom((type) =>
+      //   Object.values(PhotoType).includes(type),
+      // ),
       photoStorage.single('photo'),
       asyncWrapper(this.uploadAvatar),
     );
@@ -78,7 +82,7 @@ class CompleteProfileController {
   }
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadAvatar(req.user_id!, req.file);
+    await photoService.uploadPhoto(req.user_id!, PhotoType.Avatar, req.file);
     editProfileService.updateCompteteSteps(req.user_id!, CompletedSteps.Tags);
     res.end();
   };
