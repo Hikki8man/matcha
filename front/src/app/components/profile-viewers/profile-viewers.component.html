@@ -4,7 +4,7 @@
         <div class="viewer-item" *ngFor="let view of Views">
             <div class="left-content">
                 <div class="viewer-photo-container">
-                    <img class="viewer-photo" [src]="view.avatar | async">
+                    <img class="viewer-photo" [src]="view.avatar">
                 </div>
                 <div class="viewer-info">
                     <span class="viewer-name">{{ view.name }}</span>

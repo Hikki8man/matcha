@@ -14,16 +14,19 @@ import SocketService from '../../socket.service';
 import { Tag } from '../../types/tag';
 import { Filter, OrderBy } from '../../types/filter';
 import blockService from './block/block.service';
+import { PhotoType } from '../../types/photo';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
   public likeRepo = () => db<Like>('likes');
   public profileViewRepo = () => db<ProfileView>('profile_view');
 
+  //todo remove?
   async get_by_id(id: number) {
     try {
       return await this.profileRepo()
         .select('profile.*')
+        .select('avatar.path as avatar')
         .select(
           db.raw(`
             CASE
@@ -34,15 +37,33 @@ class ProfileService {
         )
         .select(
           db.raw(`
+            CASE
+              WHEN COUNT(photos.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('path', photos.path, 'type', photos.photo_type))
+            END as photos
+          `),
+        )
+        .select(
+          db.raw(`
               EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
           `),
         )
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
+        .leftJoin('photo as photos', function () {
+          this.on('profile.id', '=', 'photos.user_id').andOn(
+            db.raw('"photos"."photo_type" != ?', [PhotoType.Avatar]),
+          );
+        })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
         .where('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id')
+        .groupBy('profile.id', 'avatar')
         .first();
     } catch (e: any) {
       console.log('Error', e.message);
@@ -58,11 +79,19 @@ class ProfileService {
           'profile.bio',
           'profile.gender',
           'profile.sexual_orientation',
-          'profile.tags',
           'profile.country',
           'profile.city',
           'profile.online',
           'profile.last_online',
+        )
+        .select('avatar.path as avatar')
+        .select(
+          db.raw(`
+            CASE
+              WHEN COUNT(photos.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(jsonb_build_object('path', photos.path, 'type', photos.photo_type))
+            END as photos
+          `),
         )
         .select(
           db.raw(`
@@ -77,12 +106,22 @@ class ProfileService {
               EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
           `),
         )
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('"avatar"."photo_type" = ?', [PhotoType.Avatar]),
+          );
+        })
+        .leftJoin('photo as photos', function () {
+          this.on('profile.id', '=', 'photos.user_id').andOn(
+            db.raw('"photos"."photo_type" != ?', [PhotoType.Avatar]),
+          );
+        })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
         .where('profile.id', id)
         .andWhere('acc.verified', true)
-        .groupBy('profile.id')
+        .groupBy('profile.id', 'avatar')
         .first();
     } catch (e: any) {
       console.error('Error', e.message);
@@ -90,6 +129,7 @@ class ProfileService {
     }
   }
 
+  //TODO remove
   async get_all(id: number) {
     try {
       return await this.profileRepo()
@@ -165,7 +205,6 @@ class ProfileService {
             END as tags
           `),
         )
-
         .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
         .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
         .where('profile.id', id)
@@ -196,6 +235,7 @@ class ProfileService {
           'profile.online',
           'profile.last_online',
         )
+        .select('avatar.path as avatar')
         .select(
           db.raw(`
             CASE
@@ -228,6 +268,11 @@ class ProfileService {
             [my_profile.longitude, my_profile.latitude],
           ),
         )
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
         .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
@@ -286,7 +331,7 @@ class ProfileService {
       }
 
       return await profilesQuery
-        .groupBy('profile.id')
+        .groupBy('profile.id', 'avatar')
         .offset(filter.offset)
         .limit(10, { skipBinding: true });
     } catch (e: any) {
@@ -350,8 +395,14 @@ class ProfileService {
         }
       }
       const liker_user = await this.profileRepo()
-        .select('name', 'id')
-        .where('id', liker_id)
+        .select('profile.name', 'profile.id')
+        .select('avatar.path as avatar')
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
+        .where('profile.id', liker_id)
         .first();
       if (liker_user) {
         const user = { ...liker_user, created_at: like.created_at };
@@ -380,6 +431,12 @@ class ProfileService {
     try {
       return await this.profileRepo()
         .select('profile.id', 'profile.name', 'likes.created_at')
+        .select('avatar.path as avatar')
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
         .leftJoin('likes', 'profile.id', 'likes.liker_id')
         .where('likes.liked_id', id);
     } catch (e) {
@@ -400,6 +457,12 @@ class ProfileService {
   async getProfileViews(user_id: number) {
     return this.profileRepo()
       .select('profile.id', 'profile.name', 'profile_view.created_at')
+      .select('avatar.path as avatar')
+      .leftJoin('photo as avatar', function () {
+        this.on('profile.id', '=', 'avatar.user_id').andOn(
+          db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+        );
+      })
       .leftJoin('profile_view', 'profile.id', 'profile_view.viewer_id')
       .where('profile_view.viewed_id', user_id);
   }
@@ -413,8 +476,14 @@ class ProfileService {
 
     if (profile_view) {
       const profile = await this.profileRepo()
-        .select('id', 'name')
-        .where('id', viewer_id)
+        .select('profile.id', 'profile.name')
+        .select('avatar.path as avatar')
+        .leftJoin('photo as avatar', function () {
+          this.on('profile.id', '=', 'avatar.user_id').andOn(
+            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
+        .where('profile.id', viewer_id)
         .first();
       if (profile) {
         SocketService.sendProfileView(viewed_id, {

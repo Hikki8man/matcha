@@ -4,7 +4,7 @@
         <div class="like-item" *ngFor="let like of Likes">
             <div class="left-content">
                 <div class="like-photo-container">
-                    <img class="like-photo" [src]="(like.avatar | async)">
+                    <img class="like-photo" [src]="like.avatar">
                 </div>
                 <div class="like-info">
                     <span class="like-name">{{ like.name }}</span>

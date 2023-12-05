@@ -1,5 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
-import profileService from '../profile.service';
+import express, { Response, NextFunction } from 'express';
 import HttpError from '../../../utils/HttpError';
 import photoService from '../photos/photo.service';
 import jwtStrategy from '../../../auth/jwt.strategy';
@@ -12,7 +11,7 @@ import tagsService from '../../../tags/tags.service';
 import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
-// import { body } from 'express-validator';
+import { PhotoType } from '../../../types/photo';
 
 class EditProfileController {
   public path = '/profile/edit';
@@ -25,10 +24,13 @@ class EditProfileController {
 
   public initializeRoutes() {
     this.router.post(
-      this.path + '/avatar',
+      this.path + '/photo',
       jwtStrategy,
+      body('photo_type').custom((type) =>
+        Object.values(PhotoType).includes(type),
+      ),
       photoStorage.single('photo'),
-      asyncWrapper(this.uploadAvatar),
+      asyncWrapper(this.uploadPhoto),
     );
 
     this.router.post(
@@ -74,8 +76,8 @@ class EditProfileController {
     );
   }
 
-  uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadAvatar(req.user_id!, req.file);
+  uploadPhoto = async (req: MyRequest, res: Response, next: NextFunction) => {
+    await photoService.uploadPhoto(req.user_id!, req.body.photo_type, req.file);
     res.end();
   };
 

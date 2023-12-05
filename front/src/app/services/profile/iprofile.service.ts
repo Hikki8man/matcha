@@ -10,7 +10,7 @@ export abstract class IProfileService {
     public abstract editBio(bio: string): Observable<void>;
     public abstract editGender(gender: GenderEnum): Observable<void>;
     public abstract editAvatar(photo: any): Observable<void>;
-    public abstract getAvatar(id: number): Observable<string>;
+    public abstract getAvatar(avatarPath: string): string;
     public abstract getAllTags(): Observable<Tag[]>;
     public abstract editTags(tags: Tag[]): Observable<void>;
     public abstract getProfilesFiltered(filter: FiltersModel): Observable<PublicProfileModel[]>;

@@ -29,6 +29,7 @@ class AuthController {
       this.path + '/login',
       body('username').isString(),
       body('password').isString(),
+      CheckValidation,
       asyncWrapper(this.login),
     );
     this.router.post(this.path + '/validate-account', this.validateAccount);
@@ -72,7 +73,7 @@ class AuthController {
     const { access_token, refresh_token } =
       authService.generateAccessAndRefreshToken(account.id);
     res.cookie('refresh_token', refresh_token, { httpOnly: true });
-
+    //TODO remove acc
     res.send({ account, profile, access_token });
   };
 
