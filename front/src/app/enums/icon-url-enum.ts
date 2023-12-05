@@ -3,10 +3,12 @@ export class IconUrlEnum {
 
     public static readonly ArrowBack: string = `${this._baseUrl}arrow-back.svg`;
     public static readonly Edit: string = `${this._baseUrl}edit.svg`;
+    public static readonly Flag: string = `${this._baseUrl}flag.svg`;
     public static readonly Heart: string = `${this._baseUrl}heart.svg`;
     public static readonly HeartEmpty: string = `${this._baseUrl}heart-empty.svg`;
     public static readonly Location: string = `${this._baseUrl}location.svg`;
     public static readonly Message: string = `${this._baseUrl}message.svg`;
+    public static readonly More: string = `${this._baseUrl}more.svg`;
     public static readonly Notification: string = `${this._baseUrl}notification.svg`;
     public static readonly Search: string = `${this._baseUrl}search.svg`;
     public static readonly Send: string = `${this._baseUrl}send.svg`;

@@ -5,6 +5,7 @@ import { UserProfileCardModule } from 'src/app/components/user-profile-card/user
 import { UserPhotosModule } from 'src/app/components/user-photos/user-photos.module';
 import { UserAboutModule } from 'src/app/components/user-about/user-about.module';
 import { RouterModule } from '@angular/router';
+import { UserProfileHeaderModule } from 'src/app/components/user-profile-header/user-profile-header.module';
 
 
 
@@ -18,6 +19,7 @@ import { RouterModule } from '@angular/router';
 		UserPhotosModule,
 		UserAboutModule,
 		RouterModule,
+		UserProfileHeaderModule,
 	],
 	exports: [
 		UserComponent
