@@ -2,6 +2,7 @@ export class IconUrlEnum {
     private static readonly _baseUrl: string = 'assets/icons/';
 
     public static readonly ArrowBack: string = `${this._baseUrl}arrow-back.svg`;
+    public static readonly Edit: string = `${this._baseUrl}edit.svg`;
     public static readonly Heart: string = `${this._baseUrl}heart.svg`;
     public static readonly HeartEmpty: string = `${this._baseUrl}heart-empty.svg`;
     public static readonly Location: string = `${this._baseUrl}location.svg`;

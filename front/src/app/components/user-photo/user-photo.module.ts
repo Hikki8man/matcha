@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserPhotoComponent } from './user-photo.component';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 
 
 
@@ -9,7 +10,8 @@ import { UserPhotoComponent } from './user-photo.component';
 		UserPhotoComponent
 	],
 	imports: [
-		CommonModule
+		CommonModule,
+		SvgIconComponentModule,
 	],
 	exports: [
 		UserPhotoComponent
