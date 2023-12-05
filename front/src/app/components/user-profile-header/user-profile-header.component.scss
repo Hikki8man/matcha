@@ -1,0 +1,32 @@
+.profile-header {
+    padding: 10px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .left-content {
+        display: flex;
+        align-items: center;
+        .back-icon {
+            margin-right: 10px;
+            cursor: pointer;
+
+        }
+        .profile-title {
+            font-size: 18px;
+            font-weight: 550;
+            color: var(--color-text-primary);
+        }
+    }
+
+    .right-content {
+        display: flex;
+        align-items: center;
+
+        .more-button {
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    }
+}

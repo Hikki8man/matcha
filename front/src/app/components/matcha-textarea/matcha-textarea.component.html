@@ -1,0 +1,6 @@
+<span *ngIf="Title" class="title">{{ Title }}</span>
+<div class="matcha-input-container" [class.error]="HasError">
+    <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" class="matcha-input" [ngModel]="Value"
+        [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name" maxlength="200"
+        (focusout)="handleFocusOut()"></textarea>
+</div>

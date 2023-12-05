@@ -1,16 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
 @Component({
-    selector: 'matcha-input',
-    templateUrl: './matcha-input.component.html',
-    styleUrls: ['./matcha-input.component.scss'],
+    selector: 'matcha-textarea',
+    templateUrl: './matcha-textarea.component.html',
+    styleUrls: ['./matcha-textarea.component.scss'],
 })
-export class MatchaInputComponent implements OnInit {
+export class MatchaTextAreaComponent {
 
     @Input() public Placeholder: string = null;
-    @Input() public Type: string;
     @Input()
     get FormGroup(): FormGroup {
         return this._formGroup;
@@ -21,12 +20,11 @@ export class MatchaInputComponent implements OnInit {
     }
     @Input() public Name: string;
     @Input() public HasError: boolean | undefined = false;
-    @Input() public Value: any;
+    @Input() public Value: string = null;
     @Input() public Disabled: boolean = false;
     @Input() public Title: string;
     
     public InputFormControl: FormControl = new FormControl();
-    public IsPassword: boolean = false;
     public IconVisibilityUrl: string = IconUrlEnum.VisibilityOff;
     public IconVisibilityStyle: Record<string, string> = {
         width: '18px',
@@ -37,14 +35,8 @@ export class MatchaInputComponent implements OnInit {
     };
 
     private _formGroup: FormGroup;
-
-    ngOnInit(): void {
-        this.IsPassword = this.Type === 'password';
-    }
-
-    public handlePasswordVisibilityChange(): void {
-        this.IconVisibilityUrl = this.Type === 'password' ? IconUrlEnum.Visibility : IconUrlEnum.VisibilityOff;
-        this.Type = this.Type === 'password' ? 'text' : 'password';
+    
+    public handleFocusOut(): void {
     }
 
     private init(): void {

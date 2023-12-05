@@ -1,6 +1,8 @@
 <div class="user-photos">
-    <span class="title">Photos</span>
+    <span class="title" *ngIf="!IsEdit">Photos</span>
     <div class="photos-container">
-        <img *ngFor="let image of Album; let i=index" class="user-photo" [src]="image.src" (click)="open(i)">
+        <ng-container *ngFor="let image of Album; let i=index">
+            <user-photo class="user-photo" [Src]="image.src" [IsEdit]="IsEdit" (OnPhotoClicked)="open(i)"></user-photo>
+        </ng-container>
     </div>
 </div>

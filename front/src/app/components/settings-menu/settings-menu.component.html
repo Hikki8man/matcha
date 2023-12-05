@@ -1,10 +1,15 @@
 <div class="settings-menu">
-    <a class="settings-menu-item" routerLink="/settings">
-        <svg-icon class="menu-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="settings-menu-item-text">Paramètres</span>
-    </a>
-    <div class="settings-menu-item" (click)="logout()">
-        <svg-icon class="menu-icon" [Src]="LogoutIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="settings-menu-item-text">Déconnection</span>
+    <div class="menu-head">
+        <span class="user-name">{{ UserName }}</span>
+    </div>
+    <div class="menu-body">
+        <a class="settings-menu-item" routerLink="/settings" matRipple>
+            <svg-icon class="menu-icon" [Src]="SettingsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+            <span class="settings-menu-item-text">Paramètres</span>
+        </a>
+        <div class="settings-menu-item" (click)="logout()" matRipple>
+            <svg-icon class="menu-icon" [Src]="LogoutIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+            <span class="settings-menu-item-text">Déconnection</span>
+        </div>
     </div>
 </div>
