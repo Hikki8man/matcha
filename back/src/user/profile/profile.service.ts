@@ -25,43 +25,32 @@ class ProfileService {
   async get_by_id(id: number) {
     try {
       return await this.profileRepo()
-        .select('profile.*')
-        .select('avatar.path as avatar')
         .select(
+          'profile.*',
           db.raw(`
-            CASE
-              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
-            END as tags
-          `),
-        )
-        .select(
+        CASE
+          WHEN COUNT(DISTINCT photos.id) = 0 THEN '[]'::jsonb
+          ELSE jsonb_agg(DISTINCT jsonb_build_object('path', photos.path, 'type', photos.photo_type))
+        END as photos
+      `),
           db.raw(`
-            CASE
-              WHEN COUNT(photos.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('path', photos.path, 'type', photos.photo_type))
-            END as photos
-          `),
-        )
-        .select(
+        CASE
+          WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+          ELSE jsonb_agg(DISTINCT jsonb_build_object('id', tags.id, 'name', tags.name))
+        END as tags
+      `),
           db.raw(`
-              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
-          `),
+          EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+      `),
         )
-        .leftJoin('photo as avatar', function () {
-          this.on('profile.id', '=', 'avatar.user_id').andOn(
-            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
-          );
-        })
-        .leftJoin('photo as photos', function () {
-          this.on('profile.id', '=', 'photos.user_id').andOn(
-            db.raw('"photos"."photo_type" != ?', [PhotoType.Avatar]),
-          );
-        })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .leftJoin('photo as photos', 'profile.id', 'photos.user_id')
+        .leftJoin('photo as avatar', 'profile.id', 'avatar.user_id')
         .where('profile.id', id)
+        .andWhere('avatar.photo_type', PhotoType.Avatar)
+        .andWhereNot('photos.photo_type', PhotoType.Avatar)
         .andWhere('acc.verified', true)
         .groupBy('profile.id', 'avatar')
         .first();
@@ -83,43 +72,31 @@ class ProfileService {
           'profile.city',
           'profile.online',
           'profile.last_online',
-        )
-        .select('avatar.path as avatar')
-        .select(
+          'avatar.path as avatar',
           db.raw(`
             CASE
-              WHEN COUNT(photos.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('path', photos.path, 'type', photos.photo_type))
+              WHEN COUNT(DISTINCT photos.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(DISTINCT jsonb_build_object('path', photos.path, 'type', photos.photo_type))
             END as photos
           `),
-        )
-        .select(
           db.raw(`
             CASE
               WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+              ELSE jsonb_agg(DISTINCT jsonb_build_object('id', tags.id, 'name', tags.name))
             END as tags
           `),
-        )
-        .select(
           db.raw(`
               EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
           `),
         )
-        .leftJoin('photo as avatar', function () {
-          this.on('profile.id', '=', 'avatar.user_id').andOn(
-            db.raw('"avatar"."photo_type" = ?', [PhotoType.Avatar]),
-          );
-        })
-        .leftJoin('photo as photos', function () {
-          this.on('profile.id', '=', 'photos.user_id').andOn(
-            db.raw('"photos"."photo_type" != ?', [PhotoType.Avatar]),
-          );
-        })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
         .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
+        .leftJoin('photo as photos', 'profile.id', 'photos.user_id')
+        .leftJoin('photo as avatar', 'profile.id', 'avatar.user_id')
         .where('profile.id', id)
+        .andWhere('avatar.photo_type', PhotoType.Avatar)
+        .andWhereNot('photos.photo_type', PhotoType.Avatar)
         .andWhere('acc.verified', true)
         .groupBy('profile.id', 'avatar')
         .first();
