@@ -6,8 +6,12 @@
         <span class="profile-title">Profil</span>
     </div>
     <div class="right-content">
-        <div class="more-button" matRipple>
+        <div class="more-button" matRipple [matMenuTriggerFor]="menu">
             <svg-icon [Src]="MoreIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         </div>
     </div>
 </div>
+
+<mat-menu #menu xPosition="before">
+    <user-actions-menu [UserId]="UserId"></user-actions-menu>
+</mat-menu>

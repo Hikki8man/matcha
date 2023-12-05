@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
 @Component({
@@ -7,6 +7,8 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 	styleUrls: ['./user-profile-header.component.scss']
 })
 export class UserProfileHeaderComponent {
+
+	@Input() public UserId: number
 
 	public BackIconUrl: string = IconUrlEnum.ArrowBack;
 	public MoreIconUrl: string = IconUrlEnum.More;
