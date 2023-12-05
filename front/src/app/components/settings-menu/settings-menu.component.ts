@@ -11,7 +11,7 @@ export class SettingsMenuComponent {
 
 	public SettingsIconUrl: string = IconUrlEnum.Settings;
 	public LogoutIconUrl: string = IconUrlEnum.Logout;
-	public IconStyle: Record<string, string> = { display: 'flex', height: '16px', width: '16px' };
+	public IconStyle: Record<string, string> = { display: 'flex', height: '18px', width: '18px' };
 	public UserName: string;
 
 	constructor(

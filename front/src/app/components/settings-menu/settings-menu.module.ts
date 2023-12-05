@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SettingsMenuComponent } from './settings-menu.component';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { RouterModule } from '@angular/router';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -14,6 +15,7 @@ import { RouterModule } from '@angular/router';
 		CommonModule,
 		SvgIconComponentModule,
 		RouterModule,
+		MatRippleModule,
 	],
 	exports: [
 		SettingsMenuComponent
