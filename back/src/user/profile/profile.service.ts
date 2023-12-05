@@ -27,6 +27,7 @@ class ProfileService {
       return await this.profileRepo()
         .select(
           'profile.*',
+          'avatar.path as avatar',
           db.raw(`
         CASE
           WHEN COUNT(DISTINCT photos.id) = 0 THEN '[]'::jsonb
