@@ -63,11 +63,10 @@ export class UserPhotoComponent implements AfterViewChecked {
 		console.log(file, this.Index);
 		
 		const formData: FormData = new FormData();
-		formData.append('file', file, file.name);
+		formData.append('photo', file, file.name);
 		formData.append('photo_type', `photo_${this.Index}`);
 		this._apiService.callApi('profile/edit/photo', 'POST', formData).subscribe((response: any) => {
 			console.log(response);
-			
 		});
 	}
 }
