@@ -2,7 +2,7 @@
     <span class="title" *ngIf="!IsEdit">Photos</span>
     <div class="photos-container">
         <ng-container *ngFor="let image of Album; let i=index">
-            <user-photo class="user-photo" [Src]="image.src" [IsEdit]="IsEdit" (OnPhotoClicked)="open(i)"></user-photo>
+            <user-photo class="user-photo" [Index]="i + 1" [Src]="image.src" [IsEdit]="IsEdit" (OnPhotoClicked)="open(i)"></user-photo>
         </ng-container>
     </div>
 </div>

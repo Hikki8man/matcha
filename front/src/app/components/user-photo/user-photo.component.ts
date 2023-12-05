@@ -1,5 +1,6 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
+import { IApiService } from 'src/app/services/api/iapi.service';
 
 @Component({
 	selector: 'user-photo',
@@ -10,6 +11,7 @@ export class UserPhotoComponent implements AfterViewChecked {
 
 	@Input() public Src: string;
 	@Input() public IsEdit: boolean = false;
+	@Input() public Index: number = 0;
 
 	@Output() public OnPhotoClicked: EventEmitter<void> = new EventEmitter<void>();
 	@Output() public OnEditClicked: EventEmitter<void> = new EventEmitter<void>();
@@ -20,7 +22,7 @@ export class UserPhotoComponent implements AfterViewChecked {
 	public IconEditUrl: string = IconUrlEnum.Edit;
 	public IconStyle: Record<string, string> = {};
 
-	constructor() {
+	constructor(private readonly _apiService: IApiService) {
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -50,14 +52,22 @@ export class UserPhotoComponent implements AfterViewChecked {
 		if (event.target.files.length === 0) {
 			return;
 		}
-		console.log(event.target.files);
 		const reader = new FileReader();
+		const file = event.target.files[0];
 
 		reader.onload = (e: any) => {
-			console.log(e.target.result);
 			this.Src = e.target.result;
-		};
-
-		reader.readAsDataURL(event.target.files[0]);
+		};		
+		reader.readAsDataURL(file);
+		
+		console.log(file, this.Index);
+		
+		const formData: FormData = new FormData();
+		formData.append('file', file, file.name);
+		formData.append('photo_type', `photo_${this.Index}`);
+		this._apiService.callApi('profile/edit/photo', 'POST', formData).subscribe((response: any) => {
+			console.log(response);
+			
+		});
 	}
 }
