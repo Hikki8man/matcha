@@ -14,7 +14,7 @@ class AccountService {
   async get_by_id(id: number) {
     try {
       return await this.accountRepo()
-        .select('id', 'email', 'verified')
+        .select('id', 'email', 'verified', 'username', 'firstname', 'lastname')
         .where('id', id)
         .first();
     } catch (e: any) {
