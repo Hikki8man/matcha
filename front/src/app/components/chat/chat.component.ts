@@ -8,7 +8,9 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
@@ -41,6 +43,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         private _apiService: IApiService,
         private _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
+        private readonly _router: Router,
     ) {}
 
     @Input() public ChatId: number | null = null;
@@ -70,6 +73,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
                 this.Chat = undefined;
             }
         });
+    }
+
+    public redirectToUserProfile() {
+        this._router.navigate([`/${AppPathEnum.Profile}/${this._interlocutor_id}`])
     }
 
     ngOnDestroy(): void {
