@@ -9,7 +9,13 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     styleUrls: ['./search-filters.component.scss'],
 })
 export class SearchFiltersComponent {
-    constructor(private _searchFilterService: ISearchFilterService) {}
+    constructor(private _searchFilterService: ISearchFilterService) {
+        const filters = localStorage.getItem('filters');
+        if (filters) {
+            this.Filters = JSON.parse(filters);
+            this.handleFiltersUpdate();
+        }
+    }
 
     public Filters: FiltersModel = new FiltersModel();
     public OrderByEnum = OrderBy;
@@ -37,6 +43,7 @@ export class SearchFiltersComponent {
     }
 
     public handleFiltersUpdate() {
+        localStorage.setItem('filters', JSON.stringify(this.Filters));
         this._searchFilterService.updateFilters(this.Filters);
     }
 }

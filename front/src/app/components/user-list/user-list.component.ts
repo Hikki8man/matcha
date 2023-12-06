@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
+import { FiltersModel } from 'src/app/models/filters.model';
 import { PublicProfileModel } from 'src/app/models/profile.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
@@ -13,16 +14,18 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
 export class UserListComponent implements OnInit, OnDestroy {
     public Loading: boolean = true;
     public Profiles: PublicProfileModel[];
-    private _destroy$ = new Subject<boolean>();
     public LocationIconUrl: string = IconUrlEnum.Location;
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
+    public Filters: FiltersModel;
+
+    private _destroy$ = new Subject<boolean>();
 
     constructor(
         private _profileService: IProfileService,
         private _searchFilterService: ISearchFilterService,
-    ) {}
+    ) { }
 
-    ngOnInit(): void {
+    ngOnInit(): void {            
         this._searchFilterService.filters.pipe(takeUntil(this._destroy$)).subscribe((filter) => {
             console.log('filter update: ', filter);
             this._profileService
