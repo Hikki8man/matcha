@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IApiService } from '../api/iapi.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Notification } from 'src/app/models/notification.model';
+import { Notification, NotificationType } from 'src/app/models/notification.model';
 import { INotificationService } from './inotification.service';
 import { ISocketService } from '../socket/isocket.service';
 
@@ -9,26 +9,36 @@ import { ISocketService } from '../socket/isocket.service';
     providedIn: 'root',
 })
 export class NotificationService implements INotificationService {
-    private notificationsSubject: BehaviorSubject<Notification[]>;
-    public notifications: Observable<Notification[]>;
+    private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+    public notifications = this.notificationsSubject.asObservable();
+    private msgNotificationsSubject = new BehaviorSubject<Notification[]>([]);
+    public msgNotifications = this.msgNotificationsSubject.asObservable();
 
     constructor(
         private _apiService: IApiService,
         private _socketService: ISocketService,
     ) {
-        this.notificationsSubject = new BehaviorSubject<Notification[]>([]);
-        this.notifications = this.notificationsSubject.asObservable();
-
         this.fetchNotifications().subscribe((notifs) => {
-            this.notificationsSubject.next(notifs);
+            const msgNotifs = notifs.filter((notif) => notif.type === NotificationType.Message);
+            this.msgNotificationsSubject.next(msgNotifs);
+            const notifications = notifs.filter((notif) => notif.type !== NotificationType.Message);
+            this.notificationsSubject.next(notifications);
         });
 
-        this._socketService
-            .onNewNotification()
-            .subscribe((notif) => this.addMessageNotification(notif));
+        this._socketService.onNewNotification().subscribe((notif) => {
+            if (notif.type === NotificationType.Message) {
+                this.addMessageNotification(notif);
+            } else {
+                this.addNotification(notif);
+            }
+        });
     }
 
     private addMessageNotification(notification: Notification) {
+        this.msgNotificationsSubject.next([...this.msgNotificationsSubject.value, notification]);
+    }
+
+    private addNotification(notification: Notification) {
         this.notificationsSubject.next([...this.notificationsSubject.value, notification]);
     }
 
@@ -36,12 +46,16 @@ export class NotificationService implements INotificationService {
         return this.notifications;
     }
 
-    public deleteNotificationsBySenderId(id: number): void {
-        const currentNotifications = this.notificationsSubject.value;
+    public getMsgNotifications(): Observable<Notification[]> {
+        return this.msgNotifications;
+    }
+
+    public deleteMsgNotificationsBySenderId(id: number): void {
+        const currentNotifications = this.msgNotificationsSubject.value;
         const updatedNotifications = currentNotifications.filter(
             (notification) => notification.sender_id !== id,
         );
-        this.notificationsSubject.next(updatedNotifications);
+        this.msgNotificationsSubject.next(updatedNotifications);
     }
 
     public fetchNotifications(): Observable<Notification[]> {

@@ -1,4 +1,4 @@
-<div class="user-photos" *ngIf="Album.length > 0 && !IsEdit">
+<div class="user-photos" *ngIf="Album.length > 0 || IsEdit">
     <span class="title" *ngIf="!IsEdit">Photos</span>
     <div class="photos-container">
         <ng-container *ngFor="let image of Album; let i=index">

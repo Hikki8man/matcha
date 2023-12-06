@@ -15,7 +15,7 @@ export interface Conversation {
 
 export interface ConversationLoaded {
   id: number;
-  user_1: { id: number; name: string };
-  user_2: { id: number; name: string };
+  user_1: { id: number; name: string; avatar: string };
+  user_2: { id: number; name: string; avatar: string };
   messages: Message[];
 }

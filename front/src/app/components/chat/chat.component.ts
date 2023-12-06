@@ -130,7 +130,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
                     this.Chat.user_1.id === this.CurrentUser?.id
                         ? this.Chat.user_2.id
                         : this.Chat.user_1.id;
-                this._notificationService.deleteNotificationsBySenderId(this.InterlocutorId);
+                this._notificationService.deleteMsgNotificationsBySenderId(this.InterlocutorId);
             });
         this._socketService.socket.emit('JoinConversation', this.ChatId);
     }

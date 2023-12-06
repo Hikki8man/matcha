@@ -45,6 +45,24 @@ class NotificationService {
       } catch (err) {}
     }
   }
+
+  async createNotification(
+    sender: { id: number; name: string },
+    receiver_id: number,
+    type: NotificationType,
+  ) {
+    try {
+      const [notif] = await this.notificationRepo()
+        .insert({
+          sender_id: sender.id,
+          receiver_id,
+          type,
+        })
+        .returning('*');
+      notif.name = sender.name;
+      SocketService.sendNotification(notif);
+    } catch (err) {}
+  }
 }
 
 export default new NotificationService();

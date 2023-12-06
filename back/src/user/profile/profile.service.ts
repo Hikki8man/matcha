@@ -15,6 +15,8 @@ import { Tag } from '../../types/tag';
 import { Filter, OrderBy } from '../../types/filter';
 import blockService from './block/block.service';
 import { PhotoType } from '../../types/photo';
+import { Notification, NotificationType } from '../../types/notification';
+import notificationService from '../../notification/notification.service';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
@@ -381,6 +383,12 @@ class ProfileService {
         );
         if (convCreated) {
           SocketService.sendMatch(convCreated);
+          //TODO await or not ? if err ?
+          notificationService.createNotification(
+            { id: liker_id, name: convCreated.user_1.name },
+            liked_id,
+            NotificationType.Match,
+          );
         }
       }
       const liker_user = await this.profileRepo()
@@ -411,6 +419,11 @@ class ProfileService {
   async unMatch(user_id: number, id: number) {
     const convCreated = await conversationService.deleteConv(user_id, id);
     if (convCreated) {
+      // notificationService.createNotification(
+      //   { id: user_id },
+      //   id,
+      //   NotificationType.unMatch,
+      // );
       SocketService.sendUnmatch(convCreated);
     }
   }
