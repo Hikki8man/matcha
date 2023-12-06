@@ -1,6 +1,7 @@
 export class IconUrlEnum {
     private static readonly _baseUrl: string = 'assets/icons/';
 
+    public static readonly Add: string = `${this._baseUrl}add.svg`;
     public static readonly ArrowBack: string = `${this._baseUrl}arrow-back.svg`;
     public static readonly Block: string = `${this._baseUrl}block.svg`;
     public static readonly Edit: string = `${this._baseUrl}edit.svg`;

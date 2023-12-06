@@ -1,17 +1,17 @@
-<div class="settings-form">
+<div class="settings-form" *ngIf="!Loading">
     <div class="form-section">
         <span class="title">Profil</span>
     </div>
     <div class="settings-row settings-line">
         <div class="settings-column">
-            <matcha-input Title="Prénom"></matcha-input>
+            <matcha-input Title="Prénom" [Value]="Account.firstname"></matcha-input>
         </div>
         <div class="settings-column">
-            <matcha-input Title="Nom"></matcha-input>
+            <matcha-input Title="Nom" [Value]="Account.lastname"></matcha-input>
         </div>
     </div>
     <div class="settings-line">
-        <matcha-input Title="Email" [Value]="Email"></matcha-input>
+        <matcha-input Title="Email" [Value]="Account.email"></matcha-input>
     </div>
     <div class="settings-line">
         <matcha-textarea Title="Bio" [Value]="Profile.bio"></matcha-textarea>
@@ -22,7 +22,7 @@
     <div class="form-section">
         <span class="title">Photos</span>
     </div>
-    <user-photos [IsEdit]="true"></user-photos>
+    <user-photos [IsEdit]="true" [Profile]="Profile"></user-photos>
     <div class="form-section">
         <span class="title">Localisation</span>
     </div>

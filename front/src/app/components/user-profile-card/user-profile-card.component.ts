@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { PublicProfileModel } from 'src/app/models/profile.model';
+import { ProfileCardModel, PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 
@@ -10,36 +9,33 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     templateUrl: './user-profile-card.component.html',
     styleUrls: ['./user-profile-card.component.scss'],
 })
-export class UserProfileCardComponent implements OnInit, OnDestroy {
-    @Input() public UserId: number;
+export class UserProfileCardComponent {
+
+    @Input()
+    set ProfileCard(value: ProfileCardModel) {
+        this._profileCard = value;
+        if (value) 
+            this.init();
+    }
+    get ProfileCard(): ProfileCardModel {
+        return this._profileCard;
+    }
+    @Input() public Loading: boolean = true;
+
+    private _profileCard: ProfileCardModel;
     public IsOtherUser: boolean = false;
-    public IsLiked: boolean = false;
-    public Loading: boolean = true;
     public Profile: PublicProfileModel;
-    private _destroy$ = new Subject<boolean>();
+    public IsLiked: boolean = false;
 
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
-    ) {}
+    ) { }
 
-    ngOnInit(): void {
-        this._profileService
-            .getById(this.UserId)
-            .pipe(takeUntil(this._destroy$))
-            .subscribe({
-                next: (card) => {
-                    this.Profile = card.profile;
-                    this.IsLiked = card.isLiked;
-                },
-                complete: () => (this.Loading = false),
-            });
-        this.IsOtherUser = this.UserId !== this._authenticationService.profileValue.id;
-    }
-
-    ngOnDestroy(): void {
-        this._destroy$.next(true);
-        this._destroy$.complete();
+    private init(): void {
+        this.Profile = this.ProfileCard.profile;
+        this.IsOtherUser = this.Profile.id !== this._authenticationService.profileValue.id;
+        this.IsLiked = this.ProfileCard.isLiked;
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
@@ -47,6 +43,6 @@ export class UserProfileCardComponent implements OnInit, OnDestroy {
 
     public handleLikeStatusChanged(isLiked: boolean) {
         this.IsLiked = isLiked;
-        this._profileService.likeProfile(this.UserId).pipe(takeUntil(this._destroy$)).subscribe();
+        this._profileService.likeProfile(this.Profile.id).subscribe();
     }
 }

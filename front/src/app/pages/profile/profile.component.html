@@ -1,10 +1,10 @@
 <div class="profile-page">
     <div class="left-content">
         <div class="profile-item-container">
-            <user-profile-card [UserId]="UserId"></user-profile-card>
+            <user-profile-card [ProfileCard]="ProfileCard" [Loading]="Loading"></user-profile-card>
         </div>
         <div class="profile-item-container">
-            <user-photos></user-photos>
+            <user-photos [Profile]="ProfileCard?.profile"></user-photos>
         </div>
         <div class="profile-item-container">
             <user-about></user-about>
