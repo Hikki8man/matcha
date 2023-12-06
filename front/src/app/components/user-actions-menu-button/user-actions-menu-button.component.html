@@ -1,0 +1,7 @@
+<div class="more-button" matRipple [matMenuTriggerFor]="menu">
+    <svg-icon [Src]="MoreIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+</div>
+
+<mat-menu #menu xPosition="before">
+    <user-actions-menu [UserId]="UserId"></user-actions-menu>
+</mat-menu>
