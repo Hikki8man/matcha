@@ -40,7 +40,7 @@ export interface PublicProfileModel {
     distance: number;
     online: boolean;
     last_online?: Date;
-    // avatar: Observable<string>;
+    photos: { path: string, type: string }[];
     avatar: string;
 }
 

@@ -1,6 +1,6 @@
 <span *ngIf="Title" class="title">{{ Title }}</span>
 <div class="matcha-input-container" [class.error]="HasError">
-    <input class="matcha-input" [value]="Value" [type]="Type" [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name">
+    <input class="matcha-input" [ngModel]="Value" [type]="Type" [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name">
     <svg-icon *ngIf="IsPassword" [Src]="IconVisibilityUrl" [ContentStyle]="IconVisibilityStyle"
             (click)="handlePasswordVisibilityChange()"></svg-icon>
 </div>

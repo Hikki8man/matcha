@@ -1,8 +1,9 @@
-<div class="user-photos">
+<div class="user-photos" *ngIf="Album.length > 0">
     <span class="title" *ngIf="!IsEdit">Photos</span>
     <div class="photos-container">
         <ng-container *ngFor="let image of Album; let i=index">
             <user-photo class="user-photo" [Index]="i + 1" [Src]="image.src" [IsEdit]="IsEdit" (OnPhotoClicked)="open(i)"></user-photo>
         </ng-container>
+        <add-photo-button class="user-photo" [Index]="getLastPhotoIndex()" *ngIf="Album.length < 5 && IsEdit" (OnPhotoAdded)="handlePhotoAdded($event)"></add-photo-button>
     </div>
 </div>

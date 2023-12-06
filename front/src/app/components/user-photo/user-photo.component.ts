@@ -57,11 +57,9 @@ export class UserPhotoComponent implements AfterViewChecked {
 
 		reader.onload = (e: any) => {
 			this.Src = e.target.result;
-		};		
+		};
 		reader.readAsDataURL(file);
-		
-		console.log(file, this.Index);
-		
+
 		const formData: FormData = new FormData();
 		formData.append('photo', file, file.name);
 		formData.append('photo_type', `photo_${this.Index}`);
