@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddPhotoButtonComponent } from './add-photo-button.component';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 
 
 
@@ -9,7 +10,8 @@ import { AddPhotoButtonComponent } from './add-photo-button.component';
 		AddPhotoButtonComponent
 	],
 	imports: [
-		CommonModule
+		CommonModule,
+		SvgIconComponentModule,
 	],
 	exports: [
 		AddPhotoButtonComponent

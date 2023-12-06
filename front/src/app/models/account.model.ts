@@ -1,7 +1,8 @@
 export interface AccountModel {
     id: number;
     email: string;
-    // token_validation?: string;
+    firstname: string;
+    lastname: string;
     verified: boolean;
 }
 

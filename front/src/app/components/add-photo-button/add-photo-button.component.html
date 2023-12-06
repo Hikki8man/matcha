@@ -1,1 +1,4 @@
-<p>add-photo-button works!</p>
+<div class="add-photo-button" (click)="photoInput.click()">
+    <svg-icon class="add-icon" [Src]="IconAddUrl" [ContentStyle]="IconAddStyle"></svg-icon>
+    <input #photoInput type="file" hidden accept="image/png, image/jpeg" (change)="handleSubmit($event)">
+</div>
