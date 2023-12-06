@@ -4,6 +4,9 @@ import { param } from '../../../utils/middleware/validator/check';
 import { MyRequest } from '../../../types/request';
 import asyncWrapper from '../../../utils/middleware/asyncWrapper';
 import blockService from './block.service';
+import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
+import conversationService from '../../../chat/conversation.service';
+import profileService from '../profile.service';
 
 class BlockController {
   public path = '/profile/block';
@@ -18,23 +21,37 @@ class BlockController {
       this.path + '/:id',
       jwtStrategy,
       param('id').isNumeric(),
+      CheckValidation,
       asyncWrapper(this.block),
     );
     this.router.get(
       '/profile/unblock/:id',
       jwtStrategy,
       param('id').isNumeric(),
+      CheckValidation,
       asyncWrapper(this.unblock),
     );
   }
 
   block = async (req: MyRequest, res: Response) => {
-    await blockService.block(req.user_id!, req.params.id!);
+    const id = +req.params.id!;
+    await blockService.block(req.user_id!, id);
+    const isMatch = await conversationService.conversationExist(
+      req.user_id!,
+      id,
+    );
+    if (isMatch) {
+      await profileService
+        .likeRepo()
+        .del()
+        .where({ liker_id: req.user_id!, liked_id: id });
+      await profileService.unMatch(req.user_id!, id);
+    }
     res.end();
   };
 
   unblock = async (req: MyRequest, res: Response) => {
-    await blockService.unblock(req.user_id!, req.params.id!);
+    await blockService.unblock(req.user_id!, +req.params.id!);
     res.end();
   };
 }

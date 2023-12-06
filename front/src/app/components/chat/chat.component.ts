@@ -57,7 +57,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
-    private _interlocutor_id: number;
+    public InterlocutorId: number;
     private _onNewMessageSubscription: Subscription;
     private _onUnmatchSub: Subscription;
 
@@ -126,18 +126,18 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
                 this.Chat = conv;
-                this._interlocutor_id =
+                this.InterlocutorId =
                     this.Chat.user_1.id === this.CurrentUser?.id
                         ? this.Chat.user_2.id
                         : this.Chat.user_1.id;
-                this._notificationService.deleteNotificationsBySenderId(this._interlocutor_id);
+                this._notificationService.deleteNotificationsBySenderId(this.InterlocutorId);
             });
         this._socketService.socket.emit('JoinConversation', this.ChatId);
     }
 
     public sendMessage(content: string): void {
         const message = {
-            receiver_id: this._interlocutor_id,
+            receiver_id: this.InterlocutorId,
             content,
         };
         this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();

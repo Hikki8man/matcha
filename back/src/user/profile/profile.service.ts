@@ -402,17 +402,16 @@ class ProfileService {
       // unlike
       await this.likeRepo().del().where('id', hasLikedAlready.id);
       if (isLiked) {
-        // if liked then Unmatch
-        const convCreated = await conversationService.deleteConv(
-          liker_id,
-          liked_id,
-        );
-        if (convCreated) {
-          console.log('conv', convCreated);
-          SocketService.sendUnmatch(convCreated);
-        }
+        await this.unMatch(liker_id, liked_id);
       }
       return { user: { id: liker_id }, type: LikeType.Unlike };
+    }
+  }
+
+  async unMatch(user_id: number, id: number) {
+    const convCreated = await conversationService.deleteConv(user_id, id);
+    if (convCreated) {
+      SocketService.sendUnmatch(convCreated);
     }
   }
 
