@@ -4,5 +4,6 @@
         <ng-container *ngFor="let image of Album; let i=index">
             <user-photo class="user-photo" [Index]="i + 1" [Src]="image.src" [IsEdit]="IsEdit" (OnPhotoClicked)="open(i)"></user-photo>
         </ng-container>
+        <add-photo-button *ngIf="Album.length < 5 && IsEdit"></add-photo-button>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Lightbox } from 'ngx-lightbox';
-import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
+import { PublicProfileModel } from 'src/app/models/profile.model';
+import { environment } from 'src/environment/environment';
 
 @Component({
     selector: 'user-photos',
@@ -10,20 +11,29 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
 export class UserPhotosComponent {
 
     @Input() public IsEdit: boolean = false;
+    @Input()
+    set Profile(value: PublicProfileModel) {
+        this._profile = value;
+        if (value)
+            this.init();
+    }
+    get Profile(): PublicProfileModel {
+        return this._profile;
+    }
 
+    private _profile: PublicProfileModel;
     public Album: any[] = [];
 
     constructor(
         private readonly _lightbox: Lightbox,
-        private readonly _authenticationService: IAuthenticationService,
-    ) {
-        this.Album.push({ src: 'assets/images/widePutin.png' });
-        this.Album.push({ src: 'assets/images/becothanksgiving.png' });
-        this.Album.push({ src: 'assets/images/becoshy.png' });
-        this.Album.push({ src: 'assets/images/becoscooter.jpg' });
-        this.Album.push({ src: 'assets/images/wideMacron.png' });
-        console.log(this._authenticationService.profileValue);
-        
+    ) { }
+
+    private init() {
+        console.log(this.Profile);
+        this.Profile.photos.forEach((photo) => {
+            const photoPath = environment.apiBaseUrl + '/' + photo.path;
+            this.Album.push({ src: photoPath });
+        });
     }
 
     protected open(index: number): void {
