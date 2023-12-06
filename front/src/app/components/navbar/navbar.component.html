@@ -7,15 +7,15 @@
         <svg-icon class="navbar-icon" [Src]="UserIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Mon profil</span>
     </a>
-    <a routerLink="notifications" class="navbar-button" [class.selected]="isCurrentPage('notifications')">
-        <svg-icon class="navbar-icon" [Src]="NotificationsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
-        <span class="navbar-details">Notifications</span>
-    </a>
     <a routerLink="messages" class="navbar-button" [class.selected]="isCurrentPage('messages')">
         <svg-icon class="navbar-icon" [Src]="MessageIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Messages</span>
         <div class="unread-messages-count" *ngIf="UnreadMessagesCount > 0">
             <span>{{ UnreadMessagesCount > 99 ? '99+' : UnreadMessagesCount }}</span>
         </div>
+    </a>
+    <a routerLink="notifications" class="navbar-button" [class.selected]="isCurrentPage('notifications')">
+        <svg-icon class="navbar-icon" [Src]="NotificationsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="navbar-details">Notifications</span>
     </a>
 </div>
