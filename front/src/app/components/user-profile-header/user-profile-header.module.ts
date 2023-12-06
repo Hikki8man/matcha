@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserProfileHeaderComponent } from './user-profile-header.component';
-import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { MatRippleModule } from '@angular/material/core';
-import { MatMenuModule } from '@angular/material/menu';
-import { UserActionsMenuModule } from '../user-actions-menu/user-actions-menu.module';
+import { RouterModule } from '@angular/router';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { UserActionsMenuButtonModule } from '../user-actions-menu-button/user-actions-menu-button.module';
+import { UserProfileHeaderComponent } from './user-profile-header.component';
 
 
 
@@ -18,8 +17,7 @@ import { UserActionsMenuModule } from '../user-actions-menu/user-actions-menu.mo
 		SvgIconComponentModule,
 		RouterModule,
 		MatRippleModule,
-		MatMenuModule,
-		UserActionsMenuModule,
+		UserActionsMenuButtonModule,
 	],
 	exports: [
 		UserProfileHeaderComponent

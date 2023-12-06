@@ -11,6 +11,5 @@ export class UserProfileHeaderComponent {
 	@Input() public UserId: number
 
 	public BackIconUrl: string = IconUrlEnum.ArrowBack;
-	public MoreIconUrl: string = IconUrlEnum.More;
 	public IconStyle: Record<string, string> = { display: 'flex', height: '24px', width: '24px' };
 }
