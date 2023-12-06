@@ -9,40 +9,25 @@
                 <div class="user-name-container">
                     <div class="user-name-container">
                         <span class="user-name">{{ Profile?.name }}, {{ Profile?.age }}</span>
-                        <div
-                            class="dot"
-                            [ngClass]="Profile.online ? 'online' : 'offline'"
-                            [matTooltip]="
+                        <div class="dot" [ngClass]="Profile.online ? 'online' : 'offline'" [matTooltip]="
                             Profile.online ? 'En ligne' : 'Dernière connection il y a 20 minutes'
-                            "
-                            matTooltipPosition="above"
-                        ></div>
+                            " matTooltipPosition="above"></div>
                     </div>
                     <div class="user-status" [class.online]="Profile.online"></div>
                 </div>
                 <div class="user-location-container">
-                    <svg-icon
-                        class="user-location-icon"
-                        [Src]="LocationIconUrl"
-                        [ContentStyle]="LocationIconStyle"
-                    ></svg-icon>
+                    <svg-icon class="user-location-icon" [Src]="LocationIconUrl"
+                        [ContentStyle]="LocationIconStyle"></svg-icon>
                     <span class="user-location">{{ Profile.country + ', ' + Profile.city }}</span>
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">
-                <like-button
-                    [IsLiked]="IsLiked"
-                    (LikeStatusChanged)="handleLikeStatusChanged($event)"
-                ></like-button>
+                <like-button [IsLiked]="IsLiked" (LikeStatusChanged)="handleLikeStatusChanged($event)"></like-button>
             </div>
         </div>
         <div class="user-bio-container">
             <span class="user-bio">{{ Profile?.bio }}</span>
         </div>
-        <div class="user-tags-container">
-            <div *ngFor="let tag of Profile?.tags">
-                <interest-tag [Tag]="tag"></interest-tag>
-            </div>
-        </div>
+        <interest-tags-list [Tags]="Profile?.tags"></interest-tags-list>
     </div>
 </div>
