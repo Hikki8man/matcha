@@ -71,8 +71,6 @@ export class UserPhotoComponent implements AfterViewChecked {
 		this._apiService.callApi('profile/edit/photo', 'POST', formData)
 			.subscribe({
 				complete: () => {
-					console.log('COMPLETED');
-
 					this.Src = src
 				},
 				error: (err) => {
