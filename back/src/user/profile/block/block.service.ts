@@ -33,6 +33,14 @@ class BlockService {
   public unblock(blocker_id: number, blocked_id: number) {
     return this.blockRepo().where({ blocker_id, blocked_id }).del();
   }
+
+  public async isBlocked(blocker_id: number, blocked_id: number) {
+    const isBlocked = await this.blockRepo()
+      .select('*')
+      .where({ blocker_id, blocked_id })
+      .first();
+    return isBlocked ? true : false;
+  }
 }
 
 export default new BlockService();
