@@ -6,7 +6,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 	styleUrls: ['./messages.component.scss'],
 })
 export class MessagesComponent implements OnInit {
-	public SelectedChatId: number | null = null;
+	public SelectedChatId: number = null;
 	public IsMobileView: boolean = false;
 
 	ngOnInit(): void {

@@ -11,9 +11,9 @@ export class LikeButtonComponent {
 	@Input() public IsLiked: boolean = false;
 	@Output() public LikeStatusChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public HeartIconUrl: string = IconUrlEnum.HeartEmpty;
+	public HeartIconUrl: string = IconUrlEnum.HeartEmpty;
 	public HeartFullIconUrl: string = IconUrlEnum.Heart;
-    public IconStyle: Record<string, string> = { display: 'flex', height: '30px', width: '30px' };
+	public IconStyle: Record<string, string> = { display: 'flex', height: '30px', width: '30px' };
 
 	public handleClick() {
 		this.IsLiked = !this.IsLiked;
