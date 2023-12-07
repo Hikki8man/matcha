@@ -30,8 +30,8 @@ class BlockService {
     }
   }
 
-  public unblock(blocker_id: number, blocked_id: number) {
-    return this.blockRepo().where({ blocker_id, blocked_id }).del();
+  public async unblock(blocker_id: number, blocked_id: number) {
+    return await this.blockRepo().where({ blocker_id, blocked_id }).del();
   }
 
   public async isBlocked(blocker_id: number, blocked_id: number) {

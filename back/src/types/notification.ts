@@ -3,6 +3,7 @@ export enum NotificationType {
   Like = 'like',
   Match = 'match',
   unMatch = 'unmatch',
+  View = 'view',
 }
 
 export interface Notification {
@@ -10,6 +11,7 @@ export interface Notification {
   receiver_id: number;
   type: NotificationType;
   created_at: Date;
+  read: boolean;
 }
 
 export interface NotificationEvent {

@@ -96,6 +96,12 @@ class LikeService {
             NotificationType.Match,
           );
         }
+      } else {
+        await notificationService.createNotification(
+          liker,
+          liked_id,
+          NotificationType.Like,
+        );
       }
       const user = { ...liker, created_at: like.created_at };
       return { user, type: LikeType.Like };

@@ -11,6 +11,7 @@ import { ISocketService } from '../socket/isocket.service';
 export class NotificationService implements INotificationService {
     private notificationsSubject = new BehaviorSubject<Notification[]>([]);
     public notifications = this.notificationsSubject.asObservable();
+
     private msgNotificationsSubject = new BehaviorSubject<Notification[]>([]);
     public msgNotifications = this.msgNotificationsSubject.asObservable();
 
@@ -39,7 +40,7 @@ export class NotificationService implements INotificationService {
     }
 
     private addNotification(notification: Notification) {
-        this.notificationsSubject.next([...this.notificationsSubject.value, notification]);
+        this.notificationsSubject.next([notification, ...this.notificationsSubject.value]);
     }
 
     public getNotifications(): Observable<Notification[]> {
@@ -48,6 +49,18 @@ export class NotificationService implements INotificationService {
 
     public getMsgNotifications(): Observable<Notification[]> {
         return this.msgNotifications;
+    }
+
+    public markNotificationsAsRead(notifications: Notification[]): void {
+        const currentNotifications = this.notificationsSubject.value;
+        const isAlreadyRead = currentNotifications.every((notif) => notif.read);
+        if (!isAlreadyRead) {
+            const updatedNotifications = notifications.map((notif) => {
+                return { ...notif, read: true };
+            });
+            this.notificationsSubject.next(updatedNotifications);
+            this._apiService.callApi('notification/read', 'GET').subscribe();
+        }
     }
 
     public deleteMsgNotificationsBySenderId(id: number): void {
