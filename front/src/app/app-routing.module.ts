@@ -41,7 +41,12 @@ const routes: Routes = [
     },
     {
         path: 'complete-profile',
-        canActivate: [() => inject(IAuthenticationService).isAuthenticatedGuard()],
+        canActivate: [
+            () => {
+                inject(IAuthenticationService).isAuthenticatedGuard();
+                inject(ICompleteProfileService).isProfileNotCompleteGuard();
+            },
+        ],
         // component: CompleteProfileComponent,
         //TODO add profile not complete guard
         children: [

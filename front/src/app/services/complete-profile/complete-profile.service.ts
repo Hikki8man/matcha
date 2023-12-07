@@ -17,7 +17,7 @@ export class CompleteProfileService implements ICompleteProfileService {
         private _router: Router,
         private _apiService: IApiService,
         private _authService: IAuthenticationService,
-    ) {}
+    ) { }
 
     public completeName(name: string): Observable<void> {
         console.log('name to complete: ', name);
@@ -56,6 +56,17 @@ export class CompleteProfileService implements ICompleteProfileService {
                     AppPathEnum.CompleteProfile + '/' + profile.completed_steps,
                 ]);
             }
+            return false;
+        }
+        return true;
+    }
+
+    public isProfileNotCompleteGuard(): boolean {
+        const profile = this._authService.profileValue;
+        if (!profile) return true;
+
+        if (profile.completed_steps === CompletedSteps.Completed) {
+            this._router.navigate([AppPathEnum.Profile + '/me']);
             return false;
         }
         return true;

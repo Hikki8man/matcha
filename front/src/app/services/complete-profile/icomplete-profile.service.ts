@@ -12,4 +12,5 @@ export abstract class ICompleteProfileService {
     public abstract completeBio(bio: string): Observable<void>;
 
     public abstract isProfileCompleteGuard(): boolean;
+    public abstract isProfileNotCompleteGuard(): boolean;
 }
