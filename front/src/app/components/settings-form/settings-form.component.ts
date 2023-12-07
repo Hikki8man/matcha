@@ -74,4 +74,8 @@ export class SettingsFormComponent {
 	public handleLastNameChanged(lastName: string): void {
 		console.log(lastName);
 	}
+
+	public handleLocateClick(): void {
+		this._toast.error('Ouais ça arrive fort', { position: 'bottom-center' });
+	}
 }
