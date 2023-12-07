@@ -15,5 +15,8 @@
                 <svg-icon class="heart-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
             </div>
         </div>
+        <div class="no-views" *ngIf="Views.length === 0">
+            <span class="no-views-text">Aucune vue pour le moment</span>
+        </div>
     </div>
 </div>

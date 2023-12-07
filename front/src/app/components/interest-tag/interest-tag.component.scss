@@ -14,6 +14,10 @@
         color: var(--tag-text-color);
         font-size: 12px;
     }
+
+    &.selectable {
+        cursor: pointer;
+    }
 }
 
 @media screen and (max-width: 600px) {

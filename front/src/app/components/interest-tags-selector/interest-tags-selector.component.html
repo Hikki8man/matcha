@@ -1,0 +1,13 @@
+<div class="tags-selector">
+    <div class="selected-tags-container">
+        <div class="selected-tag" *ngFor="let tag of SelectedTags">
+            <span class="tag-name">{{ tag.name }}</span>
+            <svg-icon class="close-icon" [Src]="IconCloseUrl" [ContentStyle]="IconCloseStyle" (click)="handleTagUnselected(tag)"></svg-icon>
+        </div>
+    </div>
+    <div class="search-bar-container">
+        <matcha-input Placeholder="Rechercher..." (ValueChange)="handleFilter($event)"></matcha-input>
+    </div>
+    <interest-tags-list [Tags]="DisplayedTags" [Selectable]="true"
+        (OnSelect)="handleTagSelected($event)"></interest-tags-list>
+</div>

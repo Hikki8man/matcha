@@ -27,7 +27,6 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {            
         this._searchFilterService.filters.pipe(takeUntil(this._destroy$)).subscribe((filter) => {
-            console.log('filter update: ', filter);
             this._profileService
                 .getProfilesFiltered(filter)
                 .pipe(takeUntil(this._destroy$))
