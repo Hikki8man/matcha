@@ -6,7 +6,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Output
+    Output,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -44,7 +44,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         private _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
         private readonly _router: Router,
-    ) { }
+    ) {}
 
     @Input() public ChatId: number | null = null;
     @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
@@ -76,7 +76,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public redirectToUserProfile() {
-        this._router.navigate([`/${AppPathEnum.Profile}/${this.InterlocutorId}`])
+        this._router.navigate([`/${AppPathEnum.Profile}/${this.InterlocutorId}`]);
     }
 
     ngOnDestroy(): void {
@@ -98,7 +98,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollDown() {
-        const bodyDiv = document.querySelector('.chat-body');        
+        const bodyDiv = document.querySelector('.chat-body');
         if (bodyDiv) {
             setTimeout(() => {
                 bodyDiv.scrollTop = bodyDiv.scrollHeight;
@@ -133,9 +133,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe((conv) => {
                 this.Chat = conv;
                 this.InterlocutorId =
-                this.Chat.user_1.id === this.CurrentUser?.id
-                ? this.Chat.user_2.id
-                : this.Chat.user_1.id;
+                    this.Chat.user_1.id === this.CurrentUser?.id
+                        ? this.Chat.user_2.id
+                        : this.Chat.user_1.id;
                 this._notificationService.deleteMsgNotificationsBySenderId(this.InterlocutorId);
                 setTimeout(() => {
                     this.scrollDown();
