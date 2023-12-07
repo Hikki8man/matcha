@@ -1,7 +1,11 @@
 import db from '../database/connection';
-import { AuthenticatedSocket } from '../types/authenticatedSocket';
 import SocketService from '../socket.service';
-import { Notification, NotificationType } from '../types/notification';
+import {
+  Notification,
+  NotificationEvent,
+  NotificationType,
+} from '../types/notification';
+import { ProfileMinimum } from '../types/profile';
 
 class NotificationService {
   public notificationRepo = () => db<Notification>('notification');
@@ -41,9 +45,40 @@ class NotificationService {
             type: NotificationType.Message,
           })
           .returning('*');
-        SocketService.sendNotification(notif);
+
+        const notification: NotificationEvent = {
+          sender: { id: sender_id },
+          receiver_id: notif.receiver_id,
+          created_at: notif.created_at,
+          type: notif.type,
+        };
+        SocketService.sendNotification(notification);
       } catch (err) {}
     }
+  }
+
+  async createNotification(
+    sender: ProfileMinimum,
+    receiver_id: number,
+    type: NotificationType,
+  ) {
+    try {
+      const [notif] = await this.notificationRepo()
+        .insert({
+          sender_id: sender.id,
+          receiver_id,
+          type,
+        })
+        .returning('*');
+
+      const notification: NotificationEvent = {
+        sender,
+        receiver_id: notif.receiver_id,
+        created_at: notif.created_at,
+        type: notif.type,
+      };
+      SocketService.sendNotification(notification);
+    } catch (err) {}
   }
 }
 

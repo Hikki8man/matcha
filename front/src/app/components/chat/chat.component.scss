@@ -7,8 +7,9 @@
     
     .chat-head {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         text-align: center;
+        align-items: center;
         padding: 20px;
         
         border-bottom: solid 1px var(--color-separator);

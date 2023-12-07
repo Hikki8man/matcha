@@ -60,7 +60,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     public DefaultAvatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
-    private _interlocutor_id: number;
+    public InterlocutorId: number;
     private _onNewMessageSubscription: Subscription;
     private _onUnmatchSub: Subscription;
 
@@ -146,7 +146,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
 
     public sendMessage(content: string): void {
         const message = {
-            receiver_id: this._interlocutor_id,
+            receiver_id: this.InterlocutorId,
             content,
         };
         this._apiService.callApi<Conversation>('chat/message/create', 'POST', message).subscribe();

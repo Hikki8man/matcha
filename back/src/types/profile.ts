@@ -36,6 +36,12 @@ export interface Profile {
   longitude: number;
 }
 
+export interface ProfileMinimum {
+  id: number;
+  name: string;
+  avatar: string;
+}
+
 export interface Like {
   id: number;
   liker_id: number;

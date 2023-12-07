@@ -3,7 +3,7 @@ export enum NotificationType {
 }
 
 export interface Notification {
-    sender_id: number;
+    sender: { id: number; name: string; avatar: string };
     receiver_id: number;
     type: NotificationType;
     created_at: Date;

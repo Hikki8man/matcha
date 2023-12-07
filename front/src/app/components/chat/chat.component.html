@@ -12,7 +12,9 @@
                     <span class="user-name">{{ getUserName(Chat) }}</span>
                 </div>
             </div>
-            <div *ngIf="IsMobileView" class="dummy-div"></div>
+            <div>
+                <user-actions-menu-button [UserId]="InterlocutorId"></user-actions-menu-button>
+            </div>
         </div>
         <div class="chat-body">
             <div class="chats-container">

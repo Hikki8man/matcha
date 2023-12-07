@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subscription, map } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { NotificationType } from 'src/app/models/notification.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { INotificationService } from 'src/app/services/notification/inotification.service';
 
@@ -11,7 +10,6 @@ import { INotificationService } from 'src/app/services/notification/inotificatio
     styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnDestroy {
-
     public UnreadMessagesCount: number;
     public UserIconUrl: string = IconUrlEnum.User;
     public HeartIconUrl: string = IconUrlEnum.Heart;
@@ -27,13 +25,8 @@ export class NavbarComponent implements OnDestroy {
         private authService: IAuthenticationService,
     ) {
         this._msgSubscription = this._notificationService
-            .getNotifications()
-            .pipe(
-                map((notifications) =>
-                    notifications.filter((notif) => notif.type === NotificationType.Message),
-                ),
-                map((filteredNotifications) => filteredNotifications.length),
-            )
+            .getMsgNotifications()
+            .pipe(map((filteredNotifications) => filteredNotifications.length))
             .subscribe((count) => (this.UnreadMessagesCount = count));
     }
 

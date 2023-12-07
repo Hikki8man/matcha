@@ -175,7 +175,7 @@ export const createDb = async () => {
       .references('id')
       .inTable('profile')
       .onDelete('CASCADE');
-    table.enum('type', ['message']);
+    table.enum('type', ['message', 'like', 'match', 'unmatch']);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });
 

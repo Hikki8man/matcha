@@ -142,6 +142,7 @@ class ProfileController {
 
   like = async (req: MyRequest, res: Response) => {
     const likeEvent = await profileService.like(req.user_id!, req.body.id);
+    console.log('like Event', likeEvent);
     if (likeEvent) {
       SocketService.sendLikeEvent(req.body.id, likeEvent);
     }
