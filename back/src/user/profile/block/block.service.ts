@@ -3,6 +3,7 @@ import db from '../../../database/connection';
 import { Block } from '../../../types/block';
 import { ProfileMinimum } from '../../../types/profile';
 import HttpError from '../../../utils/HttpError';
+import likeService from '../like/like.service';
 import profileService from '../profile.service';
 
 class BlockService {
@@ -22,10 +23,10 @@ class BlockService {
       blocked_id,
     );
     if (isMatch) {
-      await profileService.deleteLike(blocker_id);
+      await likeService.deleteLike(blocker_id);
       const blocker: ProfileMinimum =
         await profileService.profileNameAndAvatar(blocker_id);
-      await profileService.unMatch(blocker, blocked_id);
+      await likeService.unMatch(blocker, blocked_id);
     }
   }
 

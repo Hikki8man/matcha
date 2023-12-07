@@ -103,20 +103,8 @@ class SocketService {
       if (typeof conv_id !== 'number') {
         return;
       }
-      const inConv = await db<Conversation>('conversation')
-        .select('id')
-        .where((builder) => {
-          builder
-            .where('user_1', socket.user_id)
-            .orWhere('user_2', socket.user_id);
-        })
-        .andWhere('id', conv_id)
-        .first();
-
-      if (inConv) {
-        console.log(socket.user_id + ' left conversation ' + conv_id);
-        socket.leave(`conversation-${conv_id}`);
-      }
+      console.log(socket.user_id + ' left conversation ' + conv_id);
+      socket.leave(`conversation-${conv_id}`);
     });
   }
 
