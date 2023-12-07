@@ -1,30 +1,17 @@
 import {
   CompletedSteps,
   Gender,
-  Like,
-  LikeEvent,
-  LikeType,
   Profile,
-  ProfileMinimum,
-  ProfileView,
   SexualOrientation,
 } from '../../types/profile';
 import db from '../../database/connection';
-import conversationService from '../../chat/conversation.service';
-import SocketService from '../../socket.service';
 import { Tag } from '../../types/tag';
 import { Filter, OrderBy } from '../../types/filter';
 import blockService from './block/block.service';
 import { PhotoType } from '../../types/photo';
-import { Notification, NotificationType } from '../../types/notification';
-import notificationService from '../../notification/notification.service';
-import HttpError from '../../utils/HttpError';
-import { ConversationLoaded } from '../../types/chat';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
-  public likeRepo = () => db<Like>('likes');
-  public profileViewRepo = () => db<ProfileView>('profile_view');
 
   async get_by_id(id: number) {
     try {
@@ -139,31 +126,6 @@ class ProfileService {
         .first();
     } catch (e: any) {
       console.error('Error', e.message);
-      return undefined;
-    }
-  }
-
-  //TODO remove
-  async get_all(id: number) {
-    try {
-      return await this.profileRepo()
-        .select('profile.*')
-        .select(
-          db.raw(`
-            CASE
-              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
-            END as tags
-          `),
-        )
-        .leftJoin('account as acc', 'profile.id', 'acc.id')
-        .leftJoin('profile_tags as p_tags', 'profile.id', 'p_tags.profile_id')
-        .leftJoin('tags as tags', 'p_tags.tag_id', 'tags.id')
-        .whereNot('profile.id', id)
-        .andWhere('acc.verified', true)
-        .groupBy('profile.id');
-    } catch (e: any) {
-      console.log('error in getting all profile', e.message);
       return undefined;
     }
   }
@@ -371,160 +333,6 @@ class ProfileService {
     } catch (e: any) {
       console.log('error updating steps', e.message);
       return undefined;
-    }
-  }
-
-  async insertLike(liker_id: number, liked_id: number) {
-    const [like] = await this.likeRepo()
-      .insert({
-        liker_id,
-        liked_id,
-      })
-      .returning('*');
-    return like;
-  }
-
-  async deleteLike(id: number) {
-    await this.likeRepo().where('id', id).del();
-  }
-
-  async like(
-    liker_id: number,
-    liked_id: number,
-  ): Promise<LikeEvent | undefined> {
-    if (liker_id == liked_id) return undefined;
-
-    const liker: ProfileMinimum = await this.profileNameAndAvatar(liker_id);
-    const liked: ProfileMinimum = await this.profileNameAndAvatar(liked_id);
-
-    if (!liker || !liked) {
-      throw new HttpError(400, 'User not found');
-    }
-    const existingLike: Like[] = await this.likeRepo()
-      .select('*')
-      .where({ liker_id, liked_id })
-      .orWhere({ liker_id: liked_id, liked_id: liker_id });
-
-    const hasLikedAlready: Like | undefined = existingLike.find(
-      (like) => like.liker_id === liker_id,
-    );
-    const isLiked: Like | undefined = existingLike.find(
-      (like) => like.liked_id === liker_id,
-    );
-
-    console.log('has liked', hasLikedAlready);
-
-    if (!hasLikedAlready) {
-      const like = await this.insertLike(liker_id, liked_id);
-      // if liked then Match
-      if (isLiked) {
-        const convCreated = await conversationService.createConv(
-          liker_id,
-          liked_id,
-        );
-        if (convCreated) {
-          const conversation: ConversationLoaded = {
-            id: convCreated.id,
-            user_1: liker,
-            user_2: liked,
-          };
-          SocketService.sendMatch(conversation);
-          //TODO await or not ? if err ?
-          await notificationService.createNotification(
-            liker,
-            liked_id,
-            NotificationType.Match,
-          );
-        }
-      }
-      const user = { ...liker, created_at: like.created_at };
-      return { user, type: LikeType.Like };
-    } else {
-      // unlike
-      await this.deleteLike(hasLikedAlready.id);
-      if (isLiked) {
-        await this.unMatch(liker, liked.id);
-      }
-      return { user: liker, type: LikeType.Unlike };
-    }
-  }
-
-  async unMatch(liker: ProfileMinimum, liked_id: number) {
-    const convDelete = await conversationService.deleteConv(liker.id, liked_id);
-    if (convDelete) {
-      SocketService.sendUnmatch(convDelete);
-      await notificationService.createNotification(
-        liker,
-        liked_id,
-        NotificationType.unMatch,
-      );
-    }
-  }
-
-  async getLikerList(id: number) {
-    try {
-      return await this.profileRepo()
-        .select('profile.id', 'profile.name', 'likes.created_at')
-        .select('avatar.path as avatar')
-        .leftJoin('photo as avatar', function () {
-          this.on('profile.id', '=', 'avatar.user_id').andOn(
-            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
-          );
-        })
-        .leftJoin('likes', 'profile.id', 'likes.liker_id')
-        .where('likes.liked_id', id);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  async isLiked(user_id: number, liked_id: number): Promise<boolean> {
-    const isLiked = await this.likeRepo()
-      .select('id')
-      .where('liker_id', user_id)
-      .andWhere('liked_id', liked_id)
-      .first();
-
-    return isLiked ? true : false;
-  }
-
-  async getProfileViews(user_id: number) {
-    return this.profileRepo()
-      .select('profile.id', 'profile.name', 'profile_view.created_at')
-      .select('avatar.path as avatar')
-      .leftJoin('photo as avatar', function () {
-        this.on('profile.id', '=', 'avatar.user_id').andOn(
-          db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
-        );
-      })
-      .leftJoin('profile_view', 'profile.id', 'profile_view.viewer_id')
-      .where('profile_view.viewed_id', user_id);
-  }
-
-  async addProfileView(viewer_id: number, viewed_id: number) {
-    const [profile_view] = await this.profileViewRepo()
-      .insert({ viewed_id, viewer_id })
-      .onConflict(['viewed_id', 'viewer_id'])
-      .ignore()
-      .returning('*');
-
-    if (profile_view) {
-      const profile = await this.profileRepo()
-        .select('profile.id', 'profile.name')
-        .select('avatar.path as avatar')
-        .leftJoin('photo as avatar', function () {
-          this.on('profile.id', '=', 'avatar.user_id').andOn(
-            db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
-          );
-        })
-        .where('profile.id', viewer_id)
-        .first();
-      if (profile) {
-        SocketService.sendProfileView(viewed_id, {
-          ...profile,
-          created_at: profile_view.created_at,
-        });
-      }
     }
   }
 

@@ -1,6 +1,6 @@
-import profileService from '../user/profile/profile.service';
 import { Gender, SexualOrientation } from '../types/profile';
 import DbService from './db.service';
+import likeService from '../user/profile/like/like.service';
 
 export const initDb = async () => {
   const dbService = new DbService();
@@ -30,8 +30,8 @@ export const initDb = async () => {
     bio: 'Oe c moi',
   });
   await dbService.createFakeUsers(20);
-  await profileService.like(1, 3);
-  await profileService.like(3, 1);
-  await profileService.like(1, 6);
-  await profileService.like(6, 1);
+  await likeService.like(1, 3);
+  await likeService.like(3, 1);
+  await likeService.like(1, 6);
+  await likeService.like(6, 1);
 };

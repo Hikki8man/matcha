@@ -6,6 +6,7 @@ import {
   NotificationType,
 } from '../types/notification';
 import { ProfileMinimum } from '../types/profile';
+import blockService from '../user/profile/block/block.service';
 
 class NotificationService {
   public notificationRepo = () => db<Notification>('notification');
@@ -63,6 +64,10 @@ class NotificationService {
     type: NotificationType,
   ) {
     try {
+      const isBlocked = await blockService.isBlocked(receiver_id, sender.id);
+      if (isBlocked) {
+        return;
+      }
       const [notif] = await this.notificationRepo()
         .insert({
           sender_id: sender.id,
