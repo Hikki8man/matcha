@@ -23,30 +23,39 @@
             &:nth-last-child(1) {
                 margin-bottom: 0px;
             }
-            
+
             .left-content {
                 align-items: center;
                 display: flex;
+
                 .like-photo {
                     border-radius: 25px;
                     height: 50px;
                     width: 50px;
                     margin-right: 15px;
+                    cursor: pointer;
                 }
+
                 .like-info {
                     display: flex;
                     flex-direction: column;
-    
+
                     .like-name {
                         font-weight: 550;
+
+                        &:hover {
+                            cursor: pointer;
+                            text-decoration: underline;
+                        }
                     }
-    
+
                     .like-date {
                         font-size: 14px;
                         color: var(--color-text-secondary);
                     }
                 }
             }
+
             .heart-icon {
                 fill: var(--color-pink-accent);
             }

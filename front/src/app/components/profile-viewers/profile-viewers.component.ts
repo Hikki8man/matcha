@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileViewModel } from 'src/app/models/profile-view.model';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
@@ -20,6 +22,7 @@ export class ProfileViewersComponent implements OnInit, OnDestroy {
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _socketService: ISocketService,
+        private readonly _router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -40,6 +43,10 @@ export class ProfileViewersComponent implements OnInit, OnDestroy {
             .subscribe((view) => {
                 this.Views.push(view);
             });
+    }
+
+    public redirectToProfile(view: ProfileViewModel): void {
+        this._router.navigate([AppPathEnum.Profile, view.id]);
     }
 
     ngOnDestroy(): void {
