@@ -34,19 +34,7 @@ class BlockController {
   }
 
   block = async (req: MyRequest, res: Response) => {
-    const id = +req.params.id!;
-    await blockService.block(req.user_id!, id);
-    const isMatch = await conversationService.conversationExist(
-      req.user_id!,
-      id,
-    );
-    if (isMatch) {
-      await profileService
-        .likeRepo()
-        .del()
-        .where({ liker_id: req.user_id!, liked_id: id });
-      await profileService.unMatch(req.user_id!, id);
-    }
+    await blockService.block(req.user_id!, +req.params.id!);
     res.end();
   };
 

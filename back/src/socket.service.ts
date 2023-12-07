@@ -7,7 +7,7 @@ import { Conversation, ConversationLoaded, Message } from './types/chat';
 import { MyJwtPayload } from './types/jwtPayload';
 import { AuthenticatedSocket } from './types/authenticatedSocket';
 import profileService from './user/profile/profile.service';
-import { Notification } from './types/notification';
+import { Notification, NotificationEvent } from './types/notification';
 import { LikeEvent, ProfileViewEvent } from './types/profile';
 
 class SocketService {
@@ -60,7 +60,7 @@ class SocketService {
       .emit('Unmatch', conversation);
   }
 
-  public static sendNotification(notification: Notification) {
+  public static sendNotification(notification: NotificationEvent) {
     this.server
       ?.to(`user-${notification.receiver_id}`)
       .emit('NewNotification', notification);

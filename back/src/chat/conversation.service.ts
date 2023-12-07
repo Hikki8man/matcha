@@ -43,9 +43,9 @@ class ConversationService {
           user_2,
         })
         .returning('*');
-      return this.getBydIdWithUsers(conv.id);
+      // return this.getBydIdWithUsers(conv.id);
+      return conv;
     } catch (err: any) {
-      console.log(err.message);
       return undefined;
     }
   }

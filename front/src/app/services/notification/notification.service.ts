@@ -53,7 +53,7 @@ export class NotificationService implements INotificationService {
     public deleteMsgNotificationsBySenderId(id: number): void {
         const currentNotifications = this.msgNotificationsSubject.value;
         const updatedNotifications = currentNotifications.filter(
-            (notification) => notification.sender_id !== id,
+            (notification) => notification.sender.id !== id,
         );
         this.msgNotificationsSubject.next(updatedNotifications);
     }
