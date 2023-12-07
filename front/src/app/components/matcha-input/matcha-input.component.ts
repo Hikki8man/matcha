@@ -26,6 +26,7 @@ export class MatchaInputComponent implements OnInit {
     @Input() public Title: string;
 
     @Output() public ValueChange: EventEmitter<string> = new EventEmitter<string>();
+    @Output() public OnFocusOut: EventEmitter<string> = new EventEmitter<string>();
     
     public InputFormControl: FormControl = new FormControl();
     public IsPassword: boolean = false;
@@ -47,6 +48,10 @@ export class MatchaInputComponent implements OnInit {
     public handlePasswordVisibilityChange(): void {
         this.IconVisibilityUrl = this.Type === 'password' ? IconUrlEnum.Visibility : IconUrlEnum.VisibilityOff;
         this.Type = this.Type === 'password' ? 'text' : 'password';
+    }
+
+    public handleFocusOut(): void {
+        this.OnFocusOut.emit(this.Value);
     }
 
     public handleValueChange(event: Event): void {

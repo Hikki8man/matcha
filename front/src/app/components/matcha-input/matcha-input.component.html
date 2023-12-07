@@ -2,5 +2,5 @@
 <div class="matcha-input-container" [class.error]="HasError">
     <input class="matcha-input" [ngModel]="Value" (input)="handleValueChange($event)" [type]="Type" [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name">
     <svg-icon *ngIf="IsPassword" [Src]="IconVisibilityUrl" [ContentStyle]="IconVisibilityStyle"
-            (click)="handlePasswordVisibilityChange()"></svg-icon>
+            (click)="handlePasswordVisibilityChange()" (focusout)="handleFocusOut()"></svg-icon>
 </div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { AccountModel } from 'src/app/models/account.model';
-import { PublicProfileModel } from 'src/app/models/profile.model';
+import { PublicProfileModel, Tag } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
@@ -20,6 +21,7 @@ export class SettingsFormComponent {
 		private readonly _apiServive: IApiService,
 		private readonly _authenticationService: IAuthenticationService,
 		private readonly _profileService: IProfileService,
+		private readonly _toast: HotToastService,
 	) {
 		this._apiServive.callApi<AccountModel>(`account`, 'GET')
 			.subscribe((res: AccountModel) => {
@@ -33,5 +35,43 @@ export class SettingsFormComponent {
 						complete: () => { this.Loading = false },
 					});
 			});
+	}
+
+	public handleBioChanged(bio: string): void {
+		this._profileService.editBio(bio).subscribe({
+			complete: () => {
+				this.Profile.bio = bio;
+				this._toast.success('Bio mise à jour', { position: 'bottom-center' });
+			},
+			error: (err) => {
+				this._toast.error('Erreur lors de la mise à jour de la bio', { position: 'bottom-center' });
+				throw err;
+			},
+		});
+	}
+
+	public handleSelectedTagsChanged(tags: Tag[]): void {
+		this._profileService.editTags(tags).subscribe({
+			complete: () => {
+				this.Profile.tags = tags;
+				this._toast.success('Tags mis à jour', { position: 'bottom-center' });
+			},
+			error: (err) => {
+				this._toast.error('Erreur lors de la mise à jour des tags', { position: 'bottom-center' });
+				throw err;
+			},
+		});
+	}
+
+	public handleEmailChanged(email: string): void {
+		console.log(email);
+	}
+
+	public handleFirstNameChanged(firstName: string): void {
+		console.log(firstName);
+	}
+
+	public handleLastNameChanged(lastName: string): void {
+		console.log(lastName);
 	}
 }

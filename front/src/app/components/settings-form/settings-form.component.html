@@ -4,22 +4,25 @@
     </div>
     <div class="settings-row settings-line">
         <div class="settings-column">
-            <matcha-input Title="Prénom" [Value]="Account.firstname"></matcha-input>
+            <matcha-input Title="Prénom" [Value]="Account.firstname"
+                (OnFocusOut)="handleFirstNameChanged($event)"></matcha-input>
         </div>
         <div class="settings-column">
-            <matcha-input Title="Nom" [Value]="Account.lastname"></matcha-input>
+            <matcha-input Title="Nom" [Value]="Account.lastname"
+                (OnFocusOut)="handleLastNameChanged($event)"></matcha-input>
         </div>
     </div>
     <div class="settings-line">
-        <matcha-input Title="Email" [Value]="Account.email"></matcha-input>
+        <matcha-input Title="Email" [Value]="Account.email" (OnFocusOut)="handleEmailChanged($event)"></matcha-input>
     </div>
     <div class="settings-line">
-        <matcha-textarea Title="Bio" [Value]="Profile.bio"></matcha-textarea>
+        <matcha-textarea Title="Bio" [Value]="Profile.bio" (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
     </div>
     <div class="form-section">
         <span class="title">Tags</span>
         <div class="tags-list-container">
-            <select-tags-button [SelectedTags]="Profile.tags"></select-tags-button>
+            <select-tags-button [SelectedTags]="Profile.tags"
+                (SelectedTagsChange)="handleSelectedTagsChanged($event)"></select-tags-button>
             <interest-tags-list [Tags]="Profile.tags"></interest-tags-list>
         </div>
     </div>
