@@ -1,7 +1,7 @@
 .notification-item {
     display: flex;
     justify-content: space-between;
-    padding: 20px 10px;
+    padding: 10px;
     cursor: pointer;
     border-bottom: solid 1px var(--color-separator);
 
@@ -11,10 +11,27 @@
 
     .left-content {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+
+
+        .top-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+
+            .user-avatar {
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+            }
+        }
 
         .notification-icon {
             margin-right: 10px;
+        }
+
+        .details {
+            margin-left: 34px;
         }
 
         .user-name {
