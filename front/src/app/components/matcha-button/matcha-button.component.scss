@@ -7,9 +7,9 @@
 
     border-radius: 20px;
     background-color: var(--color-pink-accent);
+    transition: all 0.2s ease-in-out;
 
     &:hover {
-        transition: all 0.2s ease-in-out;
         background-color: var(--title-color);
         scale: 1.05;
     }

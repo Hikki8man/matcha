@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'node_modules/@ngneat/hot-toast/src/styles/styles.scss';
+
 :root {
     --background-color-accent: #f6f4f4;
     --background-color: #ece3e5;
@@ -48,7 +50,7 @@ mat-slider {
     border-radius: 7px;
 }
 
-.mat-mdc-menu-content{
+.mat-mdc-menu-content {
     padding: 0 !important;
 }
 

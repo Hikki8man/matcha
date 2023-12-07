@@ -1,4 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IApiService } from 'src/app/services/api/iapi.service';
 
@@ -22,8 +23,10 @@ export class UserPhotoComponent implements AfterViewChecked {
 	public IconEditUrl: string = IconUrlEnum.Edit;
 	public IconStyle: Record<string, string> = {};
 
-	constructor(private readonly _apiService: IApiService) {
-	}
+	constructor(
+		private readonly _apiService: IApiService,
+		private readonly _toast: HotToastService
+	) { }
 
 	@HostListener('window:resize', ['$event'])
 	public handleResize() {
@@ -55,16 +58,25 @@ export class UserPhotoComponent implements AfterViewChecked {
 		const reader = new FileReader();
 		const file = event.target.files[0];
 
+		let src: string;
+
 		reader.onload = (e: any) => {
-			this.Src = e.target.result;
+			src = e.target.result;
 		};
 		reader.readAsDataURL(file);
 
 		const formData: FormData = new FormData();
 		formData.append('photo', file, file.name);
 		formData.append('photo_type', `photo_${this.Index}`);
-		this._apiService.callApi('profile/edit/photo', 'POST', formData).subscribe((response: any) => {
-			console.log(response);
-		});
+		this._apiService.callApi('profile/edit/photo', 'POST', formData)
+			.subscribe({
+				complete: () => {
+					this.Src = src
+				},
+				error: (err) => {
+					this._toast.error('Erreur lors de l\'envoi de la photo', { position: 'bottom-center' });
+					throw err;
+				},
+			});
 	}
 }
