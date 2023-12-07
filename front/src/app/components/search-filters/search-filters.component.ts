@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { OrderBy } from 'src/app/enums/order-by-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
+import { Tag } from 'src/app/models/profile.model';
 import { ISearchFilterService } from 'src/app/services/search-filter/isearch-filter.service';
 
 @Component({
@@ -39,6 +40,11 @@ export class SearchFiltersComponent {
 
     public setOrderBy(order: OrderBy) {
         this.Filters.OrderBy = order;
+        this.handleFiltersUpdate();
+    }
+
+    public setTags(tags: Tag[]) {
+        this.Filters.Tags = tags;
         this.handleFiltersUpdate();
     }
 

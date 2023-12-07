@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Tag } from 'src/app/models/profile.model';
 
 @Component({
@@ -8,4 +8,12 @@ import { Tag } from 'src/app/models/profile.model';
 })
 export class InterestTagComponent {
     @Input() public Tag: Tag;
+    @Input() public Selectable: boolean = false;
+
+    @Output() public OnSelect: EventEmitter<Tag> = new EventEmitter<Tag>();
+
+    public handleSelect(): void {
+        if (this.Selectable)
+            this.OnSelect.emit(this.Tag);
+    }
 }

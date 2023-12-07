@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
@@ -24,6 +24,8 @@ export class MatchaInputComponent implements OnInit {
     @Input() public Value: any;
     @Input() public Disabled: boolean = false;
     @Input() public Title: string;
+
+    @Output() public ValueChange: EventEmitter<string> = new EventEmitter<string>();
     
     public InputFormControl: FormControl = new FormControl();
     public IsPassword: boolean = false;
@@ -45,6 +47,11 @@ export class MatchaInputComponent implements OnInit {
     public handlePasswordVisibilityChange(): void {
         this.IconVisibilityUrl = this.Type === 'password' ? IconUrlEnum.Visibility : IconUrlEnum.VisibilityOff;
         this.Type = this.Type === 'password' ? 'text' : 'password';
+    }
+
+    public handleValueChange(event: Event): void {
+        this.Value = (event.target as any).value;
+        this.ValueChange.emit(this.Value);
     }
 
     private init(): void {

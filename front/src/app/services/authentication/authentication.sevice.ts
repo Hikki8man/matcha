@@ -97,8 +97,6 @@ export class AuthenticationService implements IAuthenticationService {
 
     public isAuthenticatedGuard(): boolean {
         const isAuth = this.userValue;
-        console.log('isAuth ===', isAuth ? true : false);
-
         if (isAuth) {
             return true;
         } else {
@@ -108,10 +106,8 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     private startRefreshTokenTimer(token: string) {
-        // parse json object from base64 encoded jwt token
         const jwtBase64 = token.split('.')[1];
         const jwtToken = JSON.parse(atob(jwtBase64));
-        // set a timeout to refresh the token a minute before it expires
         const expires = new Date(jwtToken.exp * 1000);
         const timeout = expires.getTime() - Date.now() - 60 * 1000;
         if (timeout > 0) {

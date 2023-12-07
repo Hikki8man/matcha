@@ -1,4 +1,4 @@
-<div class="interest-tag-container">
+<div class="interest-tag-container" [class.selectable]="Selectable" (click)="handleSelect()">
     <span class="interest-tag">
         {{ Tag.name }}
     </span>
