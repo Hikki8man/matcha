@@ -31,6 +31,7 @@ export class UserActionsMenuComponent {
             autoFocus: false,
         });
         dialogRef.afterClosed().subscribe((reason: string) => {
+            if (!reason) return;
             console.log(reason);
         });
     }

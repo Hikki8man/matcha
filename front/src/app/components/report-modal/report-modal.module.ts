@@ -5,6 +5,7 @@ import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 import { MatchaTextAreaModule } from '../matcha-textarea/matcha-textarea.module';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { ReportModalComponent } from './report-modal.component';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -18,6 +19,7 @@ import { ReportModalComponent } from './report-modal.component';
 		MatchaButtonModule,
 		MatchaTextAreaModule,
 		ReactiveFormsModule,
+		MatRippleModule,
 	],
 	exports: [
 		ReportModalComponent
