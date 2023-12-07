@@ -20,6 +20,11 @@
         padding: 15px;
         font-size: 20px;
 
+        &:hover {
+            background-color: #ded5d7;
+            border-radius: 40px;
+        }
+
         cursor: pointer;
 
         .navbar-icon {
@@ -34,6 +39,20 @@
             margin-left: 10px;
             font-size: 12px;
             color: black;
+        }
+
+        .unread-notifications {
+            background-color: var(--title-color);
+            color: white;
+            position: absolute;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(9px, -6px);
         }
 
         &.selected {

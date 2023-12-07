@@ -17,5 +17,8 @@
     <a routerLink="notifications" class="navbar-button" [class.selected]="isCurrentPage('notifications')">
         <svg-icon class="navbar-icon" [Src]="NotificationsIconUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span class="navbar-details">Notifications</span>
+        <div class="unread-notifications" *ngIf="UnreadNotificationsCount > 0">
+            {{ UnreadNotificationsCount > 99 ? '99+' : UnreadNotificationsCount }}
+        </div>
     </a>
 </div>

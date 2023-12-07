@@ -1,0 +1,13 @@
+.notifications-list {
+    background-color: var(--background-color-accent);
+    border-radius: 15px;
+
+    .title-container {
+        padding: 20px;
+        border-bottom: solid 1px var(--color-separator);
+
+        .title {
+            font-weight: 550;
+        }
+    }
+}

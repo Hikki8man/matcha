@@ -6,4 +6,5 @@ export enum AppPathEnum {
     Messages = 'messages',
     Search = 'search',
     Settings = 'settings',
+    Notifications = 'notifications',
 }

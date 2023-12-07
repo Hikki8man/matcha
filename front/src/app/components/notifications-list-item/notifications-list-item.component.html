@@ -1,0 +1,9 @@
+<div class="notification-item" (click)="redirectToProfile()">
+    <div class="left-content">
+        <svg-icon class="notification-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span class="details"><span class="user-name">{{ UserName }}</span> {{ Details }}</span>
+    </div>
+    <div class="right-content">
+        <span class="time-ago">{{ getTimeAgo() }}</span>
+    </div>
+</div>

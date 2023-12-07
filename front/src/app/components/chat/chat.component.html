@@ -4,6 +4,7 @@
             <div *ngIf="IsMobileView" class="back-arrow-container" (click)="handleBackArrowClick()">
                 <svg-icon [Src]="IconBackUrl" [ContentStyle]="IconBackStyle"></svg-icon>
             </div>
+            <div *ngIf="!IsMobileView" class="empty-div"></div>
             <div class="user-infos" (click)="redirectToUserProfile()">
                 <div class="user-photo-container">
                     <img class="user-photo" [src]="DefaultAvatar">
@@ -18,7 +19,8 @@
         </div>
         <div class="chat-body">
             <div class="chats-container">
-                <div class="chat-message" *ngFor="let message of Chat.messages" [class.from]="isFrom(message.sender_id)">
+                <div class="chat-message" *ngFor="let message of Chat.messages"
+                    [class.from]="isFrom(message.sender_id)">
                     <span>{{ message.content }}</span>
                 </div>
             </div>

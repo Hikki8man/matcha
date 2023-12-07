@@ -76,7 +76,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public redirectToUserProfile() {
-        this._router.navigate([`/${AppPathEnum.Profile}/${this._interlocutor_id}`])
+        this._router.navigate([`/${AppPathEnum.Profile}/${this.InterlocutorId}`])
     }
 
     ngOnDestroy(): void {
@@ -132,11 +132,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
                 this.Chat = conv;
-                this._interlocutor_id =
+                this.InterlocutorId =
                 this.Chat.user_1.id === this.CurrentUser?.id
                 ? this.Chat.user_2.id
                 : this.Chat.user_1.id;
-                this._notificationService.deleteNotificationsBySenderId(this._interlocutor_id);
+                this._notificationService.deleteMsgNotificationsBySenderId(this.InterlocutorId);
                 setTimeout(() => {
                     this.scrollDown();
                 }, 10);

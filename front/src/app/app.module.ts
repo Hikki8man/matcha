@@ -31,6 +31,7 @@ import { SearchFilterService } from './services/search-filter/search-filter.serv
 import { ISocketService } from './services/socket/isocket.service';
 import { SocketService } from './services/socket/socket.service';
 import { UserModule } from './pages/user/user.module';
+import { NotificationsModule } from './pages/notifications/notifications.module';
 
 const config: SocketIoConfig = {
     url: '',
@@ -55,6 +56,7 @@ const config: SocketIoConfig = {
         RegisterModule,
         CompleteProfileModule,
         UserModule,
+        NotificationsModule,
     ],
     providers: [
         {
