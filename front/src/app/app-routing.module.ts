@@ -32,10 +32,12 @@ const routes: Routes = [
     {
         path: AppPathEnum.Login,
         component: LoginComponent,
+        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()]
     },
     {
         path: AppPathEnum.Register,
         component: RegisterComponent,
+        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()]
     },
     {
         path: 'complete-profile',

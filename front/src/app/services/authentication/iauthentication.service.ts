@@ -12,5 +12,6 @@ export abstract class IAuthenticationService {
     public abstract refreshToken(): Observable<{ access_token: string }>;
     public abstract refreshPage(): Observable<UserModel>;
     public abstract isAuthenticatedGuard(): boolean;
+    public abstract isNotAuthenticatedGuard(): boolean;
     public abstract setUser(user: UserModel): void;
 }

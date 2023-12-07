@@ -105,6 +105,16 @@ export class AuthenticationService implements IAuthenticationService {
         }
     }
 
+    public isNotAuthenticatedGuard(): boolean {
+        const isAuth = this.userValue;
+        if (isAuth) {
+            this._router.navigate([`${AppPathEnum.Profile}/me`]);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private startRefreshTokenTimer(token: string) {
         const jwtBase64 = token.split('.')[1];
         const jwtToken = JSON.parse(atob(jwtBase64));
