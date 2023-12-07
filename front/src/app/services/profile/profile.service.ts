@@ -54,7 +54,7 @@ export class ProfileService implements IProfileService {
     }
 
     public editTags(tags: Tag[]): Observable<void> {
-        return this._apiService.callApi('edit/tags', 'POST', { tags });
+        return this._apiService.callApi('profile/edit/tags', 'POST', { tags });
     }
 
     public editBio(bio: string): Observable<void> {

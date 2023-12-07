@@ -4,10 +4,23 @@
 
     .title-container {
         padding: 20px;
-        border-bottom: solid 1px var(--color-separator);
 
         .title {
             font-weight: 550;
+        }
+    }
+
+    .no-notifications {
+        border-top: solid 1px var(--color-separator);
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .text {
+            font-size: 20px;
+            font-weight: 550;
+            color: var(--color-text-secondary);
         }
     }
 }

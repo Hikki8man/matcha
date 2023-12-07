@@ -3,6 +3,9 @@
         <span class="title">Notifications</span>
     </div>
     <div class="notifications-container">
-        <notifications-list-item *ngFor="let i of [1,2,3,4]"></notifications-list-item>
+        <notifications-list-item *ngFor="let notif of Notifications"></notifications-list-item>
+        <div *ngIf="Notifications.length === 0" class="no-notifications">
+            <span class="text">Aucune notification</span>
+        </div>
     </div>
 </div>
