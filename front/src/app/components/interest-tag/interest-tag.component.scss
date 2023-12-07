@@ -6,12 +6,17 @@
 .interest-tag-container {
     margin-right: 7px;
     margin-top: 10px;
-    padding: 7px 10px;
+    padding: 5px 8px;
     background-color: var(--tag-background-color);
     border-radius: 7px;
 
     .interest-tag {
         color: var(--tag-text-color);
+        font-size: 12px;
+    }
+
+    &.selectable {
+        cursor: pointer;
     }
 }
 
@@ -22,7 +27,7 @@
         padding: 2px 6px;
 
         .interest-tag {
-            font-size: 11px;
+            font-size: 10px;
         }
     }
 }

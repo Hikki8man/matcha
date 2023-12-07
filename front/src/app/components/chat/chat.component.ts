@@ -6,9 +6,11 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Output,
+    Output
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
@@ -41,7 +43,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         private _apiService: IApiService,
         private _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
-    ) {}
+        private readonly _router: Router,
+    ) { }
 
     @Input() public ChatId: number | null = null;
     @Output() public BackArrowClicked: EventEmitter<void> = new EventEmitter<void>();
@@ -72,6 +75,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
+    public redirectToUserProfile() {
+        this._router.navigate([`/${AppPathEnum.Profile}/${this._interlocutor_id}`])
+    }
+
     ngOnDestroy(): void {
         this._onNewMessageSubscription.unsubscribe();
         this._onUnmatchSub.unsubscribe();
@@ -91,12 +98,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollDown() {
-        const bodyDiv = document.querySelector('.chat-body');
-        // Body div null at first fetch, LOLO fix
+        const bodyDiv = document.querySelector('.chat-body');        
         if (bodyDiv) {
             setTimeout(() => {
                 bodyDiv.scrollTop = bodyDiv.scrollHeight;
-            }, 0);
+            }, 10);
         }
     }
 
@@ -126,11 +132,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
                 this.Chat = conv;
-                this.InterlocutorId =
-                    this.Chat.user_1.id === this.CurrentUser?.id
-                        ? this.Chat.user_2.id
-                        : this.Chat.user_1.id;
-                this._notificationService.deleteMsgNotificationsBySenderId(this.InterlocutorId);
+                this._interlocutor_id =
+                this.Chat.user_1.id === this.CurrentUser?.id
+                ? this.Chat.user_2.id
+                : this.Chat.user_1.id;
+                this._notificationService.deleteNotificationsBySenderId(this._interlocutor_id);
+                setTimeout(() => {
+                    this.scrollDown();
+                }, 10);
             });
         this._socketService.socket.emit('JoinConversation', this.ChatId);
     }

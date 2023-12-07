@@ -1,0 +1,5 @@
+<div class="user-tags-container">
+    <div *ngFor="let tag of Tags">
+        <interest-tag [Tag]="tag" [Selectable]="Selectable" (OnSelect)="handleTagSelected($event)"></interest-tag>
+    </div>
+</div>

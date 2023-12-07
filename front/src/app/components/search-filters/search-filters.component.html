@@ -22,7 +22,7 @@
 
         <div class="tags-title-container">
             <span class="filter-name">Tags:</span>
-            <div class="select-tags-button">Sélectionner des tags</div>
+            <select-tags-button [SelectedTags]="Filters.Tags" (SelectedTagsChange)="setTags($event)"></select-tags-button>
         </div>
         <div class="tags-container">
             <div *ngFor="let tag of Filters.Tags">
@@ -31,11 +31,14 @@
         </div>
         <span class="filter-name">Order by:</span>
         <div class="sort-container">
-            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Distance}" (click)="setOrderBy(OrderByEnum.Distance)">Distance</button>
-            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Youngest}" (click)="setOrderBy(OrderByEnum.Youngest)">Youngest</button>
-            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Oldest}" (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
-            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.CommonTags}" (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
-           </div>
-        
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Distance}"
+                (click)="setOrderBy(OrderByEnum.Distance)">Distance</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Youngest}"
+                (click)="setOrderBy(OrderByEnum.Youngest)">Youngest</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.Oldest}"
+                (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.CommonTags}"
+                (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
+        </div>
     </div>
 </div>

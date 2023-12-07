@@ -1,0 +1,41 @@
+.tags-selector {
+    .search-bar-container {
+        margin-bottom: 10px;
+    }
+
+    .selected-tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+
+        .selected-tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1px 5px;
+            border-radius: 20px;
+            background-color: #272727;
+            color: white;
+            font-size: 12px;
+            user-select: none;
+            margin-right: 5px;
+            margin-bottom: 5px;
+
+            .tag-name {
+                padding-left: 14px;
+            }
+
+            &:hover {
+                .close-icon {
+                    fill: white;
+                }
+            }
+
+            .close-icon {
+                margin-left: 3px;
+                cursor: pointer;
+                fill: #272727;
+            }
+        }
+    }
+}

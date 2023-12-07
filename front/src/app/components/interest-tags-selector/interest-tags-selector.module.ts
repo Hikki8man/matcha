@@ -1,24 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { InterestTagModule } from '../interest-tag/interest-tag.module';
 import { InterestTagsListModule } from '../interest-tags-list/interest-tags-list.module';
-import { UserListComponent } from './user-list.component';
+import { MatchaInputModule } from '../matcha-input/matcha-input.module';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { InterestTagsSelectorComponent } from './interest-tags-selector.component';
 
 
 
 @NgModule({
 	declarations: [
-		UserListComponent
+		InterestTagsSelectorComponent
 	],
 	imports: [
 		CommonModule,
-		RouterModule,
+		MatchaInputModule,
+		InterestTagModule,
 		InterestTagsListModule,
 		SvgIconComponentModule,
 	],
 	exports: [
-		UserListComponent
+		InterestTagsSelectorComponent
 	]
 })
-export class UserListModule { }
+export class InterestTagsSelectorModule { }

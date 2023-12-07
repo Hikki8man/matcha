@@ -33,6 +33,7 @@
                     height: 50px;
                     width: 50px;
                     margin-right: 15px;
+                    cursor: pointer;
                 }
 
                 .viewer-info {
@@ -41,6 +42,11 @@
 
                     .viewer-name {
                         font-weight: 550;
+
+                        &:hover {
+                            cursor: pointer;
+                            text-decoration: underline;
+                        }
                     }
 
                     .viewer-date {

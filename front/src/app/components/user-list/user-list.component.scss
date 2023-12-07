@@ -20,6 +20,7 @@
             display: flex;
             background-color: var(--background-color-accent);
             margin-bottom: 15px;
+            height: 200px;
 
             .user-photo-container {
                 height: 200px;
@@ -35,6 +36,8 @@
                 padding: 15px 20px;
                 display: flex;
                 flex-direction: column;
+                justify-content: space-between;
+                overflow: auto;
 
                 .user-name {
                     text-decoration: none;
@@ -50,9 +53,21 @@
                     }
                 }
 
+                .user-location-container {
+                    display: flex;
+                    margin-top: 10px;
+                    color: var(--color-text-secondary);
+                    font-size: 14px;
+
+                    .user-location-icon {
+                        fill: var(--color-text-secondary);
+                        margin-right: 5px;
+                    }
+                }
+
                 .user-bio {
                     font-size: 14px;
-                    margin-top: 20px;
+                    margin-top: 10px;
                     color: var(--color-text-secondary);
                     
                     &.skeleton-text {

@@ -4,8 +4,7 @@
             <div *ngIf="IsMobileView" class="back-arrow-container" (click)="handleBackArrowClick()">
                 <svg-icon [Src]="IconBackUrl" [ContentStyle]="IconBackStyle"></svg-icon>
             </div>
-            <div *ngIf="!IsMobileView" class="dummy-div"></div>
-            <div class="user-infos">
+            <div class="user-infos" (click)="redirectToUserProfile()">
                 <div class="user-photo-container">
                     <img class="user-photo" [src]="DefaultAvatar">
                 </div>

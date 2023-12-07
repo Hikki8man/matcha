@@ -13,12 +13,16 @@
         padding: 20px;
         
         border-bottom: solid 1px var(--color-separator);
-        
-        .user-photo {
-            height: 50px;
-            width: 50px;
-            border-radius: 25px;
+
+        .user-infos {
+            cursor: pointer;
+            .user-photo {
+                height: 50px;
+                width: 50px;
+                border-radius: 25px;
+            }
         }
+        
 
         .back-arrow-container {
             cursor: pointer;
