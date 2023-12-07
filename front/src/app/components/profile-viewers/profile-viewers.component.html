@@ -4,15 +4,12 @@
         <div class="viewer-item" *ngFor="let view of Views">
             <div class="left-content">
                 <div class="viewer-photo-container">
-                    <img class="viewer-photo" [src]="view.avatar">
+                    <img class="viewer-photo" [src]="view.avatar" (click)="redirectToProfile(view)">
                 </div>
                 <div class="viewer-info">
-                    <span class="viewer-name">{{ view.name }}</span>
+                    <span class="viewer-name" (click)="redirectToProfile(view)">{{ view.name }}</span>
                     <span class="viewer-date">{{ view.time_ago }}</span>
                 </div>
-            </div>
-            <div class="right-content">
-                <svg-icon class="heart-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
             </div>
         </div>
         <div class="no-views" *ngIf="Views.length === 0">

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { LikeType } from 'src/app/enums/like-type-enum';
 import { LikeModel } from 'src/app/models/like.model';
@@ -19,6 +21,7 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _socketService: ISocketService,
+        private readonly _router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -44,6 +47,10 @@ export class ProfileLikesComponent implements OnInit, OnDestroy {
                     this.Likes = this.Likes.filter((l) => l.id !== like.user.id);
                 }
             });
+    }
+
+    public redirectToProfile(like: LikeModel): void {
+        this._router.navigate([AppPathEnum.Profile, like.id]);
     }
 
     ngOnDestroy(): void {
