@@ -1,0 +1,17 @@
+<div class="report-modal">
+    <div class="modal-head">
+        <span class="title">Signalement</span>
+        <div class="close-button" matRipple>
+            <svg-icon [Src]="CloseIconUrl" [ContentStyle]="IconStyle" (click)="handleClose()"></svg-icon>
+        </div>
+    </div>
+    <div class="modal-body">
+        <form class="login-form" [formGroup]="FormGroup" (ngSubmit)="handleSubmit()">
+            <matcha-textarea [HasError]="HasErrors && FormGroup.get('reason')?.invalid" Title="Raison"
+                [FormGroup]="FormGroup" Name="reason"></matcha-textarea>
+            <div class="actions">
+                <matcha-button Type="submit" Label="Signaler"></matcha-button>
+            </div>
+        </form>
+    </div>
+</div>
