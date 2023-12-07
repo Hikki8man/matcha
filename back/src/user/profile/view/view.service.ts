@@ -1,5 +1,7 @@
 import db from '../../../database/connection';
+import notificationService from '../../../notification/notification.service';
 import SocketService from '../../../socket.service';
+import { NotificationType } from '../../../types/notification';
 import { PhotoType } from '../../../types/photo';
 import { ProfileView } from '../../../types/profile';
 import profileService from '../profile.service';
@@ -29,12 +31,17 @@ class ViewService {
       .returning('*');
 
     if (profile_view) {
-      const profile = await profileService.profileNameAndAvatar(viewer_id);
-      if (profile) {
+      const viewer = await profileService.profileNameAndAvatar(viewer_id);
+      if (viewer) {
         SocketService.sendProfileView(viewed_id, {
-          ...profile,
+          ...viewer,
           created_at: profile_view.created_at,
         });
+        await notificationService.createNotification(
+          viewer,
+          viewed_id,
+          NotificationType.View,
+        );
       }
     }
   }

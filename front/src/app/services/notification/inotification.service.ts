@@ -6,4 +6,5 @@ export abstract class INotificationService {
     public abstract deleteMsgNotificationsBySenderId(id: number): void;
     public abstract getNotifications(): Observable<Notification[]>;
     public abstract getMsgNotifications(): Observable<Notification[]>;
+    public abstract markNotificationsAsRead(notifications: Notification[]): void;
 }
