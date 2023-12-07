@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class NotificationsListComponent {
 
+	public Notifications: any[] = [1,2,3,4];
 }
