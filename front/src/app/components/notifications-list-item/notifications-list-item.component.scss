@@ -1,0 +1,32 @@
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 10px;
+    cursor: pointer;
+    border-bottom: solid 1px var(--color-separator);
+
+    &:hover {
+        background-color: #efecec;
+    }
+
+    .left-content {
+        display: flex;
+        align-items: center;
+
+        .notification-icon {
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-weight: 550;
+            margin-right: 3px;
+        }
+    }
+
+    .right-content {
+        .time-ago {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+    }
+}

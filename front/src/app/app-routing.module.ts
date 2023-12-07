@@ -18,6 +18,7 @@ import { ICompleteProfileService } from './services/complete-profile/icomplete-p
 import { CompleteProfileLocationComponent } from './components/complete-profile/complete-profile-location';
 import { CompleteProfileSexualOrientationComponent } from './components/complete-profile/complete-profile-orientation.component';
 import { UserComponent } from './pages/user/user.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 const routes: Routes = [
     {
@@ -110,6 +111,10 @@ const routes: Routes = [
             {
                 path: AppPathEnum.Settings,
                 component: SettingsComponent,
+            },
+            {
+                path: AppPathEnum.Notifications,
+                component: NotificationsComponent,
             },
         ],
     },
