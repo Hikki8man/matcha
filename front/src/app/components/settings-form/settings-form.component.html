@@ -18,6 +18,10 @@
     </div>
     <div class="form-section">
         <span class="title">Tags</span>
+        <div class="tags-list-container">
+            <select-tags-button [SelectedTags]="Profile.tags"></select-tags-button>
+            <interest-tags-list [Tags]="Profile.tags"></interest-tags-list>
+        </div>
     </div>
     <div class="form-section">
         <span class="title">Photos</span>
