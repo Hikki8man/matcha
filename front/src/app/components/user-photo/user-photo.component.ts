@@ -1,4 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IApiService } from 'src/app/services/api/iapi.service';
 
@@ -24,7 +25,7 @@ export class UserPhotoComponent implements AfterViewChecked {
 
 	constructor(
 		private readonly _apiService: IApiService,
-		//private readonly _toast: HotToastService
+		private readonly _toast: HotToastService
 	) { }
 
 	@HostListener('window:resize', ['$event'])
@@ -73,7 +74,7 @@ export class UserPhotoComponent implements AfterViewChecked {
 					this.Src = src;
 				},
 				error: (err) => {					
-					//this._toast.error('Erreur lors de l\'envoi de la photo', { position: 'bottom-center' });
+					this._toast.error('Erreur lors de l\'envoi de la photo', { position: 'bottom-center' });
 					throw err;
 				},
 			});
