@@ -1,6 +1,5 @@
 .search-page {
     display: flex;
-    min-height: 86vh;
 
     .left-content {
         margin: 0px 15px 20px 0px;
@@ -9,5 +8,23 @@
 
     .right-content {
         width: 30%;
+        height: 86vh;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    .search-page {
+        flex-direction: column-reverse;
+
+        .left-content {
+            width: 100%;
+            margin-right: 0px;
+        }
+
+        .right-content {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
     }
 }

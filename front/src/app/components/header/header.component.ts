@@ -13,6 +13,7 @@ export class HeaderComponent implements OnInit {
     public HeartIconStyle: Record<string, string> = {
         display: 'flex',
         height: '14px',
+        width: '14px',
     };
     public AvatarUrl: string = null;
 
