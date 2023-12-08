@@ -12,29 +12,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1px 5px;
+            padding: 1px 11px;
             border-radius: 20px;
-            background-color: #272727;
+            background-color: #4f4f4f;
             color: white;
             font-size: 12px;
             user-select: none;
             margin-right: 5px;
             margin-bottom: 5px;
-
-            .tag-name {
-                padding-left: 14px;
-            }
-
-            &:hover {
-                .close-icon {
-                    fill: white;
-                }
-            }
+            cursor: pointer;
 
             .close-icon {
-                margin-left: 3px;
-                cursor: pointer;
-                fill: #272727;
+                margin-left: 3px;       
+                fill: white;
             }
         }
     }

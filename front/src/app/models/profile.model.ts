@@ -40,11 +40,12 @@ export interface PublicProfileModel {
     distance: number;
     online: boolean;
     last_online?: Date;
-    photos: { path: string, type: string }[];
+    photos: { path: string; type: string }[];
     avatar: string;
 }
 
 export interface ProfileCardModel {
     profile: PublicProfileModel;
-    isLiked: boolean;
+    liked: boolean;
+    likedYou: boolean;
 }

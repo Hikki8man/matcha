@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">
-                <like-button [IsLiked]="IsLiked" (LikeStatusChanged)="handleLikeStatusChanged($event)"></like-button>
+                <like-button [Liked]="Liked" (LikeStatusChanged)="handleLikeStatusChanged($event)"></like-button>
             </div>
         </div>
         <div class="user-bio-container">

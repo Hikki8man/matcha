@@ -1,8 +1,8 @@
 <div class="tags-selector">
     <div class="selected-tags-container">
-        <div class="selected-tag" *ngFor="let tag of SelectedTags">
+        <div class="selected-tag" *ngFor="let tag of SelectedTags" (click)="handleTagUnselected(tag)">
             <span class="tag-name">{{ tag.name }}</span>
-            <svg-icon class="close-icon" [Src]="IconCloseUrl" [ContentStyle]="IconCloseStyle" (click)="handleTagUnselected(tag)"></svg-icon>
+            <svg-icon class="close-icon" [Src]="IconCloseUrl" [ContentStyle]="IconCloseStyle"></svg-icon>
         </div>
     </div>
     <div class="search-bar-container">
