@@ -1,8 +1,11 @@
 <div class="search-filters">
-    <div class="title-container">
+    <div class="title-container" (click)="toggleExpand()">
+        <div *ngIf="IsMobileView" class="expand-button" [class.expand]="IsExpand">
+            <svg-icon class="expand-icon" [Src]="IconExpandUrl" [ContentStyle]="IconExpandStyle"></svg-icon>
+        </div>
         <span class="title">Filtres</span>
     </div>
-    <div class="filters-body">
+    <div class="filters-body" *ngIf="IsExpand || !IsMobileView">
         <span class="filter-name">Tranche d'âge: {{ Filters.MinAge }} - {{ formatAgeLabel(Filters.MaxAge) }}</span>
         <mat-slider min="18" max="60" discrete [displayWith]="formatAgeLabel" (change)="handleFiltersUpdate()">
             <input [(value)]="Filters.MinAge" matSliderStartThumb>
@@ -22,7 +25,8 @@
 
         <div class="tags-title-container">
             <span class="filter-name">Tags:</span>
-            <select-tags-button [SelectedTags]="Filters.Tags" (SelectedTagsChange)="setTags($event)"></select-tags-button>
+            <select-tags-button [SelectedTags]="Filters.Tags"
+                (SelectedTagsChange)="setTags($event)"></select-tags-button>
         </div>
         <div class="tags-container">
             <div *ngFor="let tag of Filters.Tags">

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IApiService } from 'src/app/services/api/iapi.service';
 
@@ -17,13 +18,12 @@ export class AddPhotoButtonComponent {
 	public IconAddStyle: Record<string, string> = {
 		width: '50%',
 		height: '50%',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
+		display: 'flex'
 	};
 
 	constructor(
 		private readonly _apiService: IApiService,
+		private readonly _toast: HotToastService
 	) { }
 
 	public handleSubmit(event: any): void {
@@ -33,16 +33,27 @@ export class AddPhotoButtonComponent {
 		const reader = new FileReader();
 		const file = event.target.files[0];
 
+		let src = '';
+
 		reader.onload = (e: any) => {
-			this.OnPhotoAdded.emit({ path: e.target.result, type: `photo_${this.Index}` });
+			src = e.target.result;
 		};
 		reader.readAsDataURL(file);
 
 		const formData: FormData = new FormData();
 		formData.append('photo', file, file.name);
 		formData.append('photo_type', `photo_${this.Index}`);
-		this._apiService.callApi('profile/edit/photo', 'POST', formData).subscribe((response: any) => {
-			console.log(response);
-		});
+
+		this._apiService.callApi('profile/edit/photo', 'POST', formData)
+			.subscribe({
+				complete: () => {
+					this.OnPhotoAdded.emit({ path: src, type: `photo_${this.Index}` });
+
+				},
+				error: (err) => {
+					this._toast.error('Erreur lors de l\'envoi de la photo', { position: 'bottom-center' });
+					throw err;
+				},
+			});
 	}
 }

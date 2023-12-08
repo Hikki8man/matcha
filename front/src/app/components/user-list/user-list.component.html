@@ -17,7 +17,7 @@
                             [ContentStyle]="LocationIconStyle"></svg-icon>
                         <span class="user-location">{{ user.distance }}km</span>
                     </div>
-                    <span class="user-bio">{{ user.bio }}</span>
+                    <span class="user-bio">{{ trimBio(user.bio) }}</span>
                     <interest-tags-list [Tags]="user.tags"></interest-tags-list>
                 </div>
             </div>

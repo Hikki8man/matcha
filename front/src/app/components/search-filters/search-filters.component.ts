@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { OrderBy } from 'src/app/enums/order-by-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { Tag } from 'src/app/models/profile.model';
@@ -9,7 +10,16 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     templateUrl: './search-filters.component.html',
     styleUrls: ['./search-filters.component.scss'],
 })
-export class SearchFiltersComponent {
+export class SearchFiltersComponent implements OnInit {
+
+    public Filters: FiltersModel = new FiltersModel();
+    public OrderByEnum = OrderBy;
+    public IsMobileView: boolean = false;
+    public IsExpand: boolean = false;
+
+    public IconExpandUrl: string = IconUrlEnum.ExpandMore;
+    public IconExpandStyle: Record<string, string> = { 'width': '24px', 'height': '24px', display: 'flex' };
+
     constructor(private _searchFilterService: ISearchFilterService) {
         const filters = localStorage.getItem('filters');
         if (filters) {
@@ -18,8 +28,18 @@ export class SearchFiltersComponent {
         }
     }
 
-    public Filters: FiltersModel = new FiltersModel();
-    public OrderByEnum = OrderBy;
+    ngOnInit(): void {
+        this.IsMobileView = window.innerWidth <= 1050;
+    }
+
+    public toggleExpand() {
+        this.IsExpand = !this.IsExpand;
+    }
+
+    @HostListener('window:resize', ['$event'])
+    public handleResize(event: any) {
+        this.IsMobileView = event.target.innerWidth <= 1050;
+    }
 
     public formatAgeLabel(value: number) {
         if (value === 60) {
