@@ -49,7 +49,7 @@ services:
       - EMAIL=${EMAIL}
       - EMAIL_PASS=${EMAIL_PASS}
     volumes:
-      - ./front:/usr/app/front
+      - ./front/src:/usr/app/front/src
     networks:
       - matcha_net
     restart: always
