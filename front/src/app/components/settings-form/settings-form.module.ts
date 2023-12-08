@@ -6,6 +6,7 @@ import { MatchaTextAreaModule } from '../matcha-textarea/matcha-textarea.module'
 import { UserPhotosModule } from '../user-photos/user-photos.module';
 import { SelectTagsButtonModule } from '../select-tags-button/select-tags-button.module';
 import { InterestTagsListModule } from '../interest-tags-list/interest-tags-list.module';
+import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 
 
 
@@ -20,6 +21,7 @@ import { InterestTagsListModule } from '../interest-tags-list/interest-tags-list
 		UserPhotosModule,
 		SelectTagsButtonModule,
 		InterestTagsListModule,
+		MatchaButtonModule,
 	],
 	exports: [
 		SettingsFormComponent
