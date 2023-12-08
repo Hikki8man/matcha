@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
 @Component({
@@ -20,7 +19,7 @@ export class ReportModalComponent {
 	constructor(
 		private readonly _dialogRef: MatDialogRef<ReportModalComponent>,
 		private readonly _formBuilder: FormBuilder,
-		private readonly _toast: HotToastService,
+		//private readonly _toast: HotToastService,
 	) {
 		this.FormGroup = this._formBuilder.group({
 			reason: ['', [Validators.required, Validators.minLength(10)]],
@@ -36,6 +35,6 @@ export class ReportModalComponent {
 		if (this.HasErrors) return;
 
 		this._dialogRef.close(this.FormGroup.get('reason').value);
-		this._toast.success('Ton signalement a bien été pris en compte', { position: 'bottom-center' });
+		//this._toast.success('Ton signalement a bien été pris en compte', { position: 'bottom-center' });
 	}
 }

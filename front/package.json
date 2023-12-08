@@ -20,7 +20,6 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "@ngneat/hot-toast": "^6.0.2",
     "ngx-lightbox": "^3.0.0",
     "ngx-socket-io": "4.5.1",
     "rxjs": "~7.8.0",
