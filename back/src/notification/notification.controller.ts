@@ -14,11 +14,21 @@ class NotificationController {
 
   public initializeRoutes() {
     this.router.get(this.path, jwtStrategy, asyncWrapper(this.getAll));
+    this.router.get(
+      this.path + '/read',
+      jwtStrategy,
+      asyncWrapper(this.readNotifications),
+    );
   }
 
   getAll = async (req: MyRequest, res: Response) => {
     const notifs = await notificationService.getAll(req.user_id!);
     res.send(notifs);
+  };
+
+  readNotifications = async (req: MyRequest, res: Response) => {
+    await notificationService.readNotifications(req.user_id!);
+    res.end();
   };
 }
 

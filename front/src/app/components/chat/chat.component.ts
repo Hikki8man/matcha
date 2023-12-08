@@ -70,6 +70,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         this._onNewMessageSubscription = this.onNewMessageEvent();
         this._onUnmatchSub = this._socketService.onUnmatch().subscribe((conv) => {
             if (this.Chat && this.Chat.id === conv.id) {
+                this._socketService.socket.emit('LeaveConversation', this.Chat.id);
                 this.Chat = undefined;
             }
         });

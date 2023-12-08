@@ -5,13 +5,33 @@ import {
   NotificationEvent,
   NotificationType,
 } from '../types/notification';
+import { PhotoType } from '../types/photo';
 import { ProfileMinimum } from '../types/profile';
+import blockService from '../user/profile/block/block.service';
 
 class NotificationService {
   public notificationRepo = () => db<Notification>('notification');
 
   getAll(user_id: number) {
-    return this.notificationRepo().select('*').where('receiver_id', user_id);
+    return this.notificationRepo()
+      .select(
+        'notification.*',
+        db.raw(`
+            jsonb_build_object(
+              'id', sender.id,
+              'name', sender.name,
+               'avatar', avatar.path
+            ) as sender
+          `),
+      )
+      .leftJoin('profile as sender', 'notification.sender_id', 'sender.id')
+      .leftJoin('photo as avatar', function () {
+        this.on('sender.id', '=', 'avatar.user_id').andOn(
+          db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
+        );
+      })
+      .where('notification.receiver_id', user_id)
+      .orderBy('notification.created_at', 'desc');
   }
 
   async deleteMessagesNotif(receiver_id: number, sender_id: number) {
@@ -63,6 +83,10 @@ class NotificationService {
     type: NotificationType,
   ) {
     try {
+      const isBlocked = await blockService.isBlocked(receiver_id, sender.id);
+      if (isBlocked) {
+        return;
+      }
       const [notif] = await this.notificationRepo()
         .insert({
           sender_id: sender.id,
@@ -79,6 +103,12 @@ class NotificationService {
       };
       SocketService.sendNotification(notification);
     } catch (err) {}
+  }
+
+  async readNotifications(id: number) {
+    await this.notificationRepo()
+      .where({ receiver_id: id })
+      .update({ read: true });
   }
 }
 

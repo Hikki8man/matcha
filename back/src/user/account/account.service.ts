@@ -70,7 +70,7 @@ class AccountService {
         'verified',
         'password',
       )
-      .where('username', username)
+      .where(db.raw('LOWER(username) = ?', [username.toLowerCase()]))
       .first();
     if (!user) {
       throw new HttpError(404, 'User not found');
