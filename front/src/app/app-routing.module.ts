@@ -33,12 +33,12 @@ const routes: Routes = [
     {
         path: AppPathEnum.Login,
         component: LoginComponent,
-        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()]
+        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()],
     },
     {
         path: AppPathEnum.Register,
         component: RegisterComponent,
-        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()]
+        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()],
     },
     {
         path: 'complete-profile',
@@ -48,8 +48,6 @@ const routes: Routes = [
                 inject(ICompleteProfileService).isProfileNotCompleteGuard();
             },
         ],
-        // component: CompleteProfileComponent,
-        //TODO add profile not complete guard
         children: [
             {
                 pathMatch: 'full',
@@ -120,7 +118,7 @@ const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: AppPathEnum.Profile,
+        redirectTo: `${AppPathEnum.Profile}/me`,
         pathMatch: 'full',
     },
 ];
@@ -129,4 +127,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
