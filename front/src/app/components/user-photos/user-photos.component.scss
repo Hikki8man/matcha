@@ -15,7 +15,7 @@
         display: flex;
         justify-content: space-between;
 
-        
+
 
         .user-photo {
             cursor: pointer;
@@ -56,11 +56,17 @@
     }
 }
 
-@media screen and (max-width:  600px) {
+@media screen and (max-width: 600px) {
     .user-photos {
         padding: 10px;
+
+        .title {
+            margin-bottom: 10px;
+        }
+
         .photos-container {
             margin-top: 10px;
+
             .user-photo {
                 height: 70px;
             }
