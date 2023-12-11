@@ -62,6 +62,32 @@
                         margin-right: 5px;
                     }
                 }
+
+                .fame-rating-container {
+                    display: flex;
+                    margin-top: 10px;
+                    color: var(--color-text-secondary);
+                    font-size: 14px;
+
+                    .fame-rating-icon {
+                        fill: #dddb12;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            .right-header-content {
+                display: flex;
+                height: fit-content;
+
+                .likes-you-badge {
+                    background-color: var(--title-color);
+                    padding: 5px 10px;
+                    border-radius: 10px;
+                    color: #ffffac;
+                    font-weight: 550;
+                    margin-right: 5px;
+                }
             }
         }
     }
