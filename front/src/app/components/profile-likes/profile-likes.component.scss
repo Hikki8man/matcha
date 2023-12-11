@@ -1,7 +1,7 @@
 .profile-likes {
     background-color: var(--background-color-accent);
     border-radius: 10px;
-    
+
     .title-container {
         padding: 20px;
 
@@ -16,11 +16,14 @@
         justify-content: space-between;
         flex-direction: column;
 
+        .no-likes {
+            padding: 20px;
+        }
+
         .like-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
             padding: 10px 20px;
             border-top: solid 1px var(--color-separator);
 
