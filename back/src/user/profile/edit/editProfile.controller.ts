@@ -12,6 +12,7 @@ import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
 import { PhotoType } from '../../../types/photo';
+import profileService from '../profile.service';
 
 class EditProfileController {
   public path = '/profile/edit';
@@ -74,6 +75,16 @@ class EditProfileController {
       CheckValidation,
       asyncWrapper(this.sexualOrientation),
     );
+    this.router.post(
+      this.path + '/location',
+      jwtStrategy,
+      body('latitude').isNumeric(),
+      body('longitude').isNumeric(),
+      body('city').isString(),
+      body('country').isString(),
+      CheckValidation,
+      asyncWrapper(this.location),
+    );
   }
 
   uploadPhoto = async (req: MyRequest, res: Response, next: NextFunction) => {
@@ -132,6 +143,18 @@ class EditProfileController {
   tags = async (req: MyRequest, res: Response) => {
     console.log('edit body: ', req.body);
     const updated = await tagsService.editTags(req.user_id!, req.body.tags);
+    if (!updated) {
+      throw new HttpError(400, 'Bad request');
+    }
+    res.end();
+  };
+
+  location = async (req: MyRequest, res: Response) => {
+    console.log('edit body: ', req.body);
+    const updated = await editProfileService.editLocation(
+      req.user_id!,
+      req.body,
+    );
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }

@@ -27,10 +27,6 @@ const routes: Routes = [
         pathMatch: 'full',
     },
     {
-        path: 'location',
-        component: CompleteProfileLocationComponent,
-    },
-    {
         path: AppPathEnum.Login,
         component: LoginComponent,
         canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()],
@@ -77,6 +73,10 @@ const routes: Routes = [
             {
                 path: 'tags',
                 component: CompleteProfileTagsComponent,
+            },
+            {
+                path: 'location',
+                component: CompleteProfileLocationComponent,
             },
         ],
     },

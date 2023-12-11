@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CompletedSteps, ProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -22,7 +22,6 @@ export class CompleteProfileBioComponent implements OnInit {
     ) {
         this._profile = _authenticationService.profileValue!;
         this.bioControl = new FormControl(this._profile.bio, {
-            validators: [Validators.required],
             nonNullable: true,
         });
     }
@@ -38,7 +37,7 @@ export class CompleteProfileBioComponent implements OnInit {
                 complete: () => {
                     this._profile.bio = this.bioControl.value;
                     this._profile.completed_steps = CompletedSteps.Completed;
-                    this._router.navigate(['/']);
+                    this._router.navigate(['complete-profile/location']);
                 },
                 error: (error) => {
                     console.error('Error:', error);

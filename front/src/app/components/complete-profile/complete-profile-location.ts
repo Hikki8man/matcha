@@ -1,43 +1,59 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LocationModel } from 'src/app/models/location.model';
+import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
-    template: ``,
+    template: `<div>{{ latitude + ' ' + longitude }}</div>`,
 })
 export class CompleteProfileLocationComponent implements OnInit {
-    public lat: number;
-    public lng: number;
+    public latitude: number;
+    public longitude: number;
 
-    constructor(/* private _httpClient: HttpClient */) {}
+    constructor(
+        private _httpClient: HttpClient,
+        private _completeService: ICompleteProfileService,
+        private _router: Router,
+    ) {}
 
-    public ngOnInit(): void {
-        this.getLocation();
+    public async ngOnInit(): Promise<void> {
+        await this.getLocation();
     }
 
-    getLocation() {
-        // const API_KEY = '';
+    async getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    console.log('bah alors');
-                    this.lat = position.coords.latitude;
-                    this.lng = position.coords.longitude;
-                    console.log(this.lat);
-                    console.log(this.lng);
-                    // this._httpClient
-                    //     .get(
-                    //         `https://ipwho.is/`,
-                    //         // `https://api.geoapify.com/v1/geocode/reverse?lat=${this.lat}&lon=${this.lng}&apiKey=${API_KEY}`,
-                    //     )
-                    //     .subscribe({
-                    //         next: (data) => {
-                    //             console.log('data: ', data);
-                    //         },
-                    //         error: (err) => console.log('error', err),
-                    //     });
+                    this.latitude = position.coords.latitude;
+                    this.longitude = position.coords.longitude;
+                    console.log(this.latitude);
+                    console.log(this.longitude);
+                    this._httpClient
+                        .get(
+                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${this.latitude}&longitude=${this.longitude}`,
+                        )
+                        .subscribe({
+                            next: (data: any) => {
+                                const location: LocationModel = {
+                                    country: data.countryName,
+                                    city: data.city,
+                                    latitude: this.latitude,
+                                    longitude: this.longitude,
+                                };
+                                console.log('location', data);
+                                this._completeService.completeLocation(location).subscribe({
+                                    next: () => this._router.navigate(['/']),
+                                    error: (err) => console.log(err),
+                                });
+                            },
+                            error: (err) => console.log('error', err),
+                        });
                 },
-                (error) => console.log(error),
+                (error) => console.log('allo', error),
             );
         } else {
+            console.log('ah oe');
             alert('Geolocation is not supported by this browser.');
         }
     }

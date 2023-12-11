@@ -3,6 +3,7 @@ import {
   CompletedSteps,
   SexualOrientation,
 } from '../../../types/profile';
+import { Location } from '../../../types/location';
 import profileService from '../profile.service';
 
 class EditProfileService {
@@ -53,7 +54,7 @@ class EditProfileService {
     }
   }
 
-  async updateCompteteSteps(id: number, step: CompletedSteps) {
+  async updateCompletedSteps(id: number, step: CompletedSteps) {
     try {
       return await profileService
         .profileRepo()
@@ -61,6 +62,23 @@ class EditProfileService {
         .where('id', id);
     } catch (e: any) {
       console.log('error updating steps', e.message);
+      return undefined;
+    }
+  }
+
+  async editLocation(id: number, location: Location) {
+    try {
+      return await profileService
+        .profileRepo()
+        .update({
+          city: location.city,
+          country: location.country,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        })
+        .where('id', id);
+    } catch (e: any) {
+      console.log('error updating name', e.message);
       return undefined;
     }
   }
