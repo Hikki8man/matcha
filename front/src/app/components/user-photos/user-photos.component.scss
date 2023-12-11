@@ -20,6 +20,10 @@
             border-radius: 10px;
             width: 18%;
             height: 180px;
+
+            &.empty {
+                cursor: default;
+            }
         }
     }
 }
