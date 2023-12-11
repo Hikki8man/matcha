@@ -9,15 +9,15 @@ export function timeAgo(raw_date: Date) {
 
     if (timeDifference < minute) {
         const seconds = Math.floor(timeDifference / 1000);
-        return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+        return `il y a ${seconds} seconde${seconds !== 1 ? 's' : ''}`;
     } else if (timeDifference < hour) {
         const minutes = Math.floor(timeDifference / minute);
-        return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+        return `il y a ${minutes} minute${minutes !== 1 ? 's' : ''}`;
     } else if (timeDifference < day) {
         const hours = Math.floor(timeDifference / hour);
-        return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+        return `il y a ${hours} heure${hours !== 1 ? 's' : ''}`;
     } else {
         const days = Math.floor(timeDifference / day);
-        return days == 1 ? 'Yesterday' : `${days} days ago`;
+        return days == 1 ? 'Hier' : `Il y a ${days} jour${days !== 1 ? 's' : ''}`;
     }
 }
