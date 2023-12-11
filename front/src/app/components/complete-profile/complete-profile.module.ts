@@ -21,5 +21,6 @@ import { CompleteProfileSexualOrientationComponent } from './complete-profile-or
         CompleteProfileSexualOrientationComponent,
     ],
     imports: [CommonModule, ReactiveFormsModule, InterestTagModule],
+    exports: [CompleteProfileLocationComponent],
 })
 export class CompleteProfileModule {}
