@@ -45,14 +45,14 @@
             background-color: var(--title-color);
             color: white;
             position: absolute;
-            height: 12px;
-            width: 12px;
+            height: 14px;
+            width: 14px;
             border-radius: 50%;
             font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: translate(10px, -9px);
+            transform: translate(9px, -9px);
         }
 
         &.selected {
