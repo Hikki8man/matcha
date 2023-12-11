@@ -42,6 +42,7 @@ export interface PublicProfileModel {
     last_online?: Date;
     photos: { path: string; type: string }[];
     avatar: string;
+    fameRating: number;
 }
 
 export interface ProfileCardModel {

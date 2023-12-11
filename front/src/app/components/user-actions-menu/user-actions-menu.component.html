@@ -7,4 +7,8 @@
         <svg-icon class="menu-icon" [Src]="IconFlagUrl" [ContentStyle]="IconStyle"></svg-icon>
         <span>Signaler</span>
     </div>
+    <div *ngIf="AllowUnmatch" class="menu-item" (click)="onUnmatch()">
+        <svg-icon class="menu-icon unmatch-icon" [Src]="IconBrokenHeartUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <span>Unmatch</span>
+    </div>
 </div>

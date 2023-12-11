@@ -24,6 +24,7 @@ export class UserProfileCardComponent {
     public IsOtherUser: boolean = false;
     public Profile: PublicProfileModel;
     public Liked: boolean = false;
+    public LikedYou: boolean = false;
 
     constructor(
         private readonly _profileService: IProfileService,
@@ -34,10 +35,12 @@ export class UserProfileCardComponent {
         this.Profile = this.ProfileCard.profile;
         this.IsOtherUser = this.Profile.id !== this._authenticationService.profileValue.id;
         this.Liked = this.ProfileCard.liked;
+        this.LikedYou = this.ProfileCard.likedYou;
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
-    public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
+    public FameRatingIconUrl: string = IconUrlEnum.Star;
+    public IconStyle: Record<string, string> = { display: 'flex', height: '16px' };
 
     public handleLikeStatusChanged(liked: boolean) {
         this.Liked = liked;

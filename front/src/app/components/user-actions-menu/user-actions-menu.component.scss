@@ -8,6 +8,11 @@
 
         .menu-icon {
             margin-right: 10px;
+
+            &.unmatch-icon {
+                stroke: black;
+                stroke-width: 13px;
+            }
         }
 
         &:hover {

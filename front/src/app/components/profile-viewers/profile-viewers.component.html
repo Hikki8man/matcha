@@ -1,13 +1,15 @@
 <div class="profile-viewers">
-    <span class="title">Vues du profil</span>
+    <div class="title-container">
+        <span class="title">Vues du profil</span>
+    </div>
     <div class="viewers-container">
-        <div class="viewer-item" *ngFor="let view of Views">
+        <div class="viewer-item" *ngFor="let view of Views" (click)="redirectToProfile(view)">
             <div class="left-content">
                 <div class="viewer-photo-container">
-                    <img class="viewer-photo" [src]="view.avatar" (click)="redirectToProfile(view)">
+                    <img class="viewer-photo" [src]="view.avatar">
                 </div>
                 <div class="viewer-info">
-                    <span class="viewer-name" (click)="redirectToProfile(view)">{{ view.name }}</span>
+                    <span class="viewer-name">{{ view.name }}</span>
                     <span class="viewer-date">{{ view.time_ago }}</span>
                 </div>
             </div>
