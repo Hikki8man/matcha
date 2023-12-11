@@ -73,11 +73,12 @@ class ProfileController {
     if (!profile) {
       res.status(404).send('User not found');
     } else {
-      const isLiked = await likeService.isLiked(req.user_id!, id);
+      const liked = await likeService.isLiked(req.user_id!, id);
+      const likedYou = await likeService.isLiked(id, req.user_id!);
       if (id !== req.user_id!) {
         await viewService.addProfileView(req.user_id!, id);
       }
-      res.send({ profile, isLiked });
+      res.send({ profile, liked, likedYou });
     }
   };
 

@@ -10,12 +10,10 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
     styleUrls: ['./user-profile-card.component.scss'],
 })
 export class UserProfileCardComponent {
-
     @Input()
     set ProfileCard(value: ProfileCardModel) {
         this._profileCard = value;
-        if (value) 
-            this.init();
+        if (value) this.init();
     }
     get ProfileCard(): ProfileCardModel {
         return this._profileCard;
@@ -25,24 +23,24 @@ export class UserProfileCardComponent {
     private _profileCard: ProfileCardModel;
     public IsOtherUser: boolean = false;
     public Profile: PublicProfileModel;
-    public IsLiked: boolean = false;
+    public Liked: boolean = false;
 
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
-    ) { }
+    ) {}
 
     private init(): void {
         this.Profile = this.ProfileCard.profile;
         this.IsOtherUser = this.Profile.id !== this._authenticationService.profileValue.id;
-        this.IsLiked = this.ProfileCard.isLiked;
+        this.Liked = this.ProfileCard.liked;
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
 
-    public handleLikeStatusChanged(isLiked: boolean) {
-        this.IsLiked = isLiked;
+    public handleLikeStatusChanged(liked: boolean) {
+        this.Liked = liked;
         this._profileService.likeProfile(this.Profile.id).subscribe();
     }
 }
