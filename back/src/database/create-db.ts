@@ -50,6 +50,7 @@ export const createDb = async () => {
       'photo',
       'bio',
       'tags',
+      'location',
       'completed',
     ]);
     table
