@@ -17,6 +17,7 @@ export enum CompletedSteps {
   Photo = 'photo',
   Tags = 'tags',
   Bio = 'bio',
+  Location = 'location',
   Completed = 'completed',
 }
 

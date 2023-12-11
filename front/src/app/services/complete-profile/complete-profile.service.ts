@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
+import { LocationModel } from 'src/app/models/location.model';
 import { GenderEnum } from '../../enums/gender-enum';
 import { CompletedSteps, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
@@ -17,7 +18,7 @@ export class CompleteProfileService implements ICompleteProfileService {
         private _router: Router,
         private _apiService: IApiService,
         private _authService: IAuthenticationService,
-    ) { }
+    ) {}
 
     public completeName(name: string): Observable<void> {
         console.log('name to complete: ', name);
@@ -46,6 +47,10 @@ export class CompleteProfileService implements ICompleteProfileService {
 
     public completeBio(bio: string): Observable<void> {
         return this._apiService.callApi('profile/complete/bio', 'POST', { bio });
+    }
+
+    public completeLocation(location: LocationModel): Observable<void> {
+        return this._apiService.callApi('profile/complete/location', 'POST', location);
     }
 
     public isProfileCompleteGuard(): boolean {

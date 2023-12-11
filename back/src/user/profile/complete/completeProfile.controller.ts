@@ -79,11 +79,22 @@ class CompleteProfileController {
       CheckValidation,
       asyncWrapper(this.sexualOrientation),
     );
+
+    this.router.post(
+      this.path + '/location',
+      jwtStrategy,
+      body('latitude').isNumeric(),
+      body('longitude').isNumeric(),
+      body('city').isString(),
+      body('country').isString(),
+      CheckValidation,
+      asyncWrapper(this.location),
+    );
   }
 
   uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
     await photoService.uploadPhoto(req.user_id!, PhotoType.Avatar, req.file);
-    editProfileService.updateCompteteSteps(req.user_id!, CompletedSteps.Tags);
+    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Tags);
     res.end();
   };
 
@@ -96,7 +107,10 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompteteSteps(req.user_id!, CompletedSteps.Gender);
+    editProfileService.updateCompletedSteps(
+      req.user_id!,
+      CompletedSteps.Gender,
+    );
     res.end();
   };
 
@@ -109,7 +123,7 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompteteSteps(
+    editProfileService.updateCompletedSteps(
       req.user_id!,
       CompletedSteps.SexualOrientation,
     );
@@ -125,7 +139,7 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompteteSteps(req.user_id!, CompletedSteps.Photo);
+    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Photo);
     res.end();
   };
 
@@ -138,9 +152,9 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompteteSteps(
+    editProfileService.updateCompletedSteps(
       req.user_id!,
-      CompletedSteps.Completed,
+      CompletedSteps.Location,
     );
     res.end();
   };
@@ -151,7 +165,23 @@ class CompleteProfileController {
     if (!updated) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompteteSteps(req.user_id!, CompletedSteps.Bio);
+    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Bio);
+    res.end();
+  };
+
+  location = async (req: MyRequest, res: Response) => {
+    console.log('edit body: ', req.body);
+    const updated = await editProfileService.editLocation(
+      req.user_id!,
+      req.body,
+    );
+    if (!updated) {
+      throw new HttpError(400, 'Bad request');
+    }
+    editProfileService.updateCompletedSteps(
+      req.user_id!,
+      CompletedSteps.Completed,
+    );
     res.end();
   };
 }
