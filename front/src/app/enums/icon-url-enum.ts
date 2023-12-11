@@ -4,6 +4,7 @@ export class IconUrlEnum {
     public static readonly Add: string = `${this._baseUrl}add.svg`;
     public static readonly ArrowBack: string = `${this._baseUrl}arrow-back.svg`;
     public static readonly Block: string = `${this._baseUrl}block.svg`;
+    public static readonly BrokenHeart: string = `${this._baseUrl}broken-heart.svg`;
     public static readonly Close: string = `${this._baseUrl}close.svg`;
     public static readonly Edit: string = `${this._baseUrl}edit.svg`;
     public static readonly ExpandLess: string = `${this._baseUrl}expand-less.svg`;

@@ -9,6 +9,7 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 export class UserActionsMenuButtonComponent {
 
 	@Input() public UserId: number;
+	@Input() public AllowUnmatch: boolean = false;
 
 	public MoreIconUrl: string = IconUrlEnum.More;
 	public IconStyle: Record<string, string> = { display: 'flex', height: '24px', width: '24px' };
