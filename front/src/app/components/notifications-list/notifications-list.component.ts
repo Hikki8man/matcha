@@ -13,7 +13,6 @@ export class NotificationsListComponent implements OnDestroy {
     private _destroyed$: Subject<boolean> = new Subject();
 
     constructor(private _notificationService: INotificationService) {
-        // this._notificationService.readNotifications();
         this._notificationService
             .getNotifications()
             .pipe(
