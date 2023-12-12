@@ -24,8 +24,8 @@ export class LoginFormComponent {
     public InvalidCredentials: boolean = false;
 
     constructor(
-        private _authenticationService: IAuthenticationService,
-        private _router: Router,
+        private readonly _authenticationService: IAuthenticationService,
+        private readonly _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
     ) {}
 

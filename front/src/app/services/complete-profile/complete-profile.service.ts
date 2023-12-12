@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { Observable } from 'rxjs';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
@@ -18,7 +20,9 @@ export class CompleteProfileService implements ICompleteProfileService {
         private _router: Router,
         private _apiService: IApiService,
         private _authService: IAuthenticationService,
-    ) {}
+        private readonly _httpClient: HttpClient,
+        private readonly _toastService: HotToastService,
+    ) { }
 
     public completeName(name: string): Observable<void> {
         console.log('name to complete: ', name);
@@ -75,5 +79,63 @@ export class CompleteProfileService implements ICompleteProfileService {
             return false;
         }
         return true;
+    }
+
+    public askForLocation(): void {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position: GeolocationPosition) => {
+                    this.updateLocationFromPosition(position);
+                },
+                (_) => {
+                    this.updateLocationFromIp();
+                },
+            );
+        } else {
+            console.log('ah oe');
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+
+    private updateLocationFromPosition(position: GeolocationPosition): void {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        this._httpClient
+            .get(
+                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}`,
+            )
+            .subscribe({
+                next: (data: any) => {
+                    const location: LocationModel = {
+                        country: data.countryName,
+                        city: data.city,
+                        latitude: latitude,
+                        longitude: longitude,
+                    };
+                    this.completeLocation(location).subscribe({
+                        next: () => this._router.navigate(['/']),
+                        error: (err) => console.log(err), //TODO toaster
+                    });
+                },
+                error: (_) =>
+                    this._toastService.error(
+                        'Une erreur est survenue, merci de réessayer ultérieurement',
+                    ),
+            });
+    }
+
+    private updateLocationFromIp(): void {
+        this._httpClient.get(`https://ipwho.is`).subscribe((data: any) => {
+            const location: LocationModel = {
+                country: data.country,
+                city: data.city,
+                latitude: data.latitude,
+                longitude: data.longitude,
+            };
+            this.completeLocation(location).subscribe({
+                next: () => this._router.navigate(['/']),
+                error: (err) => console.log(err),
+            });
+        });
     }
 }
