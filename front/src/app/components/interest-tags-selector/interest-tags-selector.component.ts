@@ -10,7 +10,8 @@ import { IProfileService } from 'src/app/services/profile/iprofile.service';
 })
 export class InterestTagsSelectorComponent implements OnInit {
 
-	@Input()set SelectedTags(value: Tag[]) {
+	@Input()
+	set SelectedTags(value: Tag[]) {
 		this._selectedTags = [...value];
 	}
 	get SelectedTags(): Tag[] {
@@ -38,6 +39,9 @@ export class InterestTagsSelectorComponent implements OnInit {
 	}
 
 	public handleTagSelected(tag: Tag): void {
+		if (this.SelectedTags.length === 5) {
+			return;
+		}
 		this.SelectedTags.push(tag);
 		this._allTags = this._allTags.filter((t) => t.id !== tag.id);
 		this.DisplayedTags = this.DisplayedTags.filter((t) => t.id !== tag.id);

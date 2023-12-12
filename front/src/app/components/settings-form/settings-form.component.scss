@@ -15,6 +15,27 @@
             padding-top: 10px;
             background-color: var(--background-color-accent);
             border-radius: 15px;
+
+            .edit-button-container {
+                display: flex;
+
+                .select-tags-button {
+                    display: flex;
+                    align-items: center;
+                    width: fit-content;
+                    border-radius: 5px;
+                    padding: 2px 7px;
+
+                    .edit-icon {
+                        margin-left: 5px;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #ebebebc9;
+                    }
+                }
+            }
         }
 
         .button-container {
