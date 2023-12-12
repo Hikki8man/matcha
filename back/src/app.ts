@@ -5,21 +5,18 @@ import errorHandler from './utils/middleware/errorHandler';
 import http from 'http';
 import { env } from './config';
 import SocketService from './socket.service';
-import https from 'https';
 import fs from 'fs';
 
 class App {
   public app: express.Application;
   public port: number;
-  private server: https.Server;
+  private server: http.Server;
   private socketService: SocketService;
 
   constructor(controllers: any, port: number) {
     this.app = express();
-    const key = fs.readFileSync('./key.pem');
-    const cert = fs.readFileSync('./cert.pem');
     this.port = port;
-    this.server = https.createServer({ key, cert }, this.app);
+    this.server = http.createServer(this.app);
     this.app.use('/uploads', express.static('uploads'));
     this.app.use('/public', express.static('public'));
 

@@ -16,4 +16,4 @@ RUN npm install
 
 RUN npm i -g @angular/cli
 
-ENTRYPOINT [ "ng", "serve", "--ssl" , "--host=0.0.0.0" ]
+ENTRYPOINT [ "ng", "serve" , "--host=0.0.0.0" ]

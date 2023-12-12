@@ -49,7 +49,7 @@ class CompleteProfileController {
     this.router.post(
       this.path + '/bio',
       jwtStrategy,
-      body('bio').isString(),
+      body('bio').optional().isString(),
       CheckValidation,
       asyncWrapper(this.bio),
     );
