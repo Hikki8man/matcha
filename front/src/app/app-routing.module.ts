@@ -19,6 +19,7 @@ import { CompleteProfileLocationComponent } from './components/complete-profile/
 import { CompleteProfileSexualOrientationComponent } from './components/complete-profile/complete-profile-orientation.component';
 import { UserComponent } from './pages/user/user.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { ProfileCompleteComponent } from './components/profile-complete/profile-complete.component';
 
 const routes: Routes = [
     {
@@ -48,7 +49,7 @@ const routes: Routes = [
             {
                 pathMatch: 'full',
                 path: '',
-                redirectTo: '/search',
+                component: ProfileCompleteComponent,
             },
             {
                 path: 'name',

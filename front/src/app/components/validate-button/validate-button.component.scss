@@ -1,0 +1,28 @@
+.matcha-button {
+    padding: 7px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+
+    border-radius: 20px;
+    background-color: var(--color-pink-accent);
+    transition: background-color 0.2s ease-in-out;
+
+    &.disabled {
+        background-color: var(--color-pink-background);
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: var(--color-pink-background);
+        }
+    }
+
+    &:hover {
+        background-color: var(--title-color);
+    }
+
+    .button-icon {
+        fill: white;
+    }
+}
