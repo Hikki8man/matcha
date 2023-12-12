@@ -67,12 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "front:build:production",
-              "ssl": true
+              "browserTarget": "front:build:production"
             },
             "development": {
-              "browserTarget": "front:build:development",
-              "ssl": true
+              "browserTarget": "front:build:development"
             }
           },
           "defaultConfiguration": "development"
