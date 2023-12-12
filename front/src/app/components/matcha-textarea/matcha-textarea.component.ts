@@ -24,6 +24,7 @@ export class MatchaTextAreaComponent {
     @Input() public Disabled: boolean = false;
     @Input() public Title: string;
 
+    @Output() public ValueChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() public OnFocusOut: EventEmitter<string> = new EventEmitter<string>();
 
     public InputFormControl: FormControl = new FormControl();
@@ -44,6 +45,7 @@ export class MatchaTextAreaComponent {
 
     public handleValueChange(event: Event): void {
         this.Value = (event.target as any).value;
+        this.ValueChange.emit(this.Value);
     }
 
     private init(): void {

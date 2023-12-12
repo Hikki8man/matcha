@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { AccountModel } from 'src/app/models/account.model';
 import { PublicProfileModel, Tag } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { SelectTagsModalComponent } from '../select-tags-modal/select-tags-modal.component';
 
 @Component({
 	selector: 'settings-form',
@@ -17,11 +20,15 @@ export class SettingsFormComponent {
 	public Account: AccountModel;
 	public Loading: boolean = true;
 
+	public IconEditUrl: string = IconUrlEnum.Edit;
+	public IconStyle: Record<string, string> = { display: 'flex', width: '16px', height: '16px' };
+
 	constructor(
 		private readonly _apiServive: IApiService,
 		private readonly _authenticationService: IAuthenticationService,
 		private readonly _profileService: IProfileService,
 		private readonly _toast: HotToastService,
+		private readonly _dialog: MatDialog,
 	) {
 		this._apiServive.callApi<AccountModel>(`account`, 'GET')
 			.subscribe((res: AccountModel) => {
@@ -35,6 +42,23 @@ export class SettingsFormComponent {
 						complete: () => { this.Loading = false },
 					});
 			});
+	}
+
+	public openTagsSelectionModal(): void {
+		const dialog = this._dialog.open(
+			SelectTagsModalComponent,
+			{
+				width: '600px',
+				autoFocus: false,
+				data: {
+					SelectedTags: this.Profile.tags,
+				}
+			}
+		);
+		dialog.afterClosed().subscribe((tags) => {
+			if (tags)
+				this.handleSelectedTagsChanged(tags);
+		});
 	}
 
 	public handleBioChanged(bio: string): void {

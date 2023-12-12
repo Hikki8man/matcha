@@ -1,0 +1,26 @@
+<div class="complete-profile">
+    <div class="app-title-container">
+        <svg-icon class="heart-icon" [Src]="HeartIconUrl" [ContentStyle]="HeartIconStyle"></svg-icon>
+        <span class="app-title">Matcha</span>
+    </div>
+    <mat-stepper #stepper linear class="stepper">
+        <mat-step completed="false">
+            <ng-template matStepLabel>Infos</ng-template>
+            <ng-template matStepContent>
+                <complete-infos></complete-infos>
+            </ng-template>
+        </mat-step>
+        <mat-step completed="false">
+            <ng-template matStepLabel>Photos</ng-template>
+            <ng-template matStepContent>
+
+            </ng-template>
+        </mat-step>
+        <mat-step completed="false">
+            <ng-template matStepLabel>Tes critères</ng-template>
+            <ng-template matStepContent>
+
+            </ng-template>
+        </mat-step>
+    </mat-stepper>
+</div>

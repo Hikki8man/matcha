@@ -1,0 +1,27 @@
+.complete-profile {
+    height: 100%;
+    background-color:  white;
+
+    .app-title-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        color: var(--title-color);
+        width: 100%;
+
+        .heart-icon {
+            fill: var(--title-color);
+            margin-right: 10px;
+        }
+
+        .app-title {
+            font-size: 30px;
+            font-weight: 550;
+        }
+    }
+
+    .stepper {
+        height: calc(100% - 100px);
+    }
+}
