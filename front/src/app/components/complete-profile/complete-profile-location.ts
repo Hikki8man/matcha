@@ -33,7 +33,7 @@ export class CompleteProfileLocationComponent implements OnInit {
                     console.log(this.longitude);
                     this._httpClient
                         .get(
-                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${this.latitude}&longitude=${this.longitude}`,
+                            `http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${this.latitude}&longitude=${this.longitude}`,
                         )
                         .subscribe({
                             next: (data: any) => {
@@ -55,7 +55,7 @@ export class CompleteProfileLocationComponent implements OnInit {
                         });
                 },
                 (_) => {
-                    this._httpClient.get(`https://ipwho.is`).subscribe((data: any) => {
+                    this._httpClient.get(`http://ipwho.is`).subscribe((data: any) => {
                         const location: LocationModel = {
                             country: data.country,
                             city: data.city,
