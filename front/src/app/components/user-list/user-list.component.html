@@ -34,5 +34,7 @@
                 </div>
             </div>
         </ng-container>
+
+        <pagination *ngIf="ItemCount > 0" [ItemCount]="ItemCount" [ItemsPerPage]="ItemsPerPage"></pagination>
     </div>
 </div>

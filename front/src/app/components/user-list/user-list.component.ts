@@ -14,6 +14,8 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
 export class UserListComponent implements OnInit, OnDestroy {
     public Loading: boolean = true;
     public Profiles: PublicProfileModel[];
+    public ItemCount: number;
+    public ItemsPerPage: number;
     public LocationIconUrl: string = IconUrlEnum.Location;
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
     public Filters: FiltersModel;
@@ -23,15 +25,19 @@ export class UserListComponent implements OnInit, OnDestroy {
     constructor(
         private _profileService: IProfileService,
         private _searchFilterService: ISearchFilterService,
-    ) { }
+    ) {}
 
-    ngOnInit(): void {            
+    ngOnInit(): void {
         this._searchFilterService.filters.pipe(takeUntil(this._destroy$)).subscribe((filter) => {
+            this.Loading = true;
+            window.scrollTo({ top: 0 });
             this._profileService
                 .getProfilesFiltered(filter)
                 .pipe(takeUntil(this._destroy$))
-                .subscribe((profiles) => {
-                    this.Profiles = profiles;
+                .subscribe((searchResult) => {
+                    this.Profiles = searchResult.profiles;
+                    this.ItemCount = searchResult.count;
+                    this.ItemsPerPage = searchResult.limit;
                     this.Loading = false;
                 });
         });

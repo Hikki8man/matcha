@@ -41,6 +41,12 @@ class BlockService {
       .first();
     return isBlocked ? true : false;
   }
+
+  public async getBlockedList(blocker_id: number) {
+    return await this.blockRepo()
+      .select('blocked_id')
+      .where('blocker_id', blocker_id);
+  }
 }
 
 export default new BlockService();
