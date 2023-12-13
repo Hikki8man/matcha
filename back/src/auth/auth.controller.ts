@@ -74,8 +74,8 @@ class AuthController {
       authService.generateAccessAndRefreshToken(account.id);
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      sameSite: 'none',
-      secure: true,
+      // sameSite: 'none',
+      // secure: true,
     });
     //TODO remove acc
     res.send({ account, profile, access_token });
