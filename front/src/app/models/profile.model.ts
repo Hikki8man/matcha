@@ -23,11 +23,12 @@ export interface ProfileModel {
     bio: string;
     gender: GenderEnum;
     tags: Tag[];
+    photos: { path: string; type: string }[];
     avatar: string;
     completed_steps: CompletedSteps;
 }
 
-export interface PublicProfileModel {
+export class PublicProfileModel {
     id: number;
     name: string;
     age: number;

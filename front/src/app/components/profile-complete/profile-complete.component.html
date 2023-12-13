@@ -7,13 +7,13 @@
         <mat-step completed="false">
             <ng-template matStepLabel>Infos</ng-template>
             <ng-template matStepContent>
-                <complete-infos></complete-infos>
+                <complete-infos (OnComplete)="handleValidateStep(0)"></complete-infos>
             </ng-template>
         </mat-step>
         <mat-step completed="false">
             <ng-template matStepLabel>Photos</ng-template>
             <ng-template matStepContent>
-
+                <complete-photos (OnComplete)="handleValidateStep(1)"></complete-photos>
             </ng-template>
         </mat-step>
         <mat-step completed="false">

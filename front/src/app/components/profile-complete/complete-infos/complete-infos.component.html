@@ -2,7 +2,7 @@
     <div class="items-container">
         <div class="select-item">
             <div class="title-container">
-                <span class="title">Comment veux tu qu'on t'appelle ?</span>
+                <span class="title">Comment veux tu qu'on t'appelle ? <span class="mandatory">*</span></span>
             </div>
             <div class="validation-input-container">
                 <div class="input-container">
@@ -17,14 +17,20 @@
             </div>
             <div class="validation-input-container">
                 <div class="input-container">
-                    <matcha-textarea [(Value)]="Bio" Placeholder="Ta bio"></matcha-textarea>
+                    <matcha-textarea [(Value)]="Bio" Placeholder="Ta bio (facultatif)"></matcha-textarea>
                 </div>
-                <validate-button [Disabled]="!Bio" (OnClick)="submitBio()"></validate-button>
+                <validate-button (OnClick)="submitBio()"></validate-button>
             </div>
         </div>
         <div *ngIf="Step >= 2" class="select-item appear">
             <div class="title-container">
-                <span class="title">Tiens 🖕</span>
+                <span class="title">Quel est ton genre ? <span class="mandatory">*</span></span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <button-choices [Items]="GenderChoices" [DefaultItem]="getSelectedGenderItem()" (OnSelect)="updateGender($event)"></button-choices>
+                </div>
+                <validate-button [Disabled]="!Gender" (OnClick)="submitGender()"></validate-button>
             </div>
         </div>
     </div>

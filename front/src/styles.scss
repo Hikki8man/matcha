@@ -54,7 +54,7 @@ mat-slider {
     padding: 0 !important;
 }
 
-.mat-step-icon-selected {
+.mat-step-icon-selected, .mat-step-icon-state-edit {
     background-color: var(--title-color) !important;
 }
 

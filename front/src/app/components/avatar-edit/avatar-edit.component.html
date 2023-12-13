@@ -1,0 +1,7 @@
+<div class="user-photo-container">
+    <div class="edit-overlay" [ngStyle]="OverlayStyle" (click)="photoInput.click()">
+        <svg-icon #editIcon class="edit-icon" [Src]="IconEditUrl" [ContentStyle]="IconStyle"></svg-icon>
+        <input #photoInput type="file" hidden accept="image/png, image/jpeg" (change)="handleSubmit($event)">
+    </div>
+    <img #photo class="user-photo" [src]="Src">
+</div>

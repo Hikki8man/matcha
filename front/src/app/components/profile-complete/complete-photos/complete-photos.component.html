@@ -1,0 +1,28 @@
+<div class="complete-photos">
+    <div class="items-container">
+        <div class="select-item">
+            <div class="title-container">
+                <span class="title">Choisis une photo de profil <span class="mandatory">*</span></span>
+            </div>
+            <div class="validation-input-container">
+                <div class="avatar-container">
+                    <avatar-select *ngIf="!Avatar" (OnPhotoAdded)="updateAvatar($event)"></avatar-select>
+                    <avatar-edit *ngIf="Avatar" [Src]="AvatarUrl"></avatar-edit>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="Step >= 1" class="select-item appear">
+            <div class="title-container">
+                <span class="title">Quelques photos supplémentaires ?</span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <user-photos [Profile]="Profile" [IsEdit]="true"></user-photos>
+                </div>
+            </div>
+            <div class="next-button">
+                <matcha-button Label="Suivant" (OnClick)="handleComplete()"></matcha-button>
+            </div>
+        </div>
+    </div>
+</div>

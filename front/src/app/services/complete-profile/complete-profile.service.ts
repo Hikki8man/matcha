@@ -62,7 +62,7 @@ export class CompleteProfileService implements ICompleteProfileService {
         if (!profile || profile.completed_steps !== CompletedSteps.Completed) {
             if (profile) {
                 this._router.navigate([
-                    AppPathEnum.CompleteProfile + '/' + profile.completed_steps,
+                    AppPathEnum.CompleteProfile
                 ]);
             }
             return false;
@@ -75,6 +75,8 @@ export class CompleteProfileService implements ICompleteProfileService {
         if (!profile) return true;
 
         if (profile.completed_steps === CompletedSteps.Completed) {
+            console.log('profile completed');
+            
             this._router.navigate([AppPathEnum.Profile + '/me']);
             return false;
         }
