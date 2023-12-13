@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -27,6 +28,7 @@ export class RegisterFormComponent {
         private readonly _authService: IAuthenticationService,
         private readonly _router: Router,
         private readonly _formBuilder: FormBuilder,
+        private readonly _toasterService: HotToastService,
     ) { }
 
     public registerForm: FormGroup = this._formBuilder.group({
@@ -61,6 +63,7 @@ export class RegisterFormComponent {
                 },
                 complete: () => {
                     this._router.navigate([AppPathEnum.Login]);
+                    this._toasterService.success('Ton compte a bien été créé, on t\'a envoyé un mail pour le valider !');
                     this.IsLoading = false;
                 },
             });

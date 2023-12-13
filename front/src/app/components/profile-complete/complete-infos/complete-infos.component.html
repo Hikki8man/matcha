@@ -33,5 +33,16 @@
                 <validate-button [Disabled]="!Gender" (OnClick)="submitGender()"></validate-button>
             </div>
         </div>
+        <div *ngIf="Step >= 3" class="select-item appear">
+            <div class="title-container">
+                <span class="title">Quelle est ton orientation sexuelle ?</span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <button-choices [Items]="OrientationItems" [DefaultItem]="getSelectedOrientationItem()" (OnSelect)="updateOrientation($event)"></button-choices>
+                </div>
+                <validate-button (OnClick)="submitOrientation()"></validate-button>
+            </div>
+        </div>
     </div>
 </div>

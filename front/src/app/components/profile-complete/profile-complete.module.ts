@@ -5,6 +5,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { CompleteInfosModule } from './complete-infos/complete-infos.module';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { CompletePhotosModule } from './complete-photos/complete-photos.module';
+import { CompleteCriteriasModule } from './complete-criterias/complete-criterias.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { CompletePhotosModule } from './complete-photos/complete-photos.module';
 		CompleteInfosModule,
 		SvgIconComponentModule,
 		CompletePhotosModule,
+		CompleteCriteriasModule,
 	],
 	exports: [
 		ProfileCompleteComponent
