@@ -1,0 +1,6 @@
+<div class="button-choices">
+    <div class="choice-container" *ngFor="let choice of Items" [class.selected]="SelectedItem === choice"
+        (click)="handleSelect(choice)">
+        <span class="choice-label">{{ choice.Label }}</span>
+    </div>
+</div>

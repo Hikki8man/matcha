@@ -10,37 +10,49 @@
 	</div>
 	<form class="register-form" [formGroup]="registerForm" (ngSubmit)="onRegister()">
 
-		<input type="text" id="username" placeholder="Username" formControlName="username">
-		<div *ngIf="registerForm.controls.username.touched && registerForm.controls.username.invalid">
-			{{getErrorMessage('username')}}
+		<div class="register-row register-line">
+			<div class="register-column">
+				<matcha-input [HasError]="HasErrors" [FormGroup]="registerForm" Name="firstname"
+					Title="Prénom"></matcha-input>
+			</div>
+			<div class="register-column">
+				<matcha-input [HasError]="HasErrors" [FormGroup]="registerForm" Name="lastname"
+					Title="Nom"></matcha-input>
+			</div>
 		</div>
 
-		<input type="text" id="firstname" placeholder="firstname" formControlName="firstname">
-		<div *ngIf="registerForm.controls.firstname.touched && registerForm.controls.firstname.invalid">
-			{{getErrorMessage('firstname')}}
+		<div class="register-line">
+			<matcha-input [HasError]="HasErrors" [FormGroup]="registerForm" Name="username"
+				Title="Nom d'utilisateur"></matcha-input>
 		</div>
 
-		<input type="text" id="lastname" placeholder="lastname" formControlName="lastname">
-		<div *ngIf="registerForm.controls.lastname.touched && registerForm.controls.lastname.invalid">
-			{{getErrorMessage('lastname')}}
+		<div class="register-line">
+			<matcha-input Type="email" [HasError]="HasErrors" [FormGroup]="registerForm" Name="email"
+				Title="Email"></matcha-input>
 		</div>
 
-		<label for="birth_date">Birth date:</label>
-		<input type="date" id="birth_date" placeholder="birth_date" formControlName="birth_date">
-		<div *ngIf="registerForm.controls.birth_date.touched && registerForm.controls.birth_date.invalid">
-			{{getErrorMessage('birth_date')}}
+
+		<div class="register-line">
+			<matcha-input Type="password" [HasError]="HasErrors" [FormGroup]="registerForm" Name="password"
+				Title="Mot de passe"></matcha-input>
 		</div>
 
-		<input type="email" id="email" placeholder="Email" formControlName="email">
-		<div *ngIf="registerForm.controls.email.touched && registerForm.controls.email.invalid">
-			{{getErrorMessage('email')}}
+		<div class="register-line">
+			<div class="birth-date-container">
+				<span class="birth-date">Date de naissance</span>
+				<input class="birth-date-input" type="date" placeholder="birth_date" formControlName="birth_date">
+			</div>
 		</div>
 
-		<input type="password" placeholder="Password" formControlName="password">
-		<div *ngIf="registerForm.controls.password.touched && registerForm.controls.password.invalid">
-			{{getErrorMessage('password')}}
+		<div *ngIf="Errors.length > 0" class="error-message invalid-form">
+			<span *ngFor="let error of Errors">{{ error }}</span>
 		</div>
 
-		<button [disabled]="!registerForm.valid" type="submit">Register</button>
+		<div class="actions">
+			<matcha-button Label="Inscription" [Disabled]="IsLoading" Type="submit"></matcha-button>
+		</div>
 	</form>
+	<div class="login-button-container">
+		<span>Déjà inscrit ? <a class="login-button" routerLink="/login">connection</a></span>
+	</div>
 </div>

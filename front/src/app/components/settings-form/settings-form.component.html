@@ -21,8 +21,12 @@
     <div class="form-section">
         <span class="title">Tags</span>
         <div class="tags-list-container">
-            <select-tags-button [SelectedTags]="Profile.tags"
-                (SelectedTagsChange)="handleSelectedTagsChanged($event)"></select-tags-button>
+            <div class="edit-button-container">
+                <div class="select-tags-button" (click)="openTagsSelectionModal()" matRipple>
+                    <span>Modifier</span>
+                    <svg-icon class="edit-icon" [Src]="IconEditUrl" [ContentStyle]="IconStyle"></svg-icon>
+                </div>
+            </div>
             <interest-tags-list [Tags]="Profile.tags"></interest-tags-list>
         </div>
     </div>

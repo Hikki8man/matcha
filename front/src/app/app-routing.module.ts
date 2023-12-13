@@ -1,24 +1,18 @@
 import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ProfileCompleteComponent } from './components/profile-complete/profile-complete.component';
 import { AppPathEnum } from './enums/app-path-enum';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './pages/login/login.component';
 import { MessagesComponent } from './pages/messages/messages.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { SearchComponent } from './pages/search/search.component';
 import { SettingsComponent } from './pages/settings/settings.component';
-import { IAuthenticationService } from './services/authentication/iauthentication.service';
-import { RegisterComponent } from './pages/register/register.component';
-import { CompleteProfileNameComponent } from './components/complete-profile/complete-profile-name.component';
-import { CompleteProfileGenderComponent } from './components/complete-profile/complete-profile-gender.component';
-import { CompleteProfileAvatarComponent } from './components/complete-profile/complete-profile-avatar.component';
-import { CompleteProfileBioComponent } from './components/complete-profile/complete-profile-bio.component';
-import { CompleteProfileTagsComponent } from './components/complete-profile/complete-profile-tags.component';
-import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
-import { CompleteProfileLocationComponent } from './components/complete-profile/complete-profile-location';
-import { CompleteProfileSexualOrientationComponent } from './components/complete-profile/complete-profile-orientation.component';
 import { UserComponent } from './pages/user/user.component';
-import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { IAuthenticationService } from './services/authentication/iauthentication.service';
+import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 
 const routes: Routes = [
     {
@@ -46,37 +40,8 @@ const routes: Routes = [
         ],
         children: [
             {
-                pathMatch: 'full',
                 path: '',
-                redirectTo: '/search',
-            },
-            {
-                path: 'name',
-                component: CompleteProfileNameComponent,
-            },
-            {
-                path: 'gender',
-                component: CompleteProfileGenderComponent,
-            },
-            {
-                path: 'sexual-orientation',
-                component: CompleteProfileSexualOrientationComponent,
-            },
-            {
-                path: 'avatar',
-                component: CompleteProfileAvatarComponent,
-            },
-            {
-                path: 'bio',
-                component: CompleteProfileBioComponent,
-            },
-            {
-                path: 'tags',
-                component: CompleteProfileTagsComponent,
-            },
-            {
-                path: 'location',
-                component: CompleteProfileLocationComponent,
+                component: ProfileCompleteComponent,
             },
         ],
     },

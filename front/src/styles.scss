@@ -54,6 +54,10 @@ mat-slider {
     padding: 0 !important;
 }
 
+.mat-step-icon-selected, .mat-step-icon-state-edit {
+    background-color: var(--title-color) !important;
+}
+
 @keyframes skeleton-loading {
     0% {
         background-color: #e6e6e6;

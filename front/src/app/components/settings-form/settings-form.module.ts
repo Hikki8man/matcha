@@ -7,6 +7,9 @@ import { UserPhotosModule } from '../user-photos/user-photos.module';
 import { SelectTagsButtonModule } from '../select-tags-button/select-tags-button.module';
 import { InterestTagsListModule } from '../interest-tags-list/interest-tags-list.module';
 import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { SelectTagsModalModule } from '../select-tags-modal/select-tags-modal.module';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -22,6 +25,9 @@ import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 		SelectTagsButtonModule,
 		InterestTagsListModule,
 		MatchaButtonModule,
+		SvgIconComponentModule,
+		SelectTagsModalModule,
+		MatRippleModule,
 	],
 	exports: [
 		SettingsFormComponent

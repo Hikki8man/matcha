@@ -1,0 +1,34 @@
+.user-photo-container {
+    height: 100%;
+    width: 100%;
+
+    .user-photo {
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .edit-overlay {
+        background-color: rgba(133, 132, 132, 0.648);
+        height: 130px;
+        width: 137px;
+        position: absolute;
+        border-radius: 10px;
+        opacity: 0;
+        cursor: pointer;
+
+
+        &:hover {
+            opacity: 1;
+            
+            .edit-icon {
+                opacity: 1;
+            }
+        }
+    }
+
+    .edit-icon {
+        opacity: 0;
+        fill: rgb(215, 215, 215);
+    }
+}

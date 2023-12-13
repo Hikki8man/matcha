@@ -1,0 +1,48 @@
+<div class="complete-infos">
+    <div class="items-container">
+        <div class="select-item">
+            <div class="title-container">
+                <span class="title">Comment veux tu qu'on t'appelle ? <span class="mandatory">*</span></span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <matcha-input [(Value)]="Name" Placeholder="Choisis un nom"></matcha-input>
+                </div>
+                <validate-button [Disabled]="!Name" (OnClick)="submitName()"></validate-button>
+            </div>
+        </div>
+        <div *ngIf="Step >= 1" class="select-item appear">
+            <div class="title-container">
+                <span class="title">Présente toi en quelques mots</span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <matcha-textarea [(Value)]="Bio" Placeholder="Ta bio (facultatif)"></matcha-textarea>
+                </div>
+                <validate-button (OnClick)="submitBio()"></validate-button>
+            </div>
+        </div>
+        <div *ngIf="Step >= 2" class="select-item appear">
+            <div class="title-container">
+                <span class="title">Quel est ton genre ? <span class="mandatory">*</span></span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <button-choices [Items]="GenderChoices" [DefaultItem]="getSelectedGenderItem()" (OnSelect)="updateGender($event)"></button-choices>
+                </div>
+                <validate-button [Disabled]="!Gender" (OnClick)="submitGender()"></validate-button>
+            </div>
+        </div>
+        <div *ngIf="Step >= 3" class="select-item appear">
+            <div class="title-container">
+                <span class="title">Quelle est ton orientation sexuelle ?</span>
+            </div>
+            <div class="validation-input-container">
+                <div class="input-container">
+                    <button-choices [Items]="OrientationItems" [DefaultItem]="getSelectedOrientationItem()" (OnSelect)="updateOrientation($event)"></button-choices>
+                </div>
+                <validate-button (OnClick)="submitOrientation()"></validate-button>
+            </div>
+        </div>
+    </div>
+</div>
