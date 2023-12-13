@@ -4,6 +4,7 @@ import { CompleteInfosComponent } from './complete-infos.component';
 import { MatchaInputModule } from '../../matcha-input/matcha-input.module';
 import { ValidateButtonModule } from '../../validate-button/validate-button.module';
 import { MatchaTextAreaModule } from '../../matcha-textarea/matcha-textarea.module';
+import { ButtonChoicesModule } from '../../button-choices/button-choices.module';
 
 
 
@@ -16,6 +17,7 @@ import { MatchaTextAreaModule } from '../../matcha-textarea/matcha-textarea.modu
 		MatchaInputModule,
 		ValidateButtonModule,
 		MatchaTextAreaModule,
+		ButtonChoicesModule,
 	],
 	exports: [
 		CompleteInfosComponent

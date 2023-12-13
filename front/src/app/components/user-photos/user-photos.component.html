@@ -5,11 +5,11 @@
             <user-photo class="user-photo" [Index]="i + 1" [Src]="image.src" [IsEdit]="IsEdit"
                 (OnPhotoClicked)="open(i)"></user-photo>
         </ng-container>
-        <ng-container *ngIf="Album.length < 5 && IsEdit">
-            <add-photo-button *ngFor="let i of [].constructor(5 - Album.length)" class="user-photo"
+        <ng-container *ngIf="Album.length < 4 && IsEdit">
+            <add-photo-button *ngFor="let i of [].constructor(4 - Album.length)" class="user-photo"
                 [Index]="getLastPhotoIndex()" (OnPhotoAdded)="handlePhotoAdded($event)"></add-photo-button>
         </ng-container>
-        <ng-container *ngIf="Album.length < 5 && !IsEdit">
+        <ng-container *ngIf="Album.length < 4 && !IsEdit">
             <div class="user-photo empty" *ngFor="let i of [].constructor(5 - Album.length)"></div>
         </ng-container>
     </div>

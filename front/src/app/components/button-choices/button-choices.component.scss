@@ -1,0 +1,30 @@
+.button-choices {
+    display: flex;
+    align-items: center;
+    border: solid 1px var(--color-pink-accent);
+    background-color: var(--background-color);
+    border-radius: 20px;
+    width: fit-content;
+
+    .choice-container {
+        padding: 10px;
+        min-width: 80px;
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+
+        &.selected {
+            background-color: white;
+        }
+
+        &:first-child {
+            border-radius: 20px 0 0 20px;
+            border-right: solid 1px var(--color-pink-accent);
+        }
+
+        &:last-child {
+            border-radius: 0 20px 20px 0;
+            border-left: solid 1px var(--color-pink-accent);
+        }
+    }
+}
