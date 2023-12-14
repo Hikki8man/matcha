@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { LikeModel } from 'src/app/models/like.model';
 import { ProfileViewModel } from 'src/app/models/profile-view.model';
 import { timeAgo } from 'src/app/utils/timeAgo';
 import { environment } from 'src/environment/environment';
 import { GenderEnum } from '../../enums/gender-enum';
-import { ProfileCardModel, PublicProfileModel, Tag } from '../../models/profile.model';
+import { ProfileCardModel, SearchResultModel, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IProfileService } from './iprofile.service';
 
@@ -61,7 +61,7 @@ export class ProfileService implements IProfileService {
         return this._apiService.callApi('profile/edit/bio', 'POST', { bio });
     }
 
-    public getProfilesFiltered(filterModel: FiltersModel): Observable<PublicProfileModel[]> {
+    public getProfilesFiltered(filterModel: FiltersModel): Observable<SearchResultModel> {
         const filter = {
             max_dist: filterModel.DistanceRange,
             min_age: filterModel.MinAge,
@@ -70,16 +70,13 @@ export class ProfileService implements IProfileService {
             order_by: filterModel.OrderBy,
             offset: filterModel.Offset,
         };
-        return this._apiService
-            .callApi<PublicProfileModel[]>('profile/filter', 'POST', filter)
-            .pipe(
-                map((profiles) => {
-                    return profiles.map((profile) => ({
-                        ...profile,
-                        avatar: this.getAvatar(profile.avatar),
-                    }));
-                }),
-            );
+        return this._apiService.callApi<SearchResultModel>('profile/filter', 'POST', filter).pipe(
+            tap((result) => {
+                for (const profile of result.profiles) {
+                    profile.avatar = this.getAvatar(profile.avatar);
+                }
+            }),
+        );
     }
 
     public likeProfile(id: number): Observable<void> {

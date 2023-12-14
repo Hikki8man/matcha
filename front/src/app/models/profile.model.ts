@@ -51,3 +51,9 @@ export interface ProfileCardModel {
     liked: boolean;
     likedYou: boolean;
 }
+
+export interface SearchResultModel {
+    profiles: PublicProfileModel[];
+    count: number;
+    limit: number;
+}

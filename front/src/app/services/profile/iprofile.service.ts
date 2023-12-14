@@ -3,7 +3,7 @@ import { GenderEnum } from 'src/app/enums/gender-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { LikeModel } from 'src/app/models/like.model';
 import { ProfileViewModel } from 'src/app/models/profile-view.model';
-import { ProfileCardModel, PublicProfileModel, Tag } from 'src/app/models/profile.model';
+import { ProfileCardModel, SearchResultModel, Tag } from 'src/app/models/profile.model';
 
 export abstract class IProfileService {
     public abstract editName(name: string): Observable<void>;
@@ -13,7 +13,7 @@ export abstract class IProfileService {
     public abstract getAvatar(avatarPath: string): string;
     public abstract getAllTags(): Observable<Tag[]>;
     public abstract editTags(tags: Tag[]): Observable<void>;
-    public abstract getProfilesFiltered(filter: FiltersModel): Observable<PublicProfileModel[]>;
+    public abstract getProfilesFiltered(filter: FiltersModel): Observable<SearchResultModel>;
     public abstract getById(id: number): Observable<ProfileCardModel>;
     public abstract likeProfile(id: number): Observable<void>;
     public abstract likerList(): Observable<LikeModel[]>;

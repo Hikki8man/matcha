@@ -11,14 +11,17 @@ import { ISearchFilterService } from 'src/app/services/search-filter/isearch-fil
     styleUrls: ['./search-filters.component.scss'],
 })
 export class SearchFiltersComponent implements OnInit {
-
     public Filters: FiltersModel = new FiltersModel();
     public OrderByEnum = OrderBy;
     public IsMobileView: boolean = false;
     public IsExpand: boolean = false;
 
     public IconExpandUrl: string = IconUrlEnum.ExpandMore;
-    public IconExpandStyle: Record<string, string> = { 'width': '24px', 'height': '24px', display: 'flex' };
+    public IconExpandStyle: Record<string, string> = {
+        width: '24px',
+        height: '24px',
+        display: 'flex',
+    };
 
     constructor(private _searchFilterService: ISearchFilterService) {
         const filters = localStorage.getItem('filters');
@@ -69,6 +72,7 @@ export class SearchFiltersComponent implements OnInit {
     }
 
     public handleFiltersUpdate() {
+        this.Filters.Offset = 0;
         localStorage.setItem('filters', JSON.stringify(this.Filters));
         this._searchFilterService.updateFilters(this.Filters);
     }

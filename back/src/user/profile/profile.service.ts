@@ -20,20 +20,20 @@ class ProfileService {
           'profile.*',
           'avatar.path as avatar',
           db.raw(`
-        CASE
-          WHEN COUNT(DISTINCT photos.id) = 0 THEN '[]'::jsonb
-          ELSE jsonb_agg(DISTINCT jsonb_build_object('path', photos.path, 'type', photos.photo_type))
-        END as photos
-      `),
+            CASE
+              WHEN COUNT(DISTINCT photos.id) = 0 THEN '[]'::jsonb
+              ELSE jsonb_agg(DISTINCT jsonb_build_object('path', photos.path, 'type', photos.photo_type))
+              END as photos
+          `),
           db.raw(`
-        CASE
-          WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-          ELSE jsonb_agg(DISTINCT jsonb_build_object('id', tags.id, 'name', tags.name))
-        END as tags
-      `),
+          CASE
+            WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+            ELSE jsonb_agg(DISTINCT jsonb_build_object('id', tags.id, 'name', tags.name))
+          END as tags
+          `),
           db.raw(`
-          EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
-      `),
+              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+          `),
         )
         .leftJoin('photo as photos', function () {
           this.on('profile.id', '=', 'photos.user_id').andOn(
@@ -171,27 +171,8 @@ class ProfileService {
   async get_all_filtered(id: number, filter: Filter) {
     const common_tags = filter.common_tags.map((tag) => tag.id);
     try {
-      const my_profile = await this.profileRepo()
-        .select('profile.*')
-        .select(
-          db.raw(`
-            CASE
-              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
-            END as tags
-          `),
-        )
-        .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
-        .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
-        .where('profile.id', id)
-        .groupBy('profile.id')
-        .first();
-
-      const blocked_list = blockService
-        .blockRepo()
-        .select('blocked_id')
-        .where('blocker_id', id);
-
+      const my_profile = await this.get_by_id(id);
+      const blocked_list = await blockService.getBlockedList(id);
       const my_tags = my_profile.tags.map((tag: Tag) => tag.id);
       const { orientation, gender_to_match } =
         this.getOrientationAndGenderToMatch(
@@ -200,50 +181,6 @@ class ProfileService {
         );
 
       const profilesQuery = this.profileRepo()
-        .select(
-          'profile.id',
-          'profile.name',
-          'profile.bio',
-          'profile.gender',
-          'profile.sexual_orientation',
-          'profile.country',
-          'profile.city',
-          'profile.online',
-          'profile.last_online',
-        )
-        .select('avatar.path as avatar')
-        .select(
-          db.raw(`
-            CASE
-              WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
-              ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
-            END as tags
-          `),
-        )
-        .select(
-          db.raw(
-            `COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) as matching_tags_count`,
-            [my_tags],
-          ),
-        )
-        .select(
-          db.raw(`
-              EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
-          `),
-        )
-        .select(
-          db.raw(
-            `
-            ROUND(
-              ST_DistanceSphere(
-                ST_MakePoint(?, ?),
-                ST_MakePoint(profile.longitude, profile.latitude)
-              ) / 1000
-            )::INTEGER as distance
-          `,
-            [my_profile.longitude, my_profile.latitude],
-          ),
-        )
         .leftJoin('photo as avatar', function () {
           this.on('profile.id', '=', 'avatar.user_id').andOn(
             db.raw('avatar.photo_type = ?', [PhotoType.Avatar]),
@@ -292,6 +229,8 @@ class ProfileService {
         );
       }
 
+      const count = await profilesQuery.clone().groupBy('profile.id').count();
+
       switch (filter.order_by) {
         case OrderBy.Oldest:
           profilesQuery.orderBy('birth_date', 'asc');
@@ -306,10 +245,55 @@ class ProfileService {
           profilesQuery.orderBy('distance', 'asc');
       }
 
-      return await profilesQuery
+      const profiles = await profilesQuery
+        .select(
+          'profile.id',
+          'profile.name',
+          'profile.bio',
+          'profile.gender',
+          'profile.sexual_orientation',
+          'profile.country',
+          'profile.city',
+          'profile.online',
+          'profile.last_online',
+        )
+        .select('avatar.path as avatar')
+        .select(
+          db.raw(`
+          CASE
+            WHEN COUNT(tags.id) = 0 THEN '[]'::jsonb
+            ELSE jsonb_agg(jsonb_build_object('id', tags.id, 'name', tags.name))
+          END as tags
+        `),
+        )
+        .select(
+          db.raw(
+            `COUNT(CASE WHEN profile_tags.tag_id = ANY(?) THEN profile_tags.tag_id END) as matching_tags_count`,
+            [my_tags],
+          ),
+        )
+        .select(
+          db.raw(`
+            EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date))::INTEGER as age
+        `),
+        )
+        .select(
+          db.raw(
+            `
+          ROUND(
+            ST_DistanceSphere(
+              ST_MakePoint(?, ?),
+              ST_MakePoint(profile.longitude, profile.latitude)
+            ) / 1000
+          )::INTEGER as distance
+        `,
+            [my_profile.longitude, my_profile.latitude],
+          ),
+        )
         .groupBy('profile.id', 'avatar')
         .offset(filter.offset)
         .limit(10, { skipBinding: true });
+      return { profiles, count: count.length, limit: 10 };
     } catch (e: any) {
       console.log('error in getting all profile', e.message);
       return undefined;

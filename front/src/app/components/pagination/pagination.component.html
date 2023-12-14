@@ -1,0 +1,8 @@
+<div class="paginator">
+    <div [class.disabled]="isFirstPage()" (click)="previousPage()" class="pagination-button">
+        <span>Précedent</span>
+    </div>
+    <div [class.disabled]="isLastPage()" (click)="nextPage()" class="pagination-button">
+        <span>Suivant</span>
+    </div>
+</div>
