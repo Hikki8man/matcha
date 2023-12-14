@@ -43,16 +43,17 @@ export const createDb = async () => {
     table.string('bio');
     table.date('birth_date');
     table.enum('gender', ['male', 'female', 'other']).defaultTo('male');
-    table.enum('completed_steps', [
-      'name',
-      'gender',
-      'sexual_orientation',
-      'photo',
-      'bio',
-      'tags',
-      'location',
-      'completed',
-    ]);
+    // table.enum('completed_steps', [
+    //   'name',
+    //   'gender',
+    //   'sexual_orientation',
+    //   'photo',
+    //   'bio',
+    //   'tags',
+    //   'location',
+    //   'completed',
+    // ]);
+    table.integer('completed_steps').defaultTo(0);
     table
       .enum('sexual_orientation', ['heterosexual', 'homosexual', 'bisexual'])
       .defaultTo('bisexual');
