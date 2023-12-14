@@ -9,6 +9,9 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { SelectTagsModalComponent } from '../select-tags-modal/select-tags-modal.component';
 import { LocationModalComponent } from '../location-modal/location-modal.component';
+import { ChoiceItem } from 'src/app/models/choice-item.model';
+import { GenderEnum } from 'src/app/enums/gender-enum';
+import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
 
 @Component({
 	selector: 'settings-form',
@@ -20,9 +23,22 @@ export class SettingsFormComponent {
 	public Profile: PublicProfileModel;
 	public Account: AccountModel;
 	public Loading: boolean = true;
+	public Orientation: SexualOrientation;
+	public Gender: GenderEnum;
 
 	public IconEditUrl: string = IconUrlEnum.Edit;
 	public IconStyle: Record<string, string> = { display: 'flex', width: '16px', height: '16px' };
+
+	public GenderChoices: ChoiceItem[] = [
+        new ChoiceItem('Homme', GenderEnum.Male),
+        new ChoiceItem('Femme', GenderEnum.Female),
+        new ChoiceItem('Autre', GenderEnum.Other),
+    ];
+    public OrientationItems: ChoiceItem[] = [
+        new ChoiceItem('Heterosexuel', SexualOrientation.Heterosexual),
+        new ChoiceItem('Homosexuel', SexualOrientation.Homosexual),
+        new ChoiceItem('Bisexuel', SexualOrientation.Bisexual),
+    ];
 
 	constructor(
 		private readonly _apiServive: IApiService,
@@ -39,6 +55,8 @@ export class SettingsFormComponent {
 					.subscribe({
 						next: (card) => {
 							this.Profile = card.profile;
+							this.Gender = this.Profile.gender;
+							this.Orientation = this.Profile.sexual_orientation;
 						},
 						complete: () => { this.Loading = false },
 					});
@@ -109,5 +127,43 @@ export class SettingsFormComponent {
 				width: '600px',
 				autoFocus: false,
 			});
+	}
+
+	public updateOrientation(choice: ChoiceItem) {
+        this.Orientation = Object.values(SexualOrientation).find((x) => x == choice.Value);
+    }
+
+    public getSelectedOrientationItem(): ChoiceItem {
+        return this.OrientationItems.find((x) => x.Value === this.Orientation);
+    }
+
+    public updateGender(choice: ChoiceItem) {
+        this.Gender = Object.values(GenderEnum).find((x) => x == choice.Value);
+    }
+
+    public getSelectedGenderItem(): ChoiceItem {
+        return this.GenderChoices.find((x) => x.Value === this.Gender);
+    }
+
+	public submitOrientation(): void {
+        this._profileService.editOrientation(this.Orientation).subscribe({
+            complete: () => {
+                this._toast.success('Orientation mise à jour', { position: 'bottom-center' });
+            },
+            error: (error) => {
+                this._toast.error(error.error);
+            },
+        });
+    }
+
+	public submitGender(): void {
+		this._profileService.editGender(this.Gender).subscribe({
+			complete: () => {
+				this._toast.success('Genre mis à jour', { position: 'bottom-center' });
+			},
+			error: (error) => {
+				this._toast.error(error.error);
+			},
+		});
 	}
 }

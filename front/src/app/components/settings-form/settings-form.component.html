@@ -41,6 +41,24 @@
     </div>
     <user-photos [IsEdit]="true" [Profile]="Profile"></user-photos>
     <div class="form-section">
+        <span class="title">Orientation</span>
+        <div class="validation-input-container">
+            <div class="input-container">
+                <button-choices [Items]="OrientationItems" [DefaultItem]="getSelectedOrientationItem()" (OnSelect)="updateOrientation($event)"></button-choices>
+            </div>
+            <validate-button (OnClick)="submitOrientation()"></validate-button>
+        </div>
+    </div>
+    <div class="form-section">
+        <span class="title">Genre</span>
+        <div class="validation-input-container">
+            <div class="input-container">
+                <button-choices [Items]="GenderChoices" [DefaultItem]="getSelectedGenderItem()" (OnSelect)="updateGender($event)"></button-choices>
+            </div>
+            <validate-button [Disabled]="!Gender" (OnClick)="submitGender()"></validate-button>
+        </div>
+    </div>
+    <div class="form-section">
         <span class="title">Localisation</span>
         <div class="button-container">
             <matcha-button Label="Mettre à jour" (OnClick)="handleLocateClick()"></matcha-button>
