@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ICompleteProfileService } from 'src/app/services/complete-profile/icomplete-profile.service';
 
 @Component({
@@ -8,13 +10,15 @@ import { ICompleteProfileService } from 'src/app/services/complete-profile/icomp
 })
 export class LocationModalComponent implements OnInit {
 
+	public LoadingIconUrl: string = IconUrlEnum.Progress;
+	public LoadingIconStyle: Record<string, string> = { display: 'flex', height: '18px', width: '18px' };
+
 	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: { redirect: boolean },
 		private readonly _completeService: ICompleteProfileService
 	) { }
 
 	ngOnInit(): void {
-		this._completeService.askForLocation();
-		console.log('location modal');
-		
+		this._completeService.askForLocation(this.data.redirect);
 	}
 }

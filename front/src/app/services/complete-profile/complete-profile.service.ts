@@ -11,6 +11,7 @@ import { CompletedSteps, Tag } from '../../models/profile.model';
 import { IApiService } from '../api/iapi.service';
 import { IAuthenticationService } from '../authentication/iauthentication.service';
 import { ICompleteProfileService } from './icomplete-profile.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root',
@@ -22,6 +23,7 @@ export class CompleteProfileService implements ICompleteProfileService {
         private _authService: IAuthenticationService,
         private readonly _httpClient: HttpClient,
         private readonly _toastService: HotToastService,
+        private readonly _dialog: MatDialog,
     ) { }
 
     public completeName(name: string): Observable<void> {
@@ -76,23 +78,23 @@ export class CompleteProfileService implements ICompleteProfileService {
 
         if (profile.completed_steps === CompletedSteps.Completed) {
             console.log('profile completed');
-            
+
             this._router.navigate([AppPathEnum.Profile + '/me']);
             return false;
         }
         return true;
     }
 
-    public askForLocation(): void {
+    public askForLocation(redirect: boolean): void {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position: GeolocationPosition) => {
-                    this.updateLocationFromPosition(position);
+                    this.updateLocationFromPosition(position, redirect);
                 },
                 (_) => {
                     console.log(_);
-                    
-                    this.updateLocationFromIp();
+
+                    this.updateLocationFromIp(redirect);
                 },
             );
         } else {
@@ -101,7 +103,7 @@ export class CompleteProfileService implements ICompleteProfileService {
         }
     }
 
-    private updateLocationFromPosition(position: GeolocationPosition): void {
+    private updateLocationFromPosition(position: GeolocationPosition, redirect: boolean): void {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         this._httpClient
@@ -117,7 +119,14 @@ export class CompleteProfileService implements ICompleteProfileService {
                         longitude: longitude,
                     };
                     this.completeLocation(location).subscribe({
-                        next: () => this._router.navigate(['/']),
+                        next: () => {
+                            if (redirect) {
+                                this._router.navigate(['/']);
+                            } else {
+                                this._toastService.success('Ta localisation a bien été mise à jour', { position: 'bottom-center' });
+                            }
+                            this._dialog.closeAll();
+                        },
                         error: (err) => console.log(err), //TODO toaster
                     });
                 },
@@ -128,7 +137,7 @@ export class CompleteProfileService implements ICompleteProfileService {
             });
     }
 
-    private updateLocationFromIp(): void {
+    private updateLocationFromIp(redirect: boolean): void {
         this._httpClient.get(`https://ipwho.is`).subscribe((data: any) => {
             const location: LocationModel = {
                 country: data.country,
@@ -137,7 +146,14 @@ export class CompleteProfileService implements ICompleteProfileService {
                 longitude: data.longitude,
             };
             this.completeLocation(location).subscribe({
-                next: () => this._router.navigate(['/']),
+                next: () => {
+                    if (redirect) {
+                        this._router.navigate(['/']);
+                    } else {
+                        this._toastService.success('Ta localisation a bien été mise à jour', { position: 'bottom-center' });
+                    }
+                    this._dialog.closeAll();
+                },
                 error: (err) => console.log(err),
             });
         });

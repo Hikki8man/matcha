@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationModalComponent } from './location-modal.component';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 
 
 
@@ -9,7 +10,8 @@ import { LocationModalComponent } from './location-modal.component';
 		LocationModalComponent
 	],
 	imports: [
-		CommonModule
+		CommonModule,
+		SvgIconComponentModule,
 	],
 	exports: [
 		LocationModalComponent

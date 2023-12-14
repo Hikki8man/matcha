@@ -8,6 +8,7 @@ import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { SelectTagsModalComponent } from '../select-tags-modal/select-tags-modal.component';
+import { LocationModalComponent } from '../location-modal/location-modal.component';
 
 @Component({
 	selector: 'settings-form',
@@ -100,6 +101,13 @@ export class SettingsFormComponent {
 	}
 
 	public handleLocateClick(): void {
-		//this._toast.error('Ouais ça arrive fort', { position: 'bottom-center' });
+		this._dialog.open(LocationModalComponent,
+			{
+				data: {
+					redirect: false,
+				},
+				width: '600px',
+				autoFocus: false,
+			});
 	}
 }
