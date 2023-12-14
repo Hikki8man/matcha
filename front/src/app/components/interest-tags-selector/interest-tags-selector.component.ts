@@ -13,6 +13,7 @@ export class InterestTagsSelectorComponent implements OnInit {
 	@Input()
 	set SelectedTags(value: Tag[]) {
 		this._selectedTags = [...value];
+		this._allTags = this._allTags.filter((tag) => !this.SelectedTags.some((t) => t.id === tag.id));
 	}
 	get SelectedTags(): Tag[] {
 		return this._selectedTags;
@@ -28,8 +29,7 @@ export class InterestTagsSelectorComponent implements OnInit {
 
 	constructor(
 		private readonly _profileService: IProfileService,
-	) {
-	}
+	) { }
 
 	ngOnInit(): void {
 		this._profileService.getAllTags().subscribe((tags) => {

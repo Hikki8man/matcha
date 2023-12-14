@@ -27,8 +27,8 @@
         </div>
 
 
-        <div *ngIf="InvalidCredentials" class="error-message invalid-credentials">
-            <span>Nom d'utilisateur ou mot de passe incorrect</span>
+        <div *ngIf="Errors.length > 0" class="error-message invalid-credentials">
+            <span *ngFor="let error of Errors">{{error}}</span>
         </div>
 
         <div class="actions">

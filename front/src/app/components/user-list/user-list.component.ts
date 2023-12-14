@@ -49,6 +49,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     public trimBio(bio: string): string {
+        if (!bio) return '';
         if (bio.length >= 80) {
             return bio.slice(0, 78) + '...';
         }

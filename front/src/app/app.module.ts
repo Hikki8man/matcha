@@ -32,7 +32,6 @@ import { ISocketService } from './services/socket/isocket.service';
 import { SocketService } from './services/socket/socket.service';
 import { UserModule } from './pages/user/user.module';
 import { NotificationsModule } from './pages/notifications/notifications.module';
-import { ProfileCompleteModule } from './components/profile-complete/profile-complete.module';
 
 const config: SocketIoConfig = {
     url: '',
@@ -55,10 +54,9 @@ const config: SocketIoConfig = {
         HttpClientModule,
         LoginModule,
         RegisterModule,
-        CompleteProfileModule,
         UserModule,
         NotificationsModule,
-        ProfileCompleteModule,
+        CompleteProfileModule,
     ],
     providers: [
         {

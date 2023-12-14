@@ -1,26 +1,27 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CompleteProfileNameComponent } from './complete-profile-name.component';
-import { CompleteProfileGenderComponent } from './complete-profile-gender.component';
-import { CompleteProfileAvatarComponent } from './complete-profile-avatar.component';
-import { CompleteProfileBioComponent } from './complete-profile-bio.component';
-import { CompleteProfileTagsComponent } from './complete-profile-tags.component';
-import { InterestTagModule } from '../interest-tag/interest-tag.module';
-import { CompleteProfileLocationComponent } from './complete-profile-location';
-import { CompleteProfileSexualOrientationComponent } from './complete-profile-orientation.component';
+import { NgModule } from '@angular/core';
+import { MatStepperModule } from '@angular/material/stepper';
+import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { CompleteCriteriasModule } from './complete-criterias/complete-criterias.module';
+import { CompleteInfosModule } from './complete-infos/complete-infos.module';
+import { CompletePhotosModule } from './complete-photos/complete-photos.module';
+import { CompleteProfileComponent } from './complete-profile.component';
+
 
 @NgModule({
-    declarations: [
-        CompleteProfileNameComponent,
-        CompleteProfileGenderComponent,
-        CompleteProfileAvatarComponent,
-        CompleteProfileBioComponent,
-        CompleteProfileTagsComponent,
-        CompleteProfileLocationComponent,
-        CompleteProfileSexualOrientationComponent,
-    ],
-    imports: [CommonModule, ReactiveFormsModule, InterestTagModule],
-    exports: [CompleteProfileLocationComponent],
+	declarations: [
+		CompleteProfileComponent
+	],
+	imports: [
+		CommonModule,
+		MatStepperModule,
+		CompleteInfosModule,
+		SvgIconComponentModule,
+		CompletePhotosModule,
+		CompleteCriteriasModule,
+	],
+	exports: [
+		CompleteProfileComponent
+	]
 })
-export class CompleteProfileModule {}
+export class CompleteProfileModule { }
