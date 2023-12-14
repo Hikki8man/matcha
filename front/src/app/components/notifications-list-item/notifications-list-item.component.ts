@@ -13,6 +13,8 @@ import { timeAgo } from 'src/app/utils/timeAgo';
 })
 export class NotificationsListItemComponent implements OnInit {
     public HeartIconUrl: string = IconUrlEnum.Heart;
+    public BrokenHeartIconUrl: string = IconUrlEnum.BrokenHeart;
+    public VisibilityIconUrl: string = IconUrlEnum.Visibility;
     public IconStyle: Record<string, string> = {
         display: 'flex',
         height: '24px',
@@ -31,6 +33,13 @@ export class NotificationsListItemComponent implements OnInit {
         [NotificationType.View]: 'a visité ton profil',
         [NotificationType.Message]: '',
     };
+    private _icon = {
+        [NotificationType.Like]: this.HeartIconUrl,
+        [NotificationType.Match]: this.HeartIconUrl,
+        [NotificationType.unMatch]: this.BrokenHeartIconUrl,
+        [NotificationType.View]: this.VisibilityIconUrl,
+        [NotificationType.Message]: '',
+    };
     public AvatarUrl: string = null;
 
     @Input() public Notification: Notification;
@@ -45,6 +54,10 @@ export class NotificationsListItemComponent implements OnInit {
         this.Details = this._type[this.Notification.type];
         this.AvatarUrl = this._profileService.getAvatar(this.Notification.sender.avatar);
         this.TimeAgo = timeAgo(this.Notification.created_at);
+    }
+
+    public getIcon(): string {
+        return this._icon[this.Notification.type];
     }
 
     public redirectToProfile(): void {

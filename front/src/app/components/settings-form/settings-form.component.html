@@ -19,6 +19,12 @@
         <matcha-textarea Title="Bio" [Value]="Profile.bio" (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
     </div>
     <div class="form-section">
+        <span class="title">Avatar</span>
+    </div>
+    <div class="avatar-edit">
+        <avatar-edit [Src]="Profile.avatar"></avatar-edit>
+    </div>
+    <div class="form-section">
         <span class="title">Tags</span>
         <div class="tags-list-container">
             <div class="edit-button-container">

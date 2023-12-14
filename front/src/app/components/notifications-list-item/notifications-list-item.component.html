@@ -1,7 +1,7 @@
 <div class="notification-item" (click)="redirectToProfile()">
     <div class="left-content">
         <div class="top-content">
-            <svg-icon class="notification-icon" [Src]="HeartIconUrl" [ContentStyle]="IconStyle"></svg-icon>
+            <svg-icon class="notification-icon" [Src]="getIcon()" [ContentStyle]="IconStyle"></svg-icon>
             <img *ngIf="AvatarUrl" class="user-avatar" [src]="AvatarUrl" alt="">
         </div>
         <span class="details"><span class="user-name">{{ UserName }}</span> {{ Details }}</span>
