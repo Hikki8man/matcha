@@ -1,6 +1,5 @@
 import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProfileCompleteComponent } from './components/profile-complete/profile-complete.component';
 import { AppPathEnum } from './enums/app-path-enum';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -13,6 +12,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { UserComponent } from './pages/user/user.component';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
+import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
 
 const routes: Routes = [
     {
@@ -38,12 +38,7 @@ const routes: Routes = [
                 inject(ICompleteProfileService).isProfileNotCompleteGuard();
             },
         ],
-        children: [
-            {
-                path: '',
-                component: ProfileCompleteComponent,
-            },
-        ],
+        component: CompleteProfileComponent,
     },
     {
         path: '',
@@ -92,4 +87,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

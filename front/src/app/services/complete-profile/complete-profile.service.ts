@@ -90,6 +90,8 @@ export class CompleteProfileService implements ICompleteProfileService {
                     this.updateLocationFromPosition(position);
                 },
                 (_) => {
+                    console.log(_);
+                    
                     this.updateLocationFromIp();
                 },
             );

@@ -3,11 +3,11 @@ import { MatStepper } from '@angular/material/stepper';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 
 @Component({
-    selector: 'app-profile-complete',
-    templateUrl: './profile-complete.component.html',
-    styleUrls: ['./profile-complete.component.scss']
+    selector: 'app-complete-profile',
+    templateUrl: './complete-profile.component.html',
+    styleUrls: ['./complete-profile.component.scss']
 })
-export class ProfileCompleteComponent {
+export class CompleteProfileComponent {
 
     @ViewChild('stepper') stepper: MatStepper;
     public HeartIconUrl: string = IconUrlEnum.Heart;

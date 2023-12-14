@@ -30,8 +30,13 @@ export class CompletePhotosComponent {
 	}
 
 	public updateAvatar(avatar: string): void {
-		this.Avatar = avatar;
-		this.AvatarUrl = this._profileService.getAvatar(this.Avatar);
+		this.Avatar = avatar;		
+		if (avatar.startsWith('uploads/')) {
+			this.AvatarUrl = this._profileService.getAvatar(this.Avatar);
+		} else {
+			this.AvatarUrl = this.Avatar;
+		}
+
 		this.Step = 1;
 	}
 
