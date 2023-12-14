@@ -102,11 +102,11 @@ class AccountService {
         ['*'],
       );
       // Insert user's profile information into the 'PROFILE' table
-      const profile = await db<Profile>('profile').insert({
+      await db<Profile>('profile').insert({
         id: account.id,
         name: body.firstname,
         birth_date: body.birth_date,
-        completed_steps: CompletedSteps.Name,
+        completed_steps: CompletedSteps.First,
       });
       delete account.password;
       return account;

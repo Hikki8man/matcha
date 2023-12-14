@@ -32,6 +32,8 @@ import { ISocketService } from './services/socket/isocket.service';
 import { SocketService } from './services/socket/socket.service';
 import { UserModule } from './pages/user/user.module';
 import { NotificationsModule } from './pages/notifications/notifications.module';
+import { ILocationService } from './services/location/ilocation.service';
+import { LocationService } from './services/location/location.service';
 
 const config: SocketIoConfig = {
     url: '',
@@ -72,6 +74,8 @@ const config: SocketIoConfig = {
         { provide: ICompleteProfileService, useClass: CompleteProfileService },
         { provide: INotificationService, useClass: NotificationService },
         { provide: ISearchFilterService, useClass: SearchFilterService },
+        { provide: ILocationService, useClass: LocationService },
+
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ],
