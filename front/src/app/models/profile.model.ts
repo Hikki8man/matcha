@@ -2,12 +2,10 @@ import { GenderEnum } from '../enums/gender-enum';
 import { SexualOrientation } from '../enums/sexual-orientation-enum';
 
 export enum CompletedSteps {
-    Name = 'name',
-    Gender = 'gender',
-    Photo = 'photo',
-    Tags = 'tags',
-    Bio = 'bio',
-    Completed = 'completed',
+    First,
+    Second,
+    Third,
+    Completed,
 }
 
 export interface Tag {

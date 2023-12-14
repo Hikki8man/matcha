@@ -10,17 +10,6 @@ export enum SexualOrientation {
   Bisexual = 'bisexual',
 }
 
-// export enum CompletedSteps {
-//   Name = 'name',
-//   Gender = 'gender',
-//   SexualOrientation = 'sexual_orientation',
-//   Photo = 'photo',
-//   Tags = 'tags',
-//   Bio = 'bio',
-//   Location = 'location',
-//   Completed = 'completed',
-// }
-
 export enum CompletedSteps {
   First,
   Second,

@@ -5,7 +5,7 @@ import editProfileService from '../edit/editProfile.service';
 import profileService from '../profile.service';
 import HttpError from '../../../utils/HttpError';
 import { CompletedSteps } from '../../../types/profile';
-
+import jwtStrategy from '../../../auth/jwt.strategy';
 
 class CompleteProfileController {
   public path = '/profile/complete';
@@ -16,9 +16,21 @@ class CompleteProfileController {
   }
 
   public initializeRoutes() {
-    this.router.post(this.path + '/first', asyncWrapper(this.completeFirstStep));
-    this.router.post(this.path + '/second', asyncWrapper(this.completeSecondStep));
-    this.router.post(this.path + '/third', asyncWrapper(this.completeThirdStep));
+    this.router.post(
+      this.path + '/first',
+      jwtStrategy,
+      asyncWrapper(this.completeFirstStep),
+    );
+    this.router.post(
+      this.path + '/second',
+      jwtStrategy,
+      asyncWrapper(this.completeSecondStep),
+    );
+    this.router.post(
+      this.path + '/third',
+      jwtStrategy,
+      asyncWrapper(this.completeThirdStep),
+    );
   }
 
   completeFirstStep = async (req: MyRequest, res: Response) => {
@@ -28,9 +40,12 @@ class CompleteProfileController {
     } else if (profile.completed_steps < CompletedSteps.First) {
       throw new HttpError(400, 'Bad request');
     }
-    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Second);
+    await editProfileService.updateCompletedSteps(
+      profile.id,
+      CompletedSteps.Second,
+    );
     res.end();
-  }
+  };
 
   completeSecondStep = async (req: MyRequest, res: Response) => {
     const profile = await profileService.get_by_id(req.user_id!);
@@ -39,9 +54,12 @@ class CompleteProfileController {
     } else if (profile.completed_steps < CompletedSteps.Second) {
       throw new HttpError(400, 'Bad request');
     }
-    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Third);
+    await editProfileService.updateCompletedSteps(
+      profile.id,
+      CompletedSteps.Third,
+    );
     res.end();
-  }
+  };
 
   completeThirdStep = async (req: MyRequest, res: Response) => {
     const profile = await profileService.get_by_id(req.user_id!);
@@ -50,10 +68,12 @@ class CompleteProfileController {
     } else if (profile.completed_steps < CompletedSteps.Third) {
       throw new HttpError(400, 'Bad request');
     }
-    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Completed);
+    await editProfileService.updateCompletedSteps(
+      profile.id,
+      CompletedSteps.Completed,
+    );
     res.end();
-  }
-  
+  };
 }
 
 export default CompleteProfileController;

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
+import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
 import { FiltersModel } from 'src/app/models/filters.model';
 import { LikeModel } from 'src/app/models/like.model';
+import { LocationModel } from 'src/app/models/location.model';
 import { ProfileViewModel } from 'src/app/models/profile-view.model';
 import { timeAgo } from 'src/app/utils/timeAgo';
 import { environment } from 'src/environment/environment';
@@ -40,10 +42,11 @@ export class ProfileService implements IProfileService {
     public editAvatar(file: File): Observable<void> {
         const formData = new FormData();
         formData.append('photo', file);
-        return this._apiService.callApi('profile/edit/avatar', 'POST', formData);
+        formData.append('photo_type', 'avatar');
+        return this._apiService.callApi('profile/edit/photo', 'POST', formData);
     }
 
-    public getAvatar(avatarPath: string): string {        
+    public getAvatar(avatarPath: string): string {
         return avatarPath
             ? environment.apiBaseUrl + '/' + avatarPath
             : 'https://www.w3schools.com/howto/img_avatar.png'; //TODO replace with asset
@@ -59,6 +62,14 @@ export class ProfileService implements IProfileService {
 
     public editBio(bio: string): Observable<void> {
         return this._apiService.callApi('profile/edit/bio', 'POST', { bio });
+    }
+
+    public editLocation(location: LocationModel): Observable<void> {
+        return this._apiService.callApi('profile/edit/location', 'POST', location);
+    }
+
+    public editOrientation(orientation: SexualOrientation): Observable<void> {
+        return this._apiService.callApi('profile/edit/sexual-orientation', 'POST', { orientation });
     }
 
     public getProfilesFiltered(filterModel: FiltersModel): Observable<SearchResultModel> {

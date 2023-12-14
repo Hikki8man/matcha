@@ -10,7 +10,7 @@
                 [Index]="getLastPhotoIndex()" (OnPhotoAdded)="handlePhotoAdded($event)"></add-photo-button>
         </ng-container>
         <ng-container *ngIf="Album.length < 4 && !IsEdit">
-            <div class="user-photo empty" *ngFor="let i of [].constructor(5 - Album.length)"></div>
+            <div class="user-photo empty" *ngFor="let i of [].constructor(4 - Album.length)"></div>
         </ng-container>
     </div>
 </div>
