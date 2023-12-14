@@ -16,6 +16,7 @@ import { ProfileModel } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { INotificationService } from 'src/app/services/notification/inotification.service';
+import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { ISocketService } from 'src/app/services/socket/isocket.service';
 
 export interface Message {
@@ -27,8 +28,8 @@ export interface Message {
 
 export interface Conversation {
     id: number;
-    user_1: { id: number; name: string };
-    user_2: { id: number; name: string };
+    user_1: { id: number; name: string; avatar: string };
+    user_2: { id: number; name: string; avatar: string };
     messages: Message[];
 }
 
@@ -39,11 +40,12 @@ export interface Conversation {
 })
 export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
-        private _socketService: ISocketService,
-        private _apiService: IApiService,
-        private _notificationService: INotificationService,
+        private readonly _socketService: ISocketService,
+        private readonly _apiService: IApiService,
+        private readonly _notificationService: INotificationService,
         private readonly _authenticationService: IAuthenticationService,
         private readonly _router: Router,
+        private readonly _profileService: IProfileService,
     ) {}
 
     @Input() public ChatId: number | null = null;
@@ -57,7 +59,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
     };
 
     public IsMobileView: boolean = false;
-    public DefaultAvatar = 'assets/images/detective_squirrel.png';
+    public Avatar = 'assets/images/detective_squirrel.png';
     public Chat: Conversation | undefined;
     public CurrentUser: ProfileModel | undefined;
     public InterlocutorId: number;
@@ -133,10 +135,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
                 this.Chat = conv;
-                this.InterlocutorId =
+                const interlocutor =
                     this.Chat.user_1.id === this.CurrentUser?.id
-                        ? this.Chat.user_2.id
-                        : this.Chat.user_1.id;
+                        ? this.Chat.user_2
+                        : this.Chat.user_1;
+                this.InterlocutorId = interlocutor.id;
+                this.Avatar = this._profileService.getAvatar(interlocutor.avatar);
                 this._notificationService.deleteMsgNotificationsBySenderId(this.InterlocutorId);
                 setTimeout(() => {
                     this.scrollDown();

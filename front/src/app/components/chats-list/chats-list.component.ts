@@ -16,7 +16,6 @@ import { timeAgo } from 'src/app/utils/timeAgo';
 export class ChatsListComponent implements OnInit, OnDestroy {
     public Chats: ConversationModel[];
     public CurrentUser: ProfileModel;
-    public defaultAvatar = 'assets/images/detective_squirrel.png';
     private _destroyed$: Subject<boolean> = new Subject();
 
     @Input() public SelectedChatId: number | null = null;
