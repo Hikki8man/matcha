@@ -10,6 +10,7 @@ import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { SelectTagsModalModule } from '../select-tags-modal/select-tags-modal.module';
 import { MatRippleModule } from '@angular/material/core';
+import { LocationModalModule } from '../location-modal/location-modal.module';
 
 
 
@@ -28,6 +29,7 @@ import { MatRippleModule } from '@angular/material/core';
 		SvgIconComponentModule,
 		SelectTagsModalModule,
 		MatRippleModule,
+		LocationModalModule,
 	],
 	exports: [
 		SettingsFormComponent

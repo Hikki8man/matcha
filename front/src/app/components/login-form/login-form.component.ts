@@ -21,7 +21,7 @@ export class LoginFormComponent {
 
     public HasErrors: boolean = false;
     public IsLoading: boolean = false;
-    public InvalidCredentials: boolean = false;
+    public Errors: string[] = [];
 
     constructor(
         private readonly _authenticationService: IAuthenticationService,
@@ -44,7 +44,7 @@ export class LoginFormComponent {
 
     public onLogin() {
         this.HasErrors = !this.loginForm.valid;
-        this.InvalidCredentials = false;
+        this.Errors = [];
         if (this.loginForm.valid) {
             this.IsLoading = true;
 
@@ -59,8 +59,9 @@ export class LoginFormComponent {
                     this.IsLoading = false;
                 },
                 error: (err) => {
-                    console.log('err at login', err);
-                    this.InvalidCredentials = true;
+                    console.log(err);
+                    
+                    this.Errors = [err.error];
                     this.IsLoading = false;
                 },
                 complete() {},

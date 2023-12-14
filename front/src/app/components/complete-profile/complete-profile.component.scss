@@ -1,32 +1,27 @@
-.photo-preview img {
-	max-width: 400px; /* Adjust the size as needed */
-	max-height: 400px; /* Adjust the size as needed */
-  }
+.complete-profile {
+    height: 100%;
+    background-color:  white;
 
-.tags-container {
-	position: absolute;
-	flex-wrap: wrap;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, 0);
-	display: flex;
-	background-color: white;
-	border-radius: 15px;
-	width: 600px;
-	padding: 20px;
-	padding-bottom: 10px;
-}
+    .app-title-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        color: var(--title-color);
+        width: 100%;
 
+        .heart-icon {
+            fill: var(--title-color);
+            margin-right: 10px;
+        }
 
-.tag-picked-container {
-	position: absolute;
-	flex-wrap: wrap;
-	left: 50%;
-	transform: translate(-50%, 0);
-	display: flex;
-	background-color: white;
-	border-radius: 15px;
-	width: 600px;
-	padding: 20px;
-	padding-bottom: 10px;
+        .app-title {
+            font-size: 28px;
+            font-weight: 550;
+        }
+    }
+
+    .stepper {
+        height: calc(100% - 80px);
+    }
 }

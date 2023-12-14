@@ -3,6 +3,7 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileCardModel, PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { timeAgo } from 'src/app/utils/timeAgo';
 
 @Component({
     selector: 'user-profile-card',
@@ -25,6 +26,7 @@ export class UserProfileCardComponent {
     public Profile: PublicProfileModel;
     public Liked: boolean = false;
     public LikedYou: boolean = false;
+    public LastOnline: string = '';
 
     constructor(
         private readonly _profileService: IProfileService,
@@ -36,6 +38,7 @@ export class UserProfileCardComponent {
         this.IsOtherUser = this.Profile.id !== this._authenticationService.profileValue.id;
         this.Liked = this.ProfileCard.liked;
         this.LikedYou = this.ProfileCard.likedYou;
+        this.LastOnline = timeAgo(this.Profile.last_online);
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;

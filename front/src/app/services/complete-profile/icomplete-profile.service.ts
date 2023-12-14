@@ -16,5 +16,5 @@ export abstract class ICompleteProfileService {
     public abstract isProfileCompleteGuard(): boolean;
     public abstract isProfileNotCompleteGuard(): boolean;
 
-    public abstract askForLocation(): void;
+    public abstract askForLocation(redirect: boolean): void;
 }

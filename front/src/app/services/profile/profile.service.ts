@@ -43,7 +43,7 @@ export class ProfileService implements IProfileService {
         return this._apiService.callApi('profile/edit/avatar', 'POST', formData);
     }
 
-    public getAvatar(avatarPath: string): string {
+    public getAvatar(avatarPath: string): string {        
         return avatarPath
             ? environment.apiBaseUrl + '/' + avatarPath
             : 'https://www.w3schools.com/howto/img_avatar.png'; //TODO replace with asset

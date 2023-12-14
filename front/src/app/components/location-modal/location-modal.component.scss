@@ -1,0 +1,45 @@
+.location-modal {
+    .top-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .location-img {
+            max-width: 600px;
+        }
+    }
+    .bottom-content {
+        .title-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+
+            .title {
+                font-size: 20px;
+                font-weight: 550;
+            }
+
+            .loading-icon {
+                margin-left: 10px;
+                display: flex;
+                align-items: center;
+                animation: spin 1s linear infinite;
+            }
+        }
+        .description-container {
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+
+            .description {
+                text-align: center;
+                color: var(--color-text-secondary);
+            }
+        }
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

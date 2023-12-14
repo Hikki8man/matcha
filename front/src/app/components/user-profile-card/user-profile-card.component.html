@@ -10,7 +10,7 @@
                     <div class="user-name-container">
                         <span class="user-name">{{ Profile?.name }}, {{ Profile?.age }}</span>
                         <div class="dot" [ngClass]="Profile.online ? 'online' : 'offline'" [matTooltip]="
-                            Profile.online ? 'En ligne' : 'Dernière connection il y a 20 minutes'
+                            Profile.online ? 'En ligne' : 'Dernière connection ' + LastOnline
                             " matTooltipPosition="above"></div>
                     </div>
                     <div class="user-status" [class.online]="Profile.online"></div>

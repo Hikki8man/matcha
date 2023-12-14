@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { InterestTagsSelectorModule } from '../../interest-tags-selector/interest-tags-selector.module';
 import { CompleteCriteriasComponent } from './complete-criterias.component';
 import { MatchaButtonModule } from '../../matcha-button/matcha-button.module';
+import { LocationModalModule } from '../../location-modal/location-modal.module';
 
 
 
@@ -14,6 +15,7 @@ import { MatchaButtonModule } from '../../matcha-button/matcha-button.module';
 		CommonModule,
 		InterestTagsSelectorModule,
 		MatchaButtonModule,
+		LocationModalModule,
 	],
 	exports: [
 		CompleteCriteriasComponent
