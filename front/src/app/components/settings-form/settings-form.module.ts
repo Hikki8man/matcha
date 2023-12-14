@@ -11,6 +11,7 @@ import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
 import { SelectTagsModalModule } from '../select-tags-modal/select-tags-modal.module';
 import { MatRippleModule } from '@angular/material/core';
 import { LocationModalModule } from '../location-modal/location-modal.module';
+import { AvatarEditModule } from '../avatar-edit/avatar-edit.module';
 
 
 
@@ -30,6 +31,7 @@ import { LocationModalModule } from '../location-modal/location-modal.module';
 		SelectTagsModalModule,
 		MatRippleModule,
 		LocationModalModule,
+		AvatarEditModule,
 	],
 	exports: [
 		SettingsFormComponent
