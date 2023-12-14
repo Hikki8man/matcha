@@ -22,10 +22,10 @@ export enum SexualOrientation {
 // }
 
 export enum CompletedSteps {
-  first,
-  second,
-  third,
-  completed,
+  First,
+  Second,
+  Third,
+  Completed,
 }
 
 export interface Profile {

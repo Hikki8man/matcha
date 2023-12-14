@@ -1,22 +1,11 @@
 import express, { Response, NextFunction } from 'express';
-import profileService from '../profile.service';
-import HttpError from '../../../utils/HttpError';
-import photoService from '../photos/photo.service';
-import jwtStrategy from '../../../auth/jwt.strategy';
-import photoStorage from '../photos/photoStorage';
 import asyncWrapper from '../../../utils/middleware/asyncWrapper';
 import { MyRequest } from '../../../types/request';
-import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
-import {
-  CompletedSteps,
-  Gender,
-  SexualOrientation,
-} from '../../../types/profile';
-import tagsService from '../../../tags/tags.service';
 import editProfileService from '../edit/editProfile.service';
-import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
-import { body } from '../../../utils/middleware/validator/check';
-import { PhotoType } from '../../../types/photo';
+import profileService from '../profile.service';
+import HttpError from '../../../utils/HttpError';
+import { CompletedSteps } from '../../../types/profile';
+
 
 class CompleteProfileController {
   public path = '/profile/complete';
@@ -24,166 +13,47 @@ class CompleteProfileController {
 
   constructor() {
     this.initializeRoutes();
-    //todo route.use middleware ? isverified, profile completed
   }
 
   public initializeRoutes() {
-    this.router.post(
-      this.path + '/avatar',
-      jwtStrategy,
-      // body('photo_type').custom((type) =>
-      //   Object.values(PhotoType).includes(type),
-      // ),
-      photoStorage.single('photo'),
-      asyncWrapper(this.uploadAvatar),
-    );
-
-    this.router.post(
-      this.path + '/name',
-      jwtStrategy,
-      body('name').isString(),
-      CheckValidation,
-      asyncWrapper(this.name),
-    );
-
-    this.router.post(
-      this.path + '/bio',
-      jwtStrategy,
-      body('bio').optional().isString(),
-      CheckValidation,
-      asyncWrapper(this.bio),
-    );
-
-    this.router.post(
-      this.path + '/tags',
-      jwtStrategy,
-      tagsValidation('tags'),
-      CheckValidation,
-      this.tags,
-    );
-
-    this.router.post(
-      this.path + '/gender',
-      jwtStrategy,
-      body('gender').custom((gender) => Object.values(Gender).includes(gender)),
-      CheckValidation,
-      asyncWrapper(this.gender),
-    );
-
-    this.router.post(
-      this.path + '/sexual-orientation',
-      jwtStrategy,
-      body('orientation').custom((orientation) =>
-        Object.values(SexualOrientation).includes(orientation),
-      ),
-      CheckValidation,
-      asyncWrapper(this.sexualOrientation),
-    );
-
-    this.router.post(
-      this.path + '/location',
-      jwtStrategy,
-      body('latitude').isNumeric(),
-      body('longitude').isNumeric(),
-      body('city').isString(),
-      body('country').isString(),
-      CheckValidation,
-      asyncWrapper(this.location),
-    );
+    this.router.post(this.path + '/first', asyncWrapper(this.completeFirstStep));
+    this.router.post(this.path + '/second', asyncWrapper(this.completeSecondStep));
+    this.router.post(this.path + '/third', asyncWrapper(this.completeThirdStep));
   }
 
-  uploadAvatar = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadPhoto(req.user_id!, PhotoType.Avatar, req.file);
-    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Tags);
-    res.end();
-  };
-
-  name = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await editProfileService.editName(
-      req.user_id!,
-      req.body.name,
-    );
-    if (!updated) {
+  completeFirstStep = async (req: MyRequest, res: Response) => {
+    const profile = await profileService.get_by_id(req.user_id!);
+    if (!profile) {
+      throw new HttpError(404, 'User not found');
+    } else if (profile.completed_steps < CompletedSteps.First) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompletedSteps(
-      req.user_id!,
-      CompletedSteps.Gender,
-    );
+    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Second);
     res.end();
-  };
+  }
 
-  gender = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await editProfileService.editGender(
-      req.user_id!,
-      req.body.gender,
-    );
-    if (!updated) {
+  completeSecondStep = async (req: MyRequest, res: Response) => {
+    const profile = await profileService.get_by_id(req.user_id!);
+    if (!profile) {
+      throw new HttpError(404, 'User not found');
+    } else if (profile.completed_steps < CompletedSteps.Second) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompletedSteps(
-      req.user_id!,
-      CompletedSteps.SexualOrientation,
-    );
+    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Third);
     res.end();
-  };
+  }
 
-  sexualOrientation = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await editProfileService.editSexualOrientation(
-      req.user_id!,
-      req.body.orientation,
-    );
-    if (!updated) {
+  completeThirdStep = async (req: MyRequest, res: Response) => {
+    const profile = await profileService.get_by_id(req.user_id!);
+    if (!profile) {
+      throw new HttpError(404, 'User not found');
+    } else if (profile.completed_steps < CompletedSteps.Third) {
       throw new HttpError(400, 'Bad request');
     }
-    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Photo);
+    await editProfileService.updateCompletedSteps(profile.id, CompletedSteps.Completed);
     res.end();
-  };
-
-  bio = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await editProfileService.editBio(
-      req.user_id!,
-      req.body.bio,
-    );
-    if (!updated) {
-      throw new HttpError(400, 'Bad request');
-    }
-    editProfileService.updateCompletedSteps(
-      req.user_id!,
-      CompletedSteps.Location,
-    );
-    res.end();
-  };
-
-  tags = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await tagsService.editTags(req.user_id!, req.body.tags);
-    if (!updated) {
-      throw new HttpError(400, 'Bad request');
-    }
-    editProfileService.updateCompletedSteps(req.user_id!, CompletedSteps.Bio);
-    res.end();
-  };
-
-  location = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
-    const updated = await editProfileService.editLocation(
-      req.user_id!,
-      req.body,
-    );
-    if (!updated) {
-      throw new HttpError(400, 'Bad request');
-    }
-    editProfileService.updateCompletedSteps(
-      req.user_id!,
-      CompletedSteps.Completed,
-    );
-    res.end();
-  };
+  }
+  
 }
 
 export default CompleteProfileController;
