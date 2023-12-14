@@ -11,14 +11,10 @@ export enum SexualOrientation {
 }
 
 export enum CompletedSteps {
-  Name = 'name',
-  Gender = 'gender',
-  SexualOrientation = 'sexual_orientation',
-  Photo = 'photo',
-  Tags = 'tags',
-  Bio = 'bio',
-  Location = 'location',
-  Completed = 'completed',
+  First,
+  Second,
+  Third,
+  Completed,
 }
 
 export interface Profile {

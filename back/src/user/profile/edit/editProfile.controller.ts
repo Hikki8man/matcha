@@ -12,7 +12,6 @@ import editProfileService from './editProfile.service';
 import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
 import { body } from '../../../utils/middleware/validator/check';
 import { PhotoType } from '../../../types/photo';
-import profileService from '../profile.service';
 
 class EditProfileController {
   public path = '/profile/edit';
@@ -20,7 +19,6 @@ class EditProfileController {
 
   constructor() {
     this.initializeRoutes();
-    //todo route.use middleware ? isverified, profile completed
   }
 
   public initializeRoutes() {
