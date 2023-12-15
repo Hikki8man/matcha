@@ -1,7 +1,7 @@
 <div class="user-profile-card" *ngIf="Profile">
     <div class="left-content">
         <div *ngIf="Loading" class="profile-image skeleton"></div>
-        <img *ngIf="!Loading" class="profile-image" [src]="Profile.avatar" alt="User profile image" />
+        <img *ngIf="!Loading" class="profile-image" [src]="Profile.avatar" alt="User profile image" (click)="open(0)" />
     </div>
     <div class="right-content">
         <div class="header-content">
