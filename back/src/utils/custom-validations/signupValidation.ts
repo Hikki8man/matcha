@@ -1,12 +1,12 @@
 import userService from '../../user/account/account.service';
 import { body } from '../middleware/validator/check';
 
-const emailNotTaken = async (email: string) => {
+export const emailNotTaken = async (email: string) => {
   const userfound = await userService.get_by_email(email);
   return userfound ? false : true;
 };
 
-const usernameNotTaken = async (username: string) => {
+export const usernameNotTaken = async (username: string) => {
   const userfound = await userService.get_by_username(username);
   return userfound ? false : true;
 };
@@ -26,9 +26,9 @@ const registerValidation = [
   body('username')
     .isString()
     .isLength({ min: 1 })
-    .withMessage('Le nom d\'utilisateur ne peut pas être vide')
+    .withMessage("Le nom d'utilisateur ne peut pas être vide")
     .custom(usernameNotTaken)
-    .withMessage('Ce nom d\'utilisateur est déjà utilisé'),
+    .withMessage("Ce nom d'utilisateur est déjà utilisé"),
   body('firstname').isString(),
   body('lastname').isString(),
   body('email')

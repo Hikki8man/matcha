@@ -76,6 +76,10 @@ class SocketService {
       .fetchSockets() as unknown as Promise<AuthenticatedSocket[]>;
   }
 
+  public static sendLogout(user_id: number) {
+    this.server?.to(`user-${user_id}`).emit('Logout');
+  }
+
   private onJoinConversation(socket: AuthenticatedSocket) {
     socket.on('JoinConversation', async (conv_id: number) => {
       if (typeof conv_id !== 'number') {
