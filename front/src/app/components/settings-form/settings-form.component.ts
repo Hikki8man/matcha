@@ -9,6 +9,10 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
 import { SelectTagsModalComponent } from '../select-tags-modal/select-tags-modal.component';
 import { LocationModalComponent } from '../location-modal/location-modal.component';
+import { ChoiceItem } from 'src/app/models/choice-item.model';
+import { GenderEnum } from 'src/app/enums/gender-enum';
+import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'settings-form',
@@ -20,9 +24,23 @@ export class SettingsFormComponent {
 	public Profile: PublicProfileModel;
 	public Account: AccountModel;
 	public Loading: boolean = true;
+	public Orientation: SexualOrientation;
+	public Gender: GenderEnum;
+	public FormGroup: FormGroup;
 
 	public IconEditUrl: string = IconUrlEnum.Edit;
 	public IconStyle: Record<string, string> = { display: 'flex', width: '16px', height: '16px' };
+
+	public GenderChoices: ChoiceItem[] = [
+        new ChoiceItem('Homme', GenderEnum.Male),
+        new ChoiceItem('Femme', GenderEnum.Female),
+        new ChoiceItem('Autre', GenderEnum.Other),
+    ];
+    public OrientationItems: ChoiceItem[] = [
+        new ChoiceItem('Heterosexuel', SexualOrientation.Heterosexual),
+        new ChoiceItem('Homosexuel', SexualOrientation.Homosexual),
+        new ChoiceItem('Bisexuel', SexualOrientation.Bisexual),
+    ];
 
 	constructor(
 		private readonly _apiServive: IApiService,
@@ -30,6 +48,7 @@ export class SettingsFormComponent {
 		private readonly _profileService: IProfileService,
 		private readonly _toast: HotToastService,
 		private readonly _dialog: MatDialog,
+		private readonly _formBuilder: FormBuilder,
 	) {
 		this._apiServive.callApi<AccountModel>(`account`, 'GET')
 			.subscribe((res: AccountModel) => {
@@ -39,6 +58,16 @@ export class SettingsFormComponent {
 					.subscribe({
 						next: (card) => {
 							this.Profile = card.profile;
+							this.Gender = this.Profile.gender;
+							this.Orientation = this.Profile.sexual_orientation;
+							this.FormGroup = this._formBuilder.group({
+								firstName: [this.Account.firstname, [Validators.required]],
+								lastName: [this.Account.lastname, [Validators.required]],
+								email: [this.Account.email, [Validators.required, Validators.email]],
+								displayName: [this.Profile.name, [Validators.required]],
+								bio: [this.Profile.bio, []],
+								userName: [this.Profile.name, [Validators.required]],
+							})
 						},
 						complete: () => { this.Loading = false },
 					});
@@ -63,6 +92,7 @@ export class SettingsFormComponent {
 	}
 
 	public handleBioChanged(bio: string): void {
+		if (bio === this.Profile.bio) return;
 		this._profileService.editBio(bio).subscribe({
 			complete: () => {
 				this.Profile.bio = bio;
@@ -76,6 +106,7 @@ export class SettingsFormComponent {
 	}
 
 	public handleSelectedTagsChanged(tags: Tag[]): void {
+		if (tags === this.Profile.tags) return;
 		this._profileService.editTags(tags).subscribe({
 			complete: () => {
 				this.Profile.tags = tags;
@@ -88,8 +119,31 @@ export class SettingsFormComponent {
 		});
 	}
 
+	public handleDisplayNameChanged(displayName: string): void {
+		if (displayName === this.Profile.name) return;
+		this._profileService.editName(displayName).subscribe({
+			complete: () => {
+				this.Profile.name = displayName;
+				this._toast.success('Nom d\'affichage mis à jour', { position: 'bottom-center' });
+			},
+			error: (err) => {
+				this._toast.error('Erreur lors de la mise à jour du nom d\'affichage', { position: 'bottom-center' });
+				throw err;
+			},
+		});
+	}
+
 	public handleEmailChanged(email: string): void {
 		console.log(email);
+		
+		if (email === this.Account.email) return;
+		if (confirm('En changeant ton email, tu vas être déconnecté. Continuer ?')) {
+			console.log('ok');
+			this.Account.email = email;
+		} else {
+			console.log('no');
+			this.FormGroup.controls['email'].setValue(this.Account.email);
+		}
 	}
 
 	public handleFirstNameChanged(firstName: string): void {
@@ -109,5 +163,43 @@ export class SettingsFormComponent {
 				width: '600px',
 				autoFocus: false,
 			});
+	}
+
+	public updateOrientation(choice: ChoiceItem) {
+        this.Orientation = Object.values(SexualOrientation).find((x) => x == choice.Value);
+    }
+
+    public getSelectedOrientationItem(): ChoiceItem {
+        return this.OrientationItems.find((x) => x.Value === this.Orientation);
+    }
+
+    public updateGender(choice: ChoiceItem) {
+        this.Gender = Object.values(GenderEnum).find((x) => x == choice.Value);
+    }
+
+    public getSelectedGenderItem(): ChoiceItem {
+        return this.GenderChoices.find((x) => x.Value === this.Gender);
+    }
+
+	public submitOrientation(): void {
+        this._profileService.editOrientation(this.Orientation).subscribe({
+            complete: () => {
+                this._toast.success('Orientation mise à jour', { position: 'bottom-center' });
+            },
+            error: (error) => {
+                this._toast.error(error.error);
+            },
+        });
+    }
+
+	public submitGender(): void {
+		this._profileService.editGender(this.Gender).subscribe({
+			complete: () => {
+				this._toast.success('Genre mis à jour', { position: 'bottom-center' });
+			},
+			error: (error) => {
+				this._toast.error(error.error);
+			},
+		});
 	}
 }

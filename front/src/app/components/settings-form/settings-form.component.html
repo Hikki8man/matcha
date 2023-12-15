@@ -4,19 +4,25 @@
     </div>
     <div class="settings-row settings-line">
         <div class="settings-column">
-            <matcha-input Title="Prénom" [Value]="Account.firstname"
-                (OnFocusOut)="handleFirstNameChanged($event)"></matcha-input>
+            <matcha-input Title="Prénom" [Value]="Account.firstname" [FormGroup]="FormGroup" [HasError]="true"
+                Name="firstName" (OnFocusOut)="handleFirstNameChanged($event)"></matcha-input>
         </div>
         <div class="settings-column">
-            <matcha-input Title="Nom" [Value]="Account.lastname"
-                (OnFocusOut)="handleLastNameChanged($event)"></matcha-input>
+            <matcha-input Title="Nom" [Value]="Account.lastname" [FormGroup]="FormGroup" [HasError]="true"
+                Name="lastName" (OnFocusOut)="handleLastNameChanged($event)"></matcha-input>
         </div>
     </div>
     <div class="settings-line">
-        <matcha-input Title="Email" [Value]="Account.email" (OnFocusOut)="handleEmailChanged($event)"></matcha-input>
+        <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="email" Title="Email" [Value]="Account.email"
+            (OnFocusOut)="handleEmailChanged($event)"></matcha-input>
     </div>
     <div class="settings-line">
-        <matcha-textarea Title="Bio" [Value]="Profile.bio" (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
+        <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="displayName" Title="Nom affiché"
+            [Value]="Profile.name" (OnFocusOut)="handleDisplayNameChanged($event)"></matcha-input>
+    </div>
+    <div class="settings-line">
+        <matcha-textarea Title="Bio" [FormGroup]="FormGroup" [HasError]="true" Name="bio" [Value]="Profile.bio"
+            (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
     </div>
     <div class="form-section">
         <span class="title">Avatar</span>
@@ -40,6 +46,26 @@
         <span class="title">Photos</span>
     </div>
     <user-photos [IsEdit]="true" [Profile]="Profile"></user-photos>
+    <div class="form-section">
+        <span class="title">Orientation</span>
+        <div class="validation-input-container">
+            <div class="input-container">
+                <button-choices [Items]="OrientationItems" [DefaultItem]="getSelectedOrientationItem()"
+                    (OnSelect)="updateOrientation($event)"></button-choices>
+            </div>
+            <validate-button (OnClick)="submitOrientation()"></validate-button>
+        </div>
+    </div>
+    <div class="form-section">
+        <span class="title">Genre</span>
+        <div class="validation-input-container">
+            <div class="input-container">
+                <button-choices [Items]="GenderChoices" [DefaultItem]="getSelectedGenderItem()"
+                    (OnSelect)="updateGender($event)"></button-choices>
+            </div>
+            <validate-button [Disabled]="!Gender" (OnClick)="submitGender()"></validate-button>
+        </div>
+    </div>
     <div class="form-section">
         <span class="title">Localisation</span>
         <div class="button-container">

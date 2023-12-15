@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Lightbox } from 'ngx-lightbox';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileCardModel, PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
@@ -27,11 +28,13 @@ export class UserProfileCardComponent {
     public Liked: boolean = false;
     public LikedYou: boolean = false;
     public LastOnline: string = '';
+    public Album: any[] = [];
 
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
-    ) {}
+        private readonly _lightbox: Lightbox,
+    ) { }
 
     private init(): void {
         this.Profile = this.ProfileCard.profile;
@@ -39,14 +42,22 @@ export class UserProfileCardComponent {
         this.Liked = this.ProfileCard.liked;
         this.LikedYou = this.ProfileCard.likedYou;
         this.LastOnline = timeAgo(this.Profile.last_online);
+        this.Album.push({ src: this.Profile.avatar })
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
-    public FameRatingIconUrl: string = IconUrlEnum.Star;
     public IconStyle: Record<string, string> = { display: 'flex', height: '16px' };
 
     public handleLikeStatusChanged(liked: boolean) {
         this.Liked = liked;
         this._profileService.likeProfile(this.Profile.id).subscribe();
+    }
+
+    protected open(index: number): void {
+        this._lightbox.open(this.Album, index, { centerVertically: true });
+    }
+
+    protected close(): void {
+        this._lightbox.close();
     }
 }

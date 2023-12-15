@@ -11,6 +11,7 @@
             height: 100%;
             width: 250px;
             border-radius: 10px 0px 0px 10px;
+            cursor: pointer;
         }
     }
 
@@ -59,18 +60,6 @@
 
                     .user-location-icon {
                         fill: var(--color-text-secondary);
-                        margin-right: 5px;
-                    }
-                }
-
-                .fame-rating-container {
-                    display: flex;
-                    margin-top: 10px;
-                    color: var(--color-text-secondary);
-                    font-size: 14px;
-
-                    .fame-rating-icon {
-                        fill: #dddb12;
                         margin-right: 5px;
                     }
                 }

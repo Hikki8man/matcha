@@ -38,6 +38,19 @@
             }
         }
 
+        .validation-input-container {
+            background-color: var(--background-color-accent);;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+
+            .input-container {
+                margin-right: 10px;
+            }
+        }
+
         .button-container {
             margin-top: 20px;
         }

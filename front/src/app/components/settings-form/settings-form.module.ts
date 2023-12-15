@@ -12,6 +12,8 @@ import { SelectTagsModalModule } from '../select-tags-modal/select-tags-modal.mo
 import { MatRippleModule } from '@angular/material/core';
 import { LocationModalModule } from '../location-modal/location-modal.module';
 import { AvatarEditModule } from '../avatar-edit/avatar-edit.module';
+import { ButtonChoicesModule } from '../button-choices/button-choices.module';
+import { ValidateButtonModule } from '../validate-button/validate-button.module';
 
 
 
@@ -32,6 +34,8 @@ import { AvatarEditModule } from '../avatar-edit/avatar-edit.module';
 		MatRippleModule,
 		LocationModalModule,
 		AvatarEditModule,
+		ButtonChoicesModule,
+		ValidateButtonModule,
 	],
 	exports: [
 		SettingsFormComponent

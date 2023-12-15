@@ -1,7 +1,7 @@
 <div class="user-profile-card" *ngIf="Profile">
     <div class="left-content">
         <div *ngIf="Loading" class="profile-image skeleton"></div>
-        <img *ngIf="!Loading" class="profile-image" [src]="Profile.avatar" alt="User profile image" />
+        <img *ngIf="!Loading" class="profile-image" [src]="Profile.avatar" alt="User profile image" (click)="open(0)" />
     </div>
     <div class="right-content">
         <div class="header-content">
@@ -19,11 +19,6 @@
                     <svg-icon class="user-location-icon" [Src]="LocationIconUrl"
                         [ContentStyle]="IconStyle"></svg-icon>
                     <span class="user-location">{{ Profile.city + ', ' + Profile.country }}</span>
-                </div>
-                <div class="fame-rating-container">
-                    <svg-icon class="fame-rating-icon" [Src]="FameRatingIconUrl"
-                        [ContentStyle]="IconStyle"></svg-icon>
-                    <span class="fame-rating">{{ Profile.fameRating }}</span>
                 </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">

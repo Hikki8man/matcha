@@ -1,7 +1,7 @@
 <span *ngIf="Title" class="title">{{ Title }}</span>
 <div class="matcha-input-container" [class.error]="HasError && FormGroup.get(Name)?.invalid">
-    <input class="matcha-input" [ngModel]="Value" (input)="handleValueChange($event)" [type]="Type"
-        [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name">
+    <input class="matcha-input" [value]="Value" (input)="handleValueChange($event)" [type]="Type"
+        [placeholder]="Placeholder ?? ''" [formControl]="InputFormControl" [name]="Name" (focusout)="handleFocusOut()">
     <svg-icon class="password-icon" *ngIf="IsPassword" [Src]="IconVisibilityUrl" [ContentStyle]="IconVisibilityStyle"
-        (click)="handlePasswordVisibilityChange()" (focusout)="handleFocusOut()"></svg-icon>
+        (click)="handlePasswordVisibilityChange()"></svg-icon>
 </div>
