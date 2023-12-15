@@ -20,13 +20,23 @@
         margin-top: 20px;
         display: flex;
 
-        .left-content, .right-content {
+        .left-content,
+        .right-content {
             width: 48%;
-        }
+            display: table;
 
-        .about-category {
-            min-width: 20%;
-            color: var(--color-text-secondary);
+            .about-row {
+                display: table-row;
+
+                .about-category {
+                    min-width: 20%;
+                    color: var(--color-text-secondary);
+                }
+
+                span {
+                    display: table-cell;
+                }
+            }
         }
     }
 }

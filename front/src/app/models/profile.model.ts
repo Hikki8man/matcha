@@ -42,6 +42,13 @@ export class PublicProfileModel {
     photos: { path: string; type: string }[];
     avatar: string;
     fameRating: number;
+    from: string;
+    job: string;
+    studies: string;
+    languages: string;
+    smoking: string;
+    drinking: string;
+    drugs: string;
 }
 
 export interface ProfileCardModel {

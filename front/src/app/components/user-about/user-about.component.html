@@ -1,61 +1,57 @@
 <div class="user-about">
     <span class="title">À propos</span>
-    <div class="about-content">
+    <div class="about-content" *ngIf="Profile">
         <div class="left-content">
-            <table>
-                <tr>
-                    <td class="about-category">Habite:</td>
-                    <td>Lyon</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Originaire de:</td>
-                    <td>Aurillac, Cantal</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="about-category">Métier:</td>
-                    <td>Ingénieur</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Études:</td>
-                    <td>42 Lyon</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Langues:</td>
-                    <td>Français, Anglais</td>
-                </tr>
-            </table>
+            <div class="about-row">
+                <span class="about-category">Originaire de:</span>
+                <span>{{ Profile.from }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Fame rating:</span>
+                <span>{{ Profile.fameRating }}</span>
+            </div>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <div class="about-row">
+                <span class="about-category">Métier:</span>
+                <span>{{ Profile.job }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Etudes:</span>
+                <span>{{ Profile.studies }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Langues:</span>
+                <span>{{ Profile.languages }}</span>
+            </div>
         </div>
         <div class="right-content">
-            <table>
-                <tr>
-                    <td class="about-category">Situation:</td>
-                    <td>Célibataire</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Orientation:</td>
-                    <td>Hétérosexuel</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="about-category">Fume:</td>
-                    <td>Oui</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Alcool:</td>
-                    <td>Oui</td>
-                </tr>
-                <tr>
-                    <td class="about-category">Drogue:</td>
-                    <td>Non</td>
-                </tr>
-            </table>
+            <div class="about-row">
+                <span class="about-category">Genre:</span>
+                <span>{{ getGender() }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Orientation:</span>
+                <span>{{ getOrientation()}}</span>
+            </div>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <div class="about-row">
+                <span class="about-category">Fume:</span>
+                <span>{{ Profile.smoking }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Alcool:</span>
+                <span>{{ Profile.drinking }}</span>
+            </div>
+            <div class="about-row">
+                <span class="about-category">Drogue:</span>
+                <span>{{ Profile.drugs }}</span>
+            </div>
         </div>
     </div>
 </div>

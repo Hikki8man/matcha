@@ -20,11 +20,6 @@
                         [ContentStyle]="IconStyle"></svg-icon>
                     <span class="user-location">{{ Profile.city + ', ' + Profile.country }}</span>
                 </div>
-                <div class="fame-rating-container">
-                    <svg-icon class="fame-rating-icon" [Src]="FameRatingIconUrl"
-                        [ContentStyle]="IconStyle"></svg-icon>
-                    <span class="fame-rating">{{ Profile.fameRating }}</span>
-                </div>
             </div>
             <div *ngIf="IsOtherUser" class="right-header-content">
                 <div class="likes-you-badge" *ngIf="LikedYou">

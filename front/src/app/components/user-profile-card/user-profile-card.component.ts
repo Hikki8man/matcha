@@ -42,7 +42,6 @@ export class UserProfileCardComponent {
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
-    public FameRatingIconUrl: string = IconUrlEnum.Star;
     public IconStyle: Record<string, string> = { display: 'flex', height: '16px' };
 
     public handleLikeStatusChanged(liked: boolean) {
