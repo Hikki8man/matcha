@@ -7,7 +7,7 @@
             <div *ngIf="!IsMobileView" class="empty-div"></div>
             <div class="user-infos" (click)="redirectToUserProfile()">
                 <div class="user-photo-container">
-                    <img class="user-photo" [src]="DefaultAvatar">
+                    <img class="user-photo" [src]="Avatar">
                 </div>
                 <div class="user-infos-container">
                     <span class="user-name">{{ getUserName(Chat) }}</span>

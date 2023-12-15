@@ -49,7 +49,7 @@ export class ProfileService implements IProfileService {
     public getAvatar(avatarPath: string): string {
         return avatarPath
             ? environment.apiBaseUrl + '/' + avatarPath
-            : 'https://www.w3schools.com/howto/img_avatar.png'; //TODO replace with asset
+            : 'assets/images/img_avatar.png';
     }
 
     public getAllTags(): Observable<Tag[]> {

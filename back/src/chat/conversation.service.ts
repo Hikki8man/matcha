@@ -5,18 +5,6 @@ import SocketService from '../socket.service';
 import { PhotoType } from '../types/photo';
 
 class ConversationService {
-  // async isInConversation(user_id: number, conv_id: number) {
-  //   try {
-  //     return await db<Conversation>('conversation')
-  //       .select('*')
-  //       .where({ user_1: user_id, id: conv_id })
-  //       .orWhere({ user_2: user_id, id: conv_id })
-  //       .first();
-  //   } catch (err) {
-  //     return null;
-  //   }
-  // }
-
   async conversationExist(user_1: number, user_2: number) {
     try {
       return await db<Conversation>('conversation')
@@ -71,25 +59,49 @@ class ConversationService {
       return await db<ConversationLoaded>('conversation')
         .select(
           'conversation.id',
-          db.raw(
-            "jsonb_build_object('id', profile1.id, 'name', profile1.name) as user_1",
-          ),
-          db.raw(
-            "jsonb_build_object('id', profile2.id, 'name', profile2.name) as user_2",
-          ),
           db.raw(`
-            CASE
-                WHEN COUNT(msg.sender_id) > 0
-                THEN jsonb_agg(jsonb_build_object('sender_id', msg.sender_id, 'conv_id', msg.conv_id, 'content', msg.content))
-                ELSE '[]'::jsonb
-            END as messages
+          jsonb_build_object(
+            'id', profile1.id,
+            'name', profile1.name,
+            'avatar', avatar1.path
+          ) as user_1
+        `),
+          db.raw(`
+          jsonb_build_object(
+            'id', profile2.id,
+            'name', profile2.name,
+            'avatar', avatar2.path
+            ) as user_2
+        `),
+          db.raw(`
+          CASE
+              WHEN COUNT(msg.sender_id) > 0
+              THEN jsonb_agg(jsonb_build_object('sender_id', msg.sender_id, 'conv_id', msg.conv_id, 'content', msg.content))
+              ELSE '[]'::jsonb
+          END as messages
         `),
         )
         .leftJoin('profile as profile1', 'conversation.user_1', 'profile1.id')
         .leftJoin('profile as profile2', 'conversation.user_2', 'profile2.id')
+        .leftJoin('photo as avatar1', function () {
+          this.on('profile1.id', '=', 'avatar1.user_id').andOn(
+            db.raw('avatar1.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
+        .leftJoin('photo as avatar2', function () {
+          this.on('profile2.id', '=', 'avatar2.user_id').andOn(
+            db.raw('avatar2.photo_type = ?', [PhotoType.Avatar]),
+          );
+        })
         .leftJoin('message as msg', 'conversation.id', 'msg.conv_id')
         .where('conversation.id', id)
-        .groupBy('conversation.id', 'profile1.id', 'profile2.id')
+        .groupBy(
+          'conversation.id',
+          'profile1.id',
+          'profile2.id',
+          'avatar1.path',
+          'avatar2.path',
+        )
         .first();
     } catch (err) {
       console.log('errror', err);
