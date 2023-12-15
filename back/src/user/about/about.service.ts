@@ -4,6 +4,10 @@ import { About } from '../../types/about';
 class AboutService {
   public aboutRepo = () => db<About>('about');
 
+  public async getById(id: number) {
+    return await this.aboutRepo().select('*').where('id', id).first();
+  }
+
   public async editFrom(id: number, from: string) {
     return await this.aboutRepo().update('from', from).where('id', id);
   }

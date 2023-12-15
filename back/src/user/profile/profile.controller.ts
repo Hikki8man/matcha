@@ -11,6 +11,7 @@ import SocketService from '../../socket.service';
 import { profileCompleteGuard } from '../../utils/middleware/profileComplete.guard';
 import likeService from './like/like.service';
 import viewService from './view/view.service';
+import aboutService from '../about/about.service';
 
 class ProfileController {
   public path = '/profile';
@@ -78,7 +79,8 @@ class ProfileController {
       if (id !== req.user_id!) {
         await viewService.addProfileView(req.user_id!, id);
       }
-      res.send({ profile, liked, likedYou });
+      const about = await aboutService.getById(profile.id);
+      res.send({ profile, liked, likedYou, about });
     }
   };
 
