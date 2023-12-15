@@ -63,12 +63,12 @@ class AuthController {
       req.body.password,
     );
     if (!account) {
-      throw new HttpError(403, 'Email or Password incorrect');
+      throw new HttpError(403, 'Nom d\'utilisateur ou mot de passe incorrect');
     }
     const profile = await profileService.get_by_id(account.id);
     console.log('profile', account);
     if (!profile) {
-      throw new HttpError(404, 'Profile not found');
+      throw new HttpError(404, 'Profil introuvable');
     }
     const { access_token, refresh_token } =
       authService.generateAccessAndRefreshToken(account.id);
@@ -86,7 +86,7 @@ class AuthController {
     try {
       const account = await authService.validateAccount(id, token);
       if (!account) {
-        throw new HttpError(404, 'User not found');
+        throw new HttpError(404, 'Ce compte n\'existe pas');
       }
 
       console.log('user validated', account);
