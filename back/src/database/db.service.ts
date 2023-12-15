@@ -16,7 +16,7 @@ import { last_names } from './fake-user-data/last-names';
 import { interestTags } from './interest-tags';
 import { locations } from './fake-user-data/locatation';
 
-const MAX_TAG_PER_USER = 10;
+const MAX_TAG_PER_USER = 5;
 
 interface FakeUser {
   email: string;
