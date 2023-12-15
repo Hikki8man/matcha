@@ -1,6 +1,6 @@
 <span *ngIf="Title" class="title">{{ Title }}</span>
-<div class="matcha-input-container" [class.error]="HasError">
-    <textarea [ngModel]="Value" (input)="handleValueChange($event)" matInput cdkTextareaAutosize
+<div class="matcha-input-container" [class.error]="HasError && FormGroup.get(Name)?.invalid">
+    <textarea [value]="Value" (input)="handleValueChange($event)" matInput cdkTextareaAutosize
         #autosize="cdkTextareaAutosize" class="matcha-input" [placeholder]="Placeholder ?? ''"
         [formControl]="InputFormControl" [name]="Name" maxlength="200" (focusout)="handleFocusOut()"></textarea>
 </div>

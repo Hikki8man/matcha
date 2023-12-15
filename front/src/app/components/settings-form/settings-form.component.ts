@@ -12,6 +12,7 @@ import { LocationModalComponent } from '../location-modal/location-modal.compone
 import { ChoiceItem } from 'src/app/models/choice-item.model';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'settings-form',
@@ -25,6 +26,7 @@ export class SettingsFormComponent {
 	public Loading: boolean = true;
 	public Orientation: SexualOrientation;
 	public Gender: GenderEnum;
+	public FormGroup: FormGroup;
 
 	public IconEditUrl: string = IconUrlEnum.Edit;
 	public IconStyle: Record<string, string> = { display: 'flex', width: '16px', height: '16px' };
@@ -46,6 +48,7 @@ export class SettingsFormComponent {
 		private readonly _profileService: IProfileService,
 		private readonly _toast: HotToastService,
 		private readonly _dialog: MatDialog,
+		private readonly _formBuilder: FormBuilder,
 	) {
 		this._apiServive.callApi<AccountModel>(`account`, 'GET')
 			.subscribe((res: AccountModel) => {
@@ -57,6 +60,13 @@ export class SettingsFormComponent {
 							this.Profile = card.profile;
 							this.Gender = this.Profile.gender;
 							this.Orientation = this.Profile.sexual_orientation;
+							this.FormGroup = this._formBuilder.group({
+								firstName: [this.Account.firstname, [Validators.required]],
+								lastName: [this.Account.lastname, [Validators.required]],
+								email: [this.Account.email, [Validators.required, Validators.email]],
+								bio: [this.Profile.bio, []],
+								userName: [this.Profile.name, [Validators.required]],
+							})
 						},
 						complete: () => { this.Loading = false },
 					});
@@ -81,6 +91,7 @@ export class SettingsFormComponent {
 	}
 
 	public handleBioChanged(bio: string): void {
+		if (bio === this.Profile.bio) return;
 		this._profileService.editBio(bio).subscribe({
 			complete: () => {
 				this.Profile.bio = bio;
@@ -94,6 +105,7 @@ export class SettingsFormComponent {
 	}
 
 	public handleSelectedTagsChanged(tags: Tag[]): void {
+		if (tags === this.Profile.tags) return;
 		this._profileService.editTags(tags).subscribe({
 			complete: () => {
 				this.Profile.tags = tags;
@@ -108,6 +120,15 @@ export class SettingsFormComponent {
 
 	public handleEmailChanged(email: string): void {
 		console.log(email);
+		
+		if (email === this.Account.email) return;
+		if (confirm('En changeant ton email, tu vas être déconnecté. Continuer ?')) {
+			console.log('ok');
+			this.Account.email = email;
+		} else {
+			console.log('no');
+			this.FormGroup.controls['email'].setValue(this.Account.email);
+		}
 	}
 
 	public handleFirstNameChanged(firstName: string): void {
