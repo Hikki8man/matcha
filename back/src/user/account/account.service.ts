@@ -108,6 +108,7 @@ class AccountService {
         birth_date: body.birth_date,
         completed_steps: CompletedSteps.First,
       });
+      await db('about').insert({ id: account.id });
       delete account.password;
       return account;
     } catch (e: any) {

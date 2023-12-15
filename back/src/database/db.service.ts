@@ -84,7 +84,7 @@ class DbService {
           bio: user.bio,
         })
         .returning('*');
-
+      await db('about').insert({ id: profile.id });
       await this.addRandomTagsToProfile(profile.id);
       await this.addProfileAvatar(profile.id, profile.gender);
     } catch {}

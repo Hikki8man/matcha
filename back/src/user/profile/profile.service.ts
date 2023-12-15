@@ -137,6 +137,12 @@ class ProfileService {
     let orientation: SexualOrientation[] = [];
     let gender_to_match: Gender[] = [];
 
+    if (gender === Gender.Other) {
+      orientation.push(SexualOrientation.Bisexual);
+      gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
+      return { orientation, gender_to_match };
+    }
+
     switch (sexual_orientation) {
       case SexualOrientation.Heterosexual:
         orientation.push(
@@ -144,11 +150,7 @@ class ProfileService {
           SexualOrientation.Bisexual,
         );
         gender_to_match.push(
-          gender === Gender.Male
-            ? Gender.Female
-            : gender === Gender.Female
-            ? Gender.Male
-            : Gender.Other,
+          gender === Gender.Male ? Gender.Female : Gender.Male,
         );
         break;
 
@@ -162,7 +164,7 @@ class ProfileService {
 
       default:
         orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(Gender.Male, Gender.Female);
+        gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
         break;
     }
     return { orientation, gender_to_match };
