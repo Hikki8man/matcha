@@ -64,6 +64,7 @@ export class SettingsFormComponent {
 								firstName: [this.Account.firstname, [Validators.required]],
 								lastName: [this.Account.lastname, [Validators.required]],
 								email: [this.Account.email, [Validators.required, Validators.email]],
+								displayName: [this.Profile.name, [Validators.required]],
 								bio: [this.Profile.bio, []],
 								userName: [this.Profile.name, [Validators.required]],
 							})
@@ -113,6 +114,20 @@ export class SettingsFormComponent {
 			},
 			error: (err) => {
 				this._toast.error('Erreur lors de la mise à jour des tags', { position: 'bottom-center' });
+				throw err;
+			},
+		});
+	}
+
+	public handleDisplayNameChanged(displayName: string): void {
+		if (displayName === this.Profile.name) return;
+		this._profileService.editName(displayName).subscribe({
+			complete: () => {
+				this.Profile.name = displayName;
+				this._toast.success('Nom d\'affichage mis à jour', { position: 'bottom-center' });
+			},
+			error: (err) => {
+				this._toast.error('Erreur lors de la mise à jour du nom d\'affichage', { position: 'bottom-center' });
 				throw err;
 			},
 		});

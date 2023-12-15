@@ -17,6 +17,10 @@
             (OnFocusOut)="handleEmailChanged($event)"></matcha-input>
     </div>
     <div class="settings-line">
+        <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="displayName" Title="Nom affiché"
+            [Value]="Profile.name" (OnFocusOut)="handleDisplayNameChanged($event)"></matcha-input>
+    </div>
+    <div class="settings-line">
         <matcha-textarea Title="Bio" [FormGroup]="FormGroup" [HasError]="true" Name="bio" [Value]="Profile.bio"
             (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
     </div>
