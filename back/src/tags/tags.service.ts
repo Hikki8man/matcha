@@ -1,6 +1,7 @@
 import db from '../database/connection';
 import { ProfileTag } from '../types/profileTag';
 import { Tag } from '../types/tag';
+import HttpError from '../utils/HttpError';
 
 class TagsService {
   public tagRepo = () => db<Tag>('tags');
@@ -16,6 +17,7 @@ class TagsService {
   }
 
   async editTags(user_id: number, tags: Tag[]) {
+    if (tags.length > 5) throw new HttpError(400, 'Too many tags');
     try {
       const tagIds = tags.map((tag) => tag.id);
       await this.profileTagRepo()
