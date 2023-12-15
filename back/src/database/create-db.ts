@@ -55,6 +55,23 @@ export const createDb = async () => {
     table.timestamp('last_online').defaultTo(db.fn.now());
   });
 
+  // Create about table
+  await createTableIfNotExists('about', (table) => {
+    table
+      .integer('id')
+      .primary()
+      .references('id')
+      .inTable('profile')
+      .onDelete('CASCADE');
+    table.string('from');
+    table.string('job');
+    table.string('studies');
+    table.string('languages');
+    table.string('smoking');
+    table.string('drinking');
+    table.string('drugs');
+  });
+
   // Create likes table
   await createTableIfNotExists('likes', (table) => {
     table.increments('id').primary();

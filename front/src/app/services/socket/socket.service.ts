@@ -40,6 +40,10 @@ export class SocketService implements ISocketService {
         this._socket.disconnect();
     }
 
+    public onLogout(): Observable<void> {
+        return this._socket.fromEvent('Logout');
+    }
+
     public onNewMessage(): Observable<Message> {
         return this._socket.fromEvent<Message>('NewMessage');
     }

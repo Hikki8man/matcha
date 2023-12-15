@@ -50,6 +50,9 @@ export class AuthenticationService implements IAuthenticationService {
                     this._userSubject.next(user);
                     this.startRefreshTokenTimer(user.access_token);
                     this._socketService.connect(user.access_token);
+                    this._socketService.onLogout().subscribe((_) => {
+                        this.logout();
+                    });
                     return user;
                 }),
             );
@@ -75,7 +78,6 @@ export class AuthenticationService implements IAuthenticationService {
                         });
                         this.startRefreshTokenTimer(token.access_token);
                     }
-                    // this._userSubject.next(user);
                     return token;
                 }),
             );
@@ -86,6 +88,10 @@ export class AuthenticationService implements IAuthenticationService {
             map((user) => {
                 this._userSubject.next(user);
                 this.startRefreshTokenTimer(user.access_token);
+                this._socketService.connect(user.access_token);
+                this._socketService.onLogout().subscribe((_) => {
+                    this.logout();
+                });
                 return user;
             }),
         );

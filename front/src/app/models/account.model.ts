@@ -3,6 +3,7 @@ export interface AccountModel {
     email: string;
     firstname: string;
     lastname: string;
+    username: string;
     verified: boolean;
 }
 

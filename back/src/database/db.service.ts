@@ -84,7 +84,7 @@ class DbService {
           bio: user.bio,
         })
         .returning('*');
-
+      await db('about').insert({ id: profile.id });
       await this.addRandomTagsToProfile(profile.id);
       await this.addProfileAvatar(profile.id, profile.gender);
     } catch {}
@@ -136,7 +136,7 @@ class DbService {
       const birth_date = this.getRandomDate();
       const password = 'password';
       const bio =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. In eu mi bibendum neque. Mauris pharetra et ultrices neque ornare aenean.';
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
       await this.insertFakeUser({
         username,
         firstname,

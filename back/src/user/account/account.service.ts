@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import db from '../../database/connection';
 import { Account } from '../../types/account';
 import HttpError from '../../utils/HttpError';
-import { CompletedSteps, Gender, Profile } from '../../types/profile';
+import { CompletedSteps, Profile } from '../../types/profile';
 import { RegisterBody } from '../../types/registerBody';
 
 class AccountService {
@@ -108,6 +108,7 @@ class AccountService {
         birth_date: body.birth_date,
         completed_steps: CompletedSteps.First,
       });
+      await db('about').insert({ id: account.id });
       delete account.password;
       return account;
     } catch (e: any) {
@@ -138,23 +139,6 @@ class AccountService {
       console.log('error in update: ', e.message);
     }
   }
-
-  // async get_likers(user_id: number) {
-  //   try {
-  //     const likers = await db.any(
-  //       `SELECT u.*
-  // 			   FROM profile u
-  // 			   LEFT JOIN likes l ON u.id = l.liked_id
-  // 			   WHERE l.liker_id = $1`,
-  //       [user_id]
-  //     );
-
-  //     return likers;
-  //   } catch (e: any) {
-  //     console.error(e);
-  //     return undefined;
-  //   }
-  // }
 }
 
 export default new AccountService();

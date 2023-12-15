@@ -16,9 +16,15 @@
         <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="email" Title="Email" [Value]="Account.email"
             (OnFocusOut)="handleEmailChanged($event)"></matcha-input>
     </div>
-    <div class="settings-line">
-        <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="displayName" Title="Nom affiché"
-            [Value]="Profile.name" (OnFocusOut)="handleDisplayNameChanged($event)"></matcha-input>
+    <div class="settings-row settings-line">
+        <div class="settings-column">
+            <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="userName" Title="Nom d'utilisateur"
+                [Value]="Account.username" (OnFocusOut)="handleUserNameChanged($event)"></matcha-input>
+        </div>
+        <div class="settings-column">
+            <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="displayName" Title="Nom affiché"
+                [Value]="Profile.name" (OnFocusOut)="handleDisplayNameChanged($event)"></matcha-input>
+        </div>
     </div>
     <div class="settings-line">
         <matcha-textarea Title="Bio" [FormGroup]="FormGroup" [HasError]="true" Name="bio" [Value]="Profile.bio"
