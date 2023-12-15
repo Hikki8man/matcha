@@ -26,25 +26,25 @@ const registerValidation = [
   body('username')
     .isString()
     .isLength({ min: 1 })
-    .withMessage('User must be at least 1 char long')
+    .withMessage('Le nom d\'utilisateur ne peut pas être vide')
     .custom(usernameNotTaken)
-    .withMessage('Username already taken'),
+    .withMessage('Ce nom d\'utilisateur est déjà utilisé'),
   body('firstname').isString(),
   body('lastname').isString(),
   body('email')
     .isEmail()
-    .withMessage('Enter a valid email')
+    .withMessage('Adresse email invalide')
     .custom(emailNotTaken)
-    .withMessage('Email already exist'),
+    .withMessage('Cet email est déjà utilisé'),
   body('password')
     .isString()
     .isLength({ min: 3 })
-    .withMessage('Password must be at least 3 chars long'),
+    .withMessage('Le mot de passe doit contenir au moins 3 caractères'),
   body('birth_date')
     .isDate()
-    .withMessage('Birth date must be a valid date')
+    .withMessage('Date de naissance invalide')
     .custom(isOverEighteen)
-    .withMessage('You must be at least 18 years old.'),
+    .withMessage('Vous devez avoir au moins 18 ans pour vous inscrire'),
 ];
 
 export default registerValidation;
