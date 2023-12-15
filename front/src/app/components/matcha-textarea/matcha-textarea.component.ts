@@ -40,7 +40,9 @@ export class MatchaTextAreaComponent {
     private _formGroup: FormGroup;
 
     public handleFocusOut(): void {
-        this.OnFocusOut.emit(this.Value);
+        if (!this.FormGroup.get(this.Name)?.invalid) {
+            this.OnFocusOut.emit(this.Value);
+        }
     }
 
     public handleValueChange(event: Event): void {

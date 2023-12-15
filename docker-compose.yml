@@ -45,9 +45,7 @@ services:
     depends_on:
       - express
     environment:
-      - TOKEN_SECRET=${TOKEN_SECRET}
-      - EMAIL=${EMAIL}
-      - EMAIL_PASS=${EMAIL_PASS}
+      - API_URL=${API_URL}
     volumes:
       - ./front/src:/usr/app/front/src
     networks:
