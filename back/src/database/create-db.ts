@@ -107,7 +107,6 @@ export const createDb = async () => {
       'photo_2',
       'photo_3',
       'photo_4',
-      'photo_5',
     ]);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });

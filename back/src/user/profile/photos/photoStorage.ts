@@ -5,14 +5,13 @@ import fs from 'fs';
 import { MyRequest } from '../../../types/request';
 
 const storage = multer.diskStorage({
-  destination: (req: MyRequest, file, cb) => {
-    console.log('req user', req.user_id!);
+  destination: (req: MyRequest, _file, cb) => {
     const userId = req.user_id!;
     const dest = `./uploads/${userId}`;
     fs.mkdirSync(dest, { recursive: true });
     cb(null, dest);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     cb(
       null,
       file.fieldname + '-' + Date.now() + path.extname(file.originalname),
@@ -21,7 +20,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (
-  req: Request,
+  _req: Request,
   file: Express.Multer.File,
   cb: FileFilterCallback,
 ) => {
