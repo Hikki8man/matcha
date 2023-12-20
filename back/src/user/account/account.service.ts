@@ -101,7 +101,6 @@ class AccountService {
         },
         ['*'],
       );
-      // Insert user's profile information into the 'PROFILE' table
       await db<Profile>('profile').insert({
         id: account.id,
         name: body.firstname,
@@ -112,18 +111,18 @@ class AccountService {
       delete account.password;
       return account;
     } catch (e: any) {
-      console.log(e.message);
+      console.error(e.message);
       return undefined;
     }
   }
 
   async insert_validation_token(user: Account) {
     try {
-      this.accountRepo()
+      await this.accountRepo()
         .where({ id: user.id })
         .update({ token_validation: user.token_validation });
     } catch (e: any) {
-      console.log('error in update: ', e.message);
+      console.error('error in update: ', e.message);
     }
   }
 
@@ -131,12 +130,11 @@ class AccountService {
     try {
       const [account] = await this.accountRepo()
         .where({ id: user_id })
-        .update({ token_validation: undefined, verified: true })
+        .update({ token_validation: null, verified: true })
         .returning(['id', 'email', 'verified']);
-      //TODO why?
       return account;
     } catch (e: any) {
-      console.log('error in update: ', e.message);
+      console.error('error in update: ', e.message);
     }
   }
 }

@@ -47,8 +47,14 @@ class AuthService {
     await emailerService.sendValidationMail(user);
   }
 
-  public async validateAccount(id: number, token: string) {
-    const account = await accountService.get_with_token(id);
+  public async verifyAccount(token: string) {
+    console.log('token in verify', token);
+    const payload = this.verifyToken(token);
+    console.log('payload in verify', payload);
+    if (!payload) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    const account = await accountService.get_with_token(payload.id);
     if (!account) {
       console.log('User not found in validate account');
       throw new HttpError(404, 'User not found');
@@ -59,7 +65,7 @@ class AuthService {
     } else if (token !== account.token_validation) {
       throw new HttpError(400, 'Invalid token');
     }
-    return await accountService.set_verified(id);
+    return await accountService.set_verified(account.id);
   }
 
   public generateAccessAndRefreshToken(id: number) {

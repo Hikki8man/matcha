@@ -13,22 +13,30 @@ import { UserComponent } from './pages/user/user.component';
 import { IAuthenticationService } from './services/authentication/iauthentication.service';
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
+import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
 
 const routes: Routes = [
     {
         path: '',
-        redirectTo: `${AppPathEnum.Profile}/me`,
-        pathMatch: 'full',
-    },
-    {
-        path: AppPathEnum.Login,
-        component: LoginComponent,
-        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()],
-    },
-    {
-        path: AppPathEnum.Register,
-        component: RegisterComponent,
-        canActivate: [() => inject(IAuthenticationService).isNotAuthenticatedGuard()],
+        canActivate: [
+            () => {
+                inject(IAuthenticationService).isNotAuthenticatedGuard();
+            },
+        ],
+        children: [
+            {
+                path: AppPathEnum.VerifyAccount,
+                component: VerifyAccountComponent,
+            },
+            {
+                path: AppPathEnum.Login,
+                component: LoginComponent,
+            },
+            {
+                path: AppPathEnum.Register,
+                component: RegisterComponent,
+            },
+        ],
     },
     {
         path: 'complete-profile',
@@ -87,4 +95,4 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
