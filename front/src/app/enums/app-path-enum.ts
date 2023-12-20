@@ -7,4 +7,5 @@ export enum AppPathEnum {
     Search = 'search',
     Settings = 'settings',
     Notifications = 'notifications',
+    VerifyAccount = 'verify-account/:token',
 }

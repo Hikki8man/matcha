@@ -32,7 +32,12 @@ class AuthController {
       CheckValidation,
       asyncWrapper(this.login),
     );
-    this.router.post(this.path + '/validate-account', this.validateAccount);
+    this.router.post(
+      this.path + '/verify-account',
+      body('token').isString(),
+      CheckValidation,
+      asyncWrapper(this.verifyAccount),
+    );
     this.router.get(
       this.path + '/refresh-token',
       jwtRefreshStrategy,
@@ -44,16 +49,15 @@ class AuthController {
       asyncWrapper(this.refreshPage),
     );
     this.router.post(this.path + '/logout', this.logout);
-    this.router.get(this.path + '/me', this.checkToken);
+    this.router.get(this.path + '/me', this.checkToken); //TODO is it used?
   }
 
   register = async (req: Request, res: Response) => {
     const user = await accountService.create(req.body);
-    console.log('user', user);
-    // if (user) {
-    //   await authService.sendValidationMail(user);
-    // }
-    res.status(201).send(user);
+    if (user) {
+      await authService.sendValidationMail(user);
+    }
+    res.status(201).end();
   };
 
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -63,7 +67,7 @@ class AuthController {
       req.body.password,
     );
     if (!account) {
-      throw new HttpError(403, 'Nom d\'utilisateur ou mot de passe incorrect');
+      throw new HttpError(403, "Nom d'utilisateur ou mot de passe incorrect");
     }
     const profile = await profileService.get_by_id(account.id);
     console.log('profile', account);
@@ -81,19 +85,14 @@ class AuthController {
     res.send({ account, profile, access_token });
   };
 
-  validateAccount = async (req: Request, res: Response, next: NextFunction) => {
-    const { id, token } = req.body;
-    try {
-      const account = await authService.validateAccount(id, token);
-      if (!account) {
-        throw new HttpError(404, 'Ce compte n\'existe pas');
-      }
-
-      console.log('user validated', account);
-      res.send(account);
-    } catch (err) {
-      next(err);
+  verifyAccount = async (req: Request, res: Response) => {
+    const { token } = req.body;
+    const account = await authService.verifyAccount(token);
+    if (!account) {
+      throw new HttpError(404, "Ce compte n'existe pas");
     }
+    console.log('user validated', account);
+    res.end();
   };
 
   checkToken = async (req: MyRequest, res: Response, next: NextFunction) => {

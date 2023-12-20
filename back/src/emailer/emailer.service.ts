@@ -38,9 +38,8 @@ class EmailerService {
   }
 
   async sendValidationMail(user: Account) {
-    console.log('user in send valid', user);
     try {
-      const message = `${env.FRONT_URL}/verify-account/${user.id}/?token=${user.token_validation}`;
+      const message = `${env.FRONT_URL}/verify-account/${user.token_validation}`;
       const info = await this.transporter.sendMail({
         from: env.EMAIL,
         to: user.email,
