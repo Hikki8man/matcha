@@ -17,6 +17,7 @@ import { interestTags } from './interest-tags';
 import { locations } from './fake-user-data/locatation';
 
 const MAX_TAG_PER_USER = 5;
+const PHOTO_DATASET_NB = 3000;
 
 interface FakeUser {
   email: string;
@@ -87,6 +88,7 @@ class DbService {
       await db('about').insert({ id: profile.id });
       await this.addRandomTagsToProfile(profile.id);
       await this.addProfileAvatar(profile.id, profile.gender);
+      await this.addProfilePhotos(profile.id);
     } catch {}
   }
 
@@ -182,6 +184,23 @@ class DbService {
       content_type: 'image/png',
       photo_type: PhotoType.Avatar,
     });
+  }
+
+  private async addProfilePhotos(id: number) {
+    const filePath = 'public/';
+    const nb_of_photos = Math.floor(Math.random() * 4 + 1);
+    for (let i = 0; i < nb_of_photos; ++i) {
+      const random_index = Math.floor(Math.random() * PHOTO_DATASET_NB + 1);
+      const filename = `photo_${random_index}.jpg`;
+      const type = `photo_${i + 1}`;
+      await db<Photo>('photo').insert({
+        user_id: id,
+        filename: filename,
+        path: filePath + filename,
+        content_type: 'image/jpg',
+        photo_type: type as PhotoType,
+      });
+    }
   }
 }
 

@@ -37,7 +37,6 @@ class PhotoService {
       });
     } catch (err) {
       await fs.unlink(file.path);
-      console.log('err', err);
     }
   }
 
@@ -62,7 +61,6 @@ class PhotoService {
       .andWhere('photo_type', photo_type)
       .del()
       .returning('*');
-    console.log('toremove: ', toRemove);
     if (toRemove && !toRemove.path.startsWith('public/')) {
       await fs.unlink(toRemove.path);
     }

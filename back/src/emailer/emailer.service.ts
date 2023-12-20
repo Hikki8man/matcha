@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { Account } from '../types/account';
+import Mail from 'nodemailer/lib/mailer';
+import { env } from '../config';
 
 class EmailerService {
   private transporter;
@@ -26,7 +28,7 @@ class EmailerService {
     }
   }
 
-  async sendMail(mailOptions: any) {
+  async sendMail(mailOptions: Mail.Options) {
     try {
       const info = await this.transporter.sendMail(mailOptions);
       console.log('Email sent:', info.response);
@@ -38,9 +40,9 @@ class EmailerService {
   async sendValidationMail(user: Account) {
     console.log('user in send valid', user);
     try {
-      const message = `http://localhost:3000/verify-account/${user.id}/?token=${user.token_validation}`;
+      const message = `${env.FRONT_URL}/verify-account/${user.id}/?token=${user.token_validation}`;
       const info = await this.transporter.sendMail({
-        from: process.env.EMAIL,
+        from: env.EMAIL,
         to: user.email,
         subject: 'Matcha: Validation email',
         text: message,
