@@ -14,6 +14,7 @@ import { IAuthenticationService } from './services/authentication/iauthenticatio
 import { ICompleteProfileService } from './services/complete-profile/icomplete-profile.service';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
     {
@@ -35,6 +36,10 @@ const routes: Routes = [
             {
                 path: AppPathEnum.Register,
                 component: RegisterComponent,
+            },
+            {
+                path: AppPathEnum.ForgotPassword,
+                component: ForgotPasswordComponent,
             },
         ],
     },

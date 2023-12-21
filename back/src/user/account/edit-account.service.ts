@@ -27,6 +27,10 @@ class EditAccountService {
       .update({ email, verified: false })
       .where('id', id);
   }
+
+  public async updatePassword(id: number, password: string) {
+    return await this.accountRepo().update({ password }).where('id', id);
+  }
 }
 
 export default new EditAccountService();

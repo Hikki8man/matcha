@@ -73,6 +73,17 @@ class AuthService {
     const refresh_token = this.signRefreshToken(id);
     return { access_token, refresh_token };
   }
+
+  public async forgotPassword(email: string) {
+    const account = await accountService.get_by_email(email);
+    if (!account) {
+      throw new HttpError(404, 'Incorrect. Veuillez réessayer.');
+    }
+    const token = jwt.sign({ id: account.id }, env.TOKEN_SECRET, {
+      expiresIn: '6h',
+    });
+    await emailerService.sendForgotPasswordMail(email, token);
+  }
 }
 
 export default new AuthService();

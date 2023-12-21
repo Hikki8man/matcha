@@ -9,6 +9,7 @@ import registerValidation from '../utils/custom-validations/signupValidation';
 import authService from './auth.service';
 import jwtRefreshStrategy from './jwtRefresh.strategy';
 import { body } from '../utils/middleware/validator/check';
+import editAccountService from '../user/account/edit-account.service';
 
 class AuthController {
   public path = '/auth';
@@ -47,6 +48,18 @@ class AuthController {
       this.path + '/refresh-page',
       jwtRefreshStrategy,
       asyncWrapper(this.refreshPage),
+    );
+    this.router.post(
+      this.path + '/forgot-password',
+      body('email').isEmail().withMessage('Adresse email invalide'),
+      CheckValidation,
+      asyncWrapper(this.forgotPassword),
+    );
+    this.router.post(
+      this.path + '/reset-password',
+      body('password').isString(),
+      CheckValidation,
+      asyncWrapper(this.resetPassword),
     );
     this.router.post(this.path + '/logout', this.logout);
     this.router.get(this.path + '/me', this.checkToken); //TODO is it used?
@@ -126,6 +139,25 @@ class AuthController {
 
     const access_token = authService.signAccessToken(account.id);
     res.send({ account, profile, access_token });
+  };
+
+  forgotPassword = async (req: Request, res: Response) => {
+    await authService.forgotPassword(req.body.email);
+    res.end();
+  };
+
+  resetPassword = async (req: Request, res: Response) => {
+    const { token, password } = req.body;
+    const payload = authService.verifyToken(token);
+    if (!payload) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    const account = await accountService.get_by_id(payload.id);
+    if (!account) {
+      throw new HttpError(404, 'User not found');
+    }
+    await editAccountService.updatePassword(account.id, password);
+    res.end();
   };
 
   logout = (_req: Request, res: Response) => {

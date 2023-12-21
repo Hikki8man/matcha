@@ -51,6 +51,20 @@ class EmailerService {
       console.error('Error sending email:', error);
     }
   }
+
+  async sendForgotPasswordMail(email: string, token: string) {
+    try {
+      const message = `click here to reset your password: ${env.FRONT_URL}/forgot-password/${token}`;
+      await this.transporter.sendMail({
+        from: env.EMAIL,
+        to: email,
+        subject: 'Matcha: Forgot password',
+        text: message,
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
 }
 
 export default new EmailerService();
