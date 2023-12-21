@@ -9,5 +9,5 @@ export enum AppPathEnum {
     Notifications = 'notifications',
     VerifyAccount = 'verify-account/:token',
     ForgotPassword = 'forgot-password',
-    ResetPassord = 'reset-password',
+    ResetPassword = 'reset-password/:token',
 }

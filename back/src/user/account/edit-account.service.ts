@@ -1,5 +1,6 @@
 import db from '../../database/connection';
 import { Account } from '../../types/account';
+import accountService from './account.service';
 
 class EditAccountService {
   public accountRepo = () => db<Account>('account');
@@ -28,7 +29,8 @@ class EditAccountService {
       .where('id', id);
   }
 
-  public async updatePassword(id: number, password: string) {
+  public async updatePassword(id: number, new_password: string) {
+    const password = await accountService.hashPassword(new_password);
     return await this.accountRepo().update({ password }).where('id', id);
   }
 }

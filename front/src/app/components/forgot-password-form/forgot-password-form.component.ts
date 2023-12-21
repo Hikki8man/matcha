@@ -35,7 +35,7 @@ export class ForgotPasswordFormComponent {
     getErrorMessage(): string {
         const control = this.forgotPassForm.get('email');
         if (control.hasError('required')) {
-            return `Email is required`;
+            return `Adresse email requis`;
         } else if (control.hasError('email')) {
             return 'Adresse email invalide';
         }

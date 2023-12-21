@@ -54,7 +54,7 @@ class EmailerService {
 
   async sendForgotPasswordMail(email: string, token: string) {
     try {
-      const message = `click here to reset your password: ${env.FRONT_URL}/forgot-password/${token}`;
+      const message = `click here to reset your password: ${env.FRONT_URL}/reset-password/${token}`;
       await this.transporter.sendMail({
         from: env.EMAIL,
         to: email,

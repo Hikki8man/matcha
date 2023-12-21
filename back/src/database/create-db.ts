@@ -28,6 +28,7 @@ export const createDb = async () => {
     table.string('email').unique();
     table.string('password');
     table.string('token_validation');
+    table.string('forgot_password_token');
     table.boolean('verified').defaultTo(false);
   });
 

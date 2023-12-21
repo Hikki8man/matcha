@@ -54,7 +54,7 @@ class AuthService {
     if (!payload) {
       throw new HttpError(400, 'Invalid token');
     }
-    const account = await accountService.get_with_token(payload.id);
+    const account = await accountService.get_with_tokens(payload.id);
     if (!account) {
       console.log('User not found in validate account');
       throw new HttpError(404, 'User not found');
@@ -82,6 +82,7 @@ class AuthService {
     const token = jwt.sign({ id: account.id }, env.TOKEN_SECRET, {
       expiresIn: '6h',
     });
+    await accountService.set_forgot_password_token(account.id, token);
     await emailerService.sendForgotPasswordMail(email, token);
   }
 }

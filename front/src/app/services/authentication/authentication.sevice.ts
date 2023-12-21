@@ -59,11 +59,13 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public logout(): void {
-        this._userSubject.next(undefined);
-        this._apiService.callApiWithCredentials('auth/logout', 'POST').subscribe();
-        this.stopRefreshTokenTimer();
-        this._socketService.disconnect();
-        this._router.navigate([AppPathEnum.Login]);
+        if (this._userSubject.value) {
+            this._userSubject.next(undefined);
+            this._apiService.callApiWithCredentials('auth/logout', 'POST').subscribe();
+            this.stopRefreshTokenTimer();
+            this._socketService.disconnect();
+            this._router.navigate([AppPathEnum.Login]);
+        }
     }
 
     public refreshToken(): Observable<{ access_token: string }> {
@@ -102,6 +104,7 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public isAuthenticatedGuard(): boolean {
+        console.log('auth guard');
         const isAuth = this.userValue;
         if (isAuth) {
             return true;
@@ -112,6 +115,8 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public isNotAuthenticatedGuard(): boolean {
+        console.log('not auth guard');
+
         const isAuth = this.userValue;
         if (isAuth) {
             this._router.navigate([`${AppPathEnum.Profile}/me`]);

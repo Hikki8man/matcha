@@ -15,53 +15,23 @@ import { ICompleteProfileService } from './services/complete-profile/icomplete-p
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
 import { VerifyAccountComponent } from './components/verify-account/verify-account.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+
+const notAuthenticatedGuard = () => inject(IAuthenticationService).isNotAuthenticatedGuard();
+const isAuthenticatedGuard = () => inject(IAuthenticationService).isAuthenticatedGuard();
+const isProfileNotCompleteGuard = () => inject(ICompleteProfileService).isProfileNotCompleteGuard();
+const isProfileCompleteGuard = () => inject(ICompleteProfileService).isProfileCompleteGuard();
 
 const routes: Routes = [
     {
-        path: '',
-        canActivate: [
-            () => {
-                inject(IAuthenticationService).isNotAuthenticatedGuard();
-            },
-        ],
-        children: [
-            {
-                path: AppPathEnum.VerifyAccount,
-                component: VerifyAccountComponent,
-            },
-            {
-                path: AppPathEnum.Login,
-                component: LoginComponent,
-            },
-            {
-                path: AppPathEnum.Register,
-                component: RegisterComponent,
-            },
-            {
-                path: AppPathEnum.ForgotPassword,
-                component: ForgotPasswordComponent,
-            },
-        ],
-    },
-    {
         path: 'complete-profile',
-        canActivate: [
-            () => {
-                inject(IAuthenticationService).isAuthenticatedGuard();
-                inject(ICompleteProfileService).isProfileNotCompleteGuard();
-            },
-        ],
+        canActivate: [isAuthenticatedGuard, isProfileNotCompleteGuard],
         component: CompleteProfileComponent,
     },
     {
         path: '',
         component: MainLayoutComponent,
-        canActivate: [
-            () => {
-                inject(IAuthenticationService).isAuthenticatedGuard();
-                inject(ICompleteProfileService).isProfileCompleteGuard();
-            },
-        ],
+        canActivate: [isAuthenticatedGuard, isProfileCompleteGuard],
         children: [
             {
                 path: `${AppPathEnum.Profile}/me`,
@@ -90,8 +60,34 @@ const routes: Routes = [
         ],
     },
     {
+        path: '',
+        canActivate: [notAuthenticatedGuard],
+        children: [
+            {
+                path: AppPathEnum.VerifyAccount,
+                component: VerifyAccountComponent,
+            },
+            {
+                path: AppPathEnum.Login,
+                component: LoginComponent,
+            },
+            {
+                path: AppPathEnum.Register,
+                component: RegisterComponent,
+            },
+            {
+                path: AppPathEnum.ForgotPassword,
+                component: ForgotPasswordComponent,
+            },
+            {
+                path: AppPathEnum.ResetPassword,
+                component: ResetPasswordComponent,
+            },
+        ],
+    },
+    {
         path: '**',
-        redirectTo: `${AppPathEnum.Profile}/me`,
+        redirectTo: AppPathEnum.Register, // TODO 404 page
         pathMatch: 'full',
     },
 ];

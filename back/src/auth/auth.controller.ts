@@ -58,6 +58,7 @@ class AuthController {
     this.router.post(
       this.path + '/reset-password',
       body('password').isString(),
+      body('token').isString(),
       CheckValidation,
       asyncWrapper(this.resetPassword),
     );
@@ -152,10 +153,14 @@ class AuthController {
     if (!payload) {
       throw new HttpError(400, 'Invalid token');
     }
-    const account = await accountService.get_by_id(payload.id);
+    const account = await accountService.get_with_tokens(payload.id);
     if (!account) {
       throw new HttpError(404, 'User not found');
     }
+    if (token !== account.forgot_password_token) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    await accountService.set_forgot_password_token(account.id, null);
     await editAccountService.updatePassword(account.id, password);
     res.end();
   };
