@@ -68,6 +68,7 @@ class ProfileController {
     this.router.post(
       this.path + '/report',
       jwtStrategy,
+      profileCompleteGuard,
       body('id').isInt(),
       body('reason').isString(),
       CheckValidation,

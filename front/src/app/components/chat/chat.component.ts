@@ -134,6 +134,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy {
         this._apiService
             .callApi<Conversation>(`chat/conversation/${this.ChatId}`, 'GET')
             .subscribe((conv) => {
+                console.log('nb messages', conv.messages.length);
                 this.Chat = conv;
                 const interlocutor =
                     this.Chat.user_1.id === this.CurrentUser?.id

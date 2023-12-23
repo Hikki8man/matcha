@@ -6,5 +6,6 @@ export interface Account {
   email: string;
   password?: string;
   token_validation: string | null;
+  forgot_password_token: string | null;
   verified: boolean;
 }

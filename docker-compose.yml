@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
   postgres:
-    # image: postgres:latest
     image: postgis/postgis:16-3.4
     ports:
       - 5432:5432
@@ -52,13 +51,13 @@ services:
       - matcha_net
     restart: always
 
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:latest
-    restart: always
-    ports:
-      - "8978:8978"
-    networks:
-      - matcha_net
+  # cloudbeaver:
+  #   image: dbeaver/cloudbeaver:latest
+  #   restart: always
+  #   ports:
+  #     - "8978:8978"
+  #   networks:
+  #     - matcha_net
 
 networks:
   matcha_net:

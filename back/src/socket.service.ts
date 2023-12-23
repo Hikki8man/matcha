@@ -125,7 +125,6 @@ class SocketService {
     SocketService.server.on('connection', (socket: AuthenticatedSocket) => {
       socket.user_id = this.validToken(socket.handshake.headers.authorization)
         ?.id;
-      console.log('hi', socket.user_id, socket.id);
       this.onDisconnect(socket);
       if (socket.user_id === undefined) {
         return socket.disconnect();

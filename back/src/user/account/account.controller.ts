@@ -62,6 +62,15 @@ class AccountController {
       CheckValidation,
       asyncWrapper(this.editEmail),
     );
+
+    this.router.post(
+      this.path + '/edit/password',
+      jwtStrategy,
+      body('old_password').isString(),
+      body('new_password').isString(), //TODO: add password validation
+      CheckValidation,
+      asyncWrapper(this.editPassword),
+    );
   }
 
   getUserById = async (req: MyRequest, res: Response) => {
@@ -87,6 +96,15 @@ class AccountController {
 
   editUsername = async (req: MyRequest, res: Response) => {
     await editAccountService.editUsername(req.user_id!, req.body.username);
+    res.end();
+  };
+
+  editPassword = async (req: MyRequest, res: Response) => {
+    await editAccountService.editPassword(
+      req.user_id!,
+      req.body.old_password,
+      req.body.new_password,
+    );
     res.end();
   };
 }

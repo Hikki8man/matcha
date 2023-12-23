@@ -8,4 +8,6 @@ export enum AppPathEnum {
     Settings = 'settings',
     Notifications = 'notifications',
     VerifyAccount = 'verify-account/:token',
+    ForgotPassword = 'forgot-password',
+    ResetPassword = 'reset-password/:token',
 }

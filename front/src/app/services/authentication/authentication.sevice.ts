@@ -59,7 +59,7 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public logout(): void {
-        if (this.profileValue) {
+        if (this._userSubject.value) {
             this._userSubject.next(undefined);
             this._apiService.callApiWithCredentials('auth/logout', 'POST').subscribe();
             this.stopRefreshTokenTimer();
@@ -123,11 +123,12 @@ export class AuthenticationService implements IAuthenticationService {
         }
     }
 
+    /* Refresh the access_token 30 sec before expiring */
     private startRefreshTokenTimer(token: string) {
         const jwtBase64 = token.split('.')[1];
         const jwtToken = JSON.parse(atob(jwtBase64));
         const expires = new Date(jwtToken.exp * 1000);
-        const timeout = expires.getTime() - Date.now() - 60 * 1000;
+        const timeout = expires.getTime() - Date.now() - 30 * 1000;
         if (timeout > 0) {
             this._refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
         }

@@ -19,7 +19,7 @@ export class VerifyAccountComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        console.log('VerifyAccountComponent');
+        console.log('verify-account');
         this._route.params.subscribe((params) => {
             if (params['token']) {
                 this._token = params['token'];

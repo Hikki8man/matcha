@@ -60,7 +60,6 @@ export class LoginFormComponent {
                 },
                 error: (err) => {
                     console.log(err);
-                    
                     this.Errors = [err.error];
                     this.IsLoading = false;
                 },

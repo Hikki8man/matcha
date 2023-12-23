@@ -23,10 +23,16 @@ class AccountService {
     }
   }
 
-  async get_with_token(id: number) {
+  async get_with_tokens(id: number) {
     try {
       return await this.accountRepo()
-        .select('id', 'email', 'verified', 'token_validation')
+        .select(
+          'id',
+          'email',
+          'verified',
+          'token_validation',
+          'forgot_password_token',
+        )
         .where('id', id)
         .first();
     } catch (e: any) {
@@ -78,7 +84,7 @@ class AccountService {
     if (user.verified === false) {
       throw new HttpError(401, 'Account not verified');
     }
-    const res = await bcrypt.compare(password, user.password!);
+    const res = await this.comparePassword(password, user.password!);
     if (res === true) {
       delete user.password;
       return user;
@@ -87,10 +93,18 @@ class AccountService {
     }
   }
 
+  public async hashPassword(password: string) {
+    return await bcrypt.hash(password, this.saltRounds);
+  }
+
+  public async comparePassword(password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
+  }
+
   //TODO validator
   async create(body: RegisterBody) {
-    const hash = await bcrypt.hash(body.password, this.saltRounds);
     try {
+      const hash = await this.hashPassword(body.password);
       const [account] = await this.accountRepo().insert(
         {
           username: body.username,
@@ -133,6 +147,16 @@ class AccountService {
         .update({ token_validation: null, verified: true })
         .returning(['id', 'email', 'verified']);
       return account;
+    } catch (e: any) {
+      console.error('error in update: ', e.message);
+    }
+  }
+
+  async set_forgot_password_token(user_id: number, token: string | null) {
+    try {
+      await this.accountRepo()
+        .where({ id: user_id })
+        .update({ forgot_password_token: token });
     } catch (e: any) {
       console.error('error in update: ', e.message);
     }

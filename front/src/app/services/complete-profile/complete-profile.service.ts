@@ -45,8 +45,6 @@ export class CompleteProfileService implements ICompleteProfileService {
         if (!profile) return true;
 
         if (profile.completed_steps === CompletedSteps.Completed) {
-            console.log('profile completed');
-
             this._router.navigate([AppPathEnum.Profile + '/me']);
             return false;
         }
