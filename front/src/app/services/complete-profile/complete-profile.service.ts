@@ -30,7 +30,6 @@ export class CompleteProfileService implements ICompleteProfileService {
     }
 
     public isProfileCompleteGuard(): boolean {
-        console.log('complete guard');
         const profile = this._authService.profileValue;
         if (!profile || profile.completed_steps !== CompletedSteps.Completed) {
             if (profile) {
@@ -42,7 +41,6 @@ export class CompleteProfileService implements ICompleteProfileService {
     }
 
     public isProfileNotCompleteGuard(): boolean {
-        console.log('not complete guard');
         const profile = this._authService.profileValue;
         if (!profile) return true;
 

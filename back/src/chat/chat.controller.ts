@@ -9,6 +9,7 @@ import CheckValidation from '../utils/middleware/validator/checkValidationResult
 import SocketService from '../socket.service';
 import notificationService from '../notification/notification.service';
 import { body, param } from '../utils/middleware/validator/check';
+import { profileCompleteGuard } from '../utils/middleware/profileComplete.guard';
 
 class ChatController {
   public path = '/chat';
@@ -22,6 +23,7 @@ class ChatController {
     this.router.post(
       this.path + '/conversation/create',
       jwtStrategy,
+      profileCompleteGuard,
       body('id').isInt(),
       CheckValidation,
       asyncWrapper(this.createConversation),
@@ -30,12 +32,14 @@ class ChatController {
     this.router.get(
       this.path + '/conversation',
       jwtStrategy,
+      profileCompleteGuard,
       asyncWrapper(this.getAllConv),
     );
 
     this.router.get(
       this.path + '/conversation/:id',
       jwtStrategy,
+      profileCompleteGuard,
       param('id').isNumeric(),
       CheckValidation,
       this.getConvByIdWithMessages,
@@ -44,6 +48,7 @@ class ChatController {
     this.router.post(
       this.path + '/message/create',
       jwtStrategy,
+      profileCompleteGuard,
       body('receiver_id').isInt(),
       body('content').isString().notEmpty(),
       CheckValidation,
@@ -69,7 +74,6 @@ class ChatController {
   };
 
   getAllConv = async (req: MyRequest, res: Response) => {
-    console.log('getting all conv');
     const convs = await convService.getAll(req.user_id!);
     res.send(convs);
   };

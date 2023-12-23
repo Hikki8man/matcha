@@ -7,8 +7,6 @@ function errorHandler(
   res: Response,
   _next: NextFunction,
 ) {
-  // Handle the error here
-  console.error('error handle:', err);
   res.status(err.status || 500).send(err.message);
 }
 

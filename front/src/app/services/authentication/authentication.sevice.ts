@@ -104,7 +104,6 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public isAuthenticatedGuard(): boolean {
-        console.log('auth guard');
         const isAuth = this.userValue;
         if (isAuth) {
             return true;
@@ -115,8 +114,6 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public isNotAuthenticatedGuard(): boolean {
-        console.log('not auth guard');
-
         const isAuth = this.userValue;
         if (isAuth) {
             this._router.navigate([`${AppPathEnum.Profile}/me`]);
@@ -126,11 +123,12 @@ export class AuthenticationService implements IAuthenticationService {
         }
     }
 
+    /* Refresh the access_token 30 sec before expiring */
     private startRefreshTokenTimer(token: string) {
         const jwtBase64 = token.split('.')[1];
         const jwtToken = JSON.parse(atob(jwtBase64));
         const expires = new Date(jwtToken.exp * 1000);
-        const timeout = expires.getTime() - Date.now() - 60 * 1000;
+        const timeout = expires.getTime() - Date.now() - 30 * 1000;
         if (timeout > 0) {
             this._refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
         }

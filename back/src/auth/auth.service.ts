@@ -8,7 +8,7 @@ import { Account } from '../types/account';
 
 class AuthService {
   public signAccessToken(id: number) {
-    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: '20h' });
+    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: '15m' });
   }
 
   public signRefreshToken(id: number) {
@@ -48,9 +48,7 @@ class AuthService {
   }
 
   public async verifyAccount(token: string) {
-    console.log('token in verify', token);
     const payload = this.verifyToken(token);
-    console.log('payload in verify', payload);
     if (!payload) {
       throw new HttpError(400, 'Invalid token');
     }

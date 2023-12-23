@@ -57,6 +57,11 @@ const routes: Routes = [
                 path: AppPathEnum.Notifications,
                 component: NotificationsComponent,
             },
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: `${AppPathEnum.Profile}/me`,
+            },
         ],
     },
     {
@@ -87,7 +92,7 @@ const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: AppPathEnum.Register, // TODO 404 page
+        redirectTo: AppPathEnum.Login, // TODO 404 page
         pathMatch: 'full',
     },
 ];

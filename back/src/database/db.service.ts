@@ -14,7 +14,7 @@ import { female_names } from './fake-user-data/female-names';
 import { male_names } from './fake-user-data/male-names';
 import { last_names } from './fake-user-data/last-names';
 import { interestTags } from './interest-tags';
-import { locations } from './fake-user-data/locatation';
+import { locations } from './fake-user-data/locations';
 
 const MAX_TAG_PER_USER = 5;
 const PHOTO_DATASET_NB = 3000;

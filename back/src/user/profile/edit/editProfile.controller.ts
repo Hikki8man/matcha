@@ -85,13 +85,16 @@ class EditProfileController {
     );
   }
 
-  uploadPhoto = async (req: MyRequest, res: Response, next: NextFunction) => {
-    await photoService.uploadPhoto(req.user_id!, req.body.photo_type, req.file);
-    res.end();
+  uploadPhoto = async (req: MyRequest, res: Response) => {
+    const path = await photoService.uploadPhoto(
+      req.user_id!,
+      req.body.photo_type,
+      req.file,
+    );
+    res.send({ path });
   };
 
   name = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await editProfileService.editName(
       req.user_id!,
       req.body.name,
@@ -103,7 +106,6 @@ class EditProfileController {
   };
 
   gender = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await editProfileService.editGender(
       req.user_id!,
       req.body.gender,
@@ -115,7 +117,6 @@ class EditProfileController {
   };
 
   sexualOrientation = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await editProfileService.editSexualOrientation(
       req.user_id!,
       req.body.orientation,
@@ -127,7 +128,6 @@ class EditProfileController {
   };
 
   bio = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await editProfileService.editBio(
       req.user_id!,
       req.body.bio,
@@ -139,7 +139,6 @@ class EditProfileController {
   };
 
   tags = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await tagsService.editTags(req.user_id!, req.body.tags);
     if (!updated) {
       throw new HttpError(400, 'Bad request');
@@ -148,7 +147,6 @@ class EditProfileController {
   };
 
   location = async (req: MyRequest, res: Response) => {
-    console.log('edit body: ', req.body);
     const updated = await editProfileService.editLocation(
       req.user_id!,
       req.body,

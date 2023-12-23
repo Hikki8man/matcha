@@ -63,7 +63,6 @@ class AuthController {
       asyncWrapper(this.resetPassword),
     );
     this.router.post(this.path + '/logout', this.logout);
-    this.router.get(this.path + '/me', this.checkToken); //TODO is it used?
   }
 
   register = async (req: Request, res: Response) => {
@@ -74,8 +73,7 @@ class AuthController {
     res.status(201).end();
   };
 
-  login = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('body', req.body);
+  login = async (req: Request, res: Response) => {
     const account = await accountService.validate_login(
       req.body.username,
       req.body.password,
@@ -92,11 +90,8 @@ class AuthController {
       authService.generateAccessAndRefreshToken(account.id);
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      // sameSite: 'none',
-      // secure: true,
     });
-    //TODO remove acc
-    res.send({ account, profile, access_token });
+    res.send({ profile, access_token });
   };
 
   verifyAccount = async (req: Request, res: Response) => {
@@ -107,14 +102,6 @@ class AuthController {
     }
     console.log('user validated', account);
     res.end();
-  };
-
-  checkToken = async (req: MyRequest, res: Response, next: NextFunction) => {
-    const user = await profileService.get_by_id(req.user_id!);
-    if (!user) {
-      return next(new HttpError(400, 'user not found'));
-    }
-    res.send(user);
   };
 
   refreshToken = async (req: MyRequest, res: Response) => {
@@ -129,17 +116,13 @@ class AuthController {
   };
 
   refreshPage = async (req: MyRequest, res: Response) => {
-    const account = await accountService.get_by_id(req.user_id!);
     const profile = await profileService.get_by_id(req.user_id!);
 
-    if (!account || !profile) {
+    if (!profile) {
       throw new HttpError(400, 'User not found');
     }
-
-    console.log('ip: ', req.ip);
-
-    const access_token = authService.signAccessToken(account.id);
-    res.send({ account, profile, access_token });
+    const access_token = authService.signAccessToken(profile.id);
+    res.send({ profile, access_token });
   };
 
   forgotPassword = async (req: Request, res: Response) => {
@@ -166,7 +149,6 @@ class AuthController {
   };
 
   logout = (_req: Request, res: Response) => {
-    console.log('logged out');
     res.clearCookie('refresh_token');
     res.end();
   };
