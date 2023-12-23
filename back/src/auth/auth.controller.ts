@@ -10,6 +10,7 @@ import authService from './auth.service';
 import jwtRefreshStrategy from './jwtRefresh.strategy';
 import { body } from '../utils/middleware/validator/check';
 import editAccountService from '../user/account/edit-account.service';
+import { Account } from '../types/account';
 
 class AuthController {
   public path = '/auth';
@@ -74,15 +75,18 @@ class AuthController {
   };
 
   login = async (req: Request, res: Response) => {
-    const account = await accountService.validate_login(
+    const account: Account | undefined = (await accountService.validate_login(
       req.body.username,
       req.body.password,
-    );
+    )) as Account;
     if (!account) {
-      throw new HttpError(403, "Nom d'utilisateur ou mot de passe incorrect");
+      throw new HttpError(404, "Nom d'utilisateur ou mot de passe incorrect");
+    }
+    if (account.verified === false) {
+      await authService.sendValidationMail(account);
+      throw new HttpError(403, 'Compte non verifié');
     }
     const profile = await profileService.get_by_id(account.id);
-    console.log('profile', account);
     if (!profile) {
       throw new HttpError(404, 'Profil introuvable');
     }
@@ -100,7 +104,6 @@ class AuthController {
     if (!account) {
       throw new HttpError(404, "Ce compte n'existe pas");
     }
-    console.log('user validated', account);
     res.end();
   };
 

@@ -54,11 +54,11 @@ class EmailerService {
 
   async sendForgotPasswordMail(email: string, token: string) {
     try {
-      const message = `click here to reset your password: ${env.FRONT_URL}/reset-password/${token}`;
+      const message = `clicker ici pour réinitialiser votre mot de passe: ${env.FRONT_URL}/reset-password/${token}`;
       await this.transporter.sendMail({
         from: env.EMAIL,
         to: email,
-        subject: 'Matcha: Forgot password',
+        subject: 'Matcha: Mot de passe oublié',
         text: message,
       });
     } catch (error) {

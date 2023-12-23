@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { AppPathEnum } from 'src/app/enums/app-path-enum';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { Credentials } from 'src/app/services/authentication/authentication.sevice';
@@ -27,6 +28,7 @@ export class LoginFormComponent {
         private readonly _authenticationService: IAuthenticationService,
         private readonly _router: Router,
         private readonly _formBuilder: NonNullableFormBuilder,
+        private readonly _toast: HotToastService,
     ) {}
 
     public loginForm: FormGroup = this._formBuilder.group({
@@ -59,7 +61,11 @@ export class LoginFormComponent {
                     this.IsLoading = false;
                 },
                 error: (err) => {
-                    console.log(err);
+                    if (err.status === 403) {
+                        this._toast.success(
+                            'Un email vous a été envoyé pour confirmer votre compte. Veuillez le confirmer avant de vous connecter.',
+                        );
+                    }
                     this.Errors = [err.error];
                     this.IsLoading = false;
                 },

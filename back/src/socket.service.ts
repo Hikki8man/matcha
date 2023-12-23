@@ -96,7 +96,6 @@ class SocketService {
         .first();
 
       if (inConv) {
-        console.log(socket.user_id + ' join conversation ' + conv_id);
         socket.join(`conversation-${conv_id}`);
       }
     });
@@ -107,7 +106,6 @@ class SocketService {
       if (typeof conv_id !== 'number') {
         return;
       }
-      console.log(socket.user_id + ' left conversation ' + conv_id);
       socket.leave(`conversation-${conv_id}`);
     });
   }
