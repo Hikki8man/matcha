@@ -43,7 +43,7 @@ export class UserProfileCardComponent {
         this.Liked = this.ProfileCard.liked;
         this.LikedYou = this.ProfileCard.likedYou;
         this.Status = this.ProfileCard.profile.online;
-        if (this.Profile.id === this._authenticationService.profileValue.id) {
+        if (!this.IsOtherUser) {
             this.Status = true;
         }
         this.LastOnline = timeAgo(this.Profile.last_online);
