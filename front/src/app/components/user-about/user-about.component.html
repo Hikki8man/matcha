@@ -1,10 +1,10 @@
 <div class="user-about">
     <span class="title">À propos</span>
-    <div class="about-content" *ngIf="Profile">
+    <div class="about-content" *ngIf="Profile && About">
         <div class="left-content">
             <div class="about-row">
                 <span class="about-category">Originaire de:</span>
-                <span>{{ Profile.from }}</span>
+                <span>{{ About.from }}</span>
             </div>
             <div class="about-row">
                 <span class="about-category">Fame rating:</span>
@@ -16,15 +16,15 @@
             </tr>
             <div class="about-row">
                 <span class="about-category">Métier:</span>
-                <span>{{ Profile.job }}</span>
+                <span>{{ About.job }}</span>
             </div>
             <div class="about-row">
                 <span class="about-category">Etudes:</span>
-                <span>{{ Profile.studies }}</span>
+                <span>{{ About.studies }}</span>
             </div>
             <div class="about-row">
                 <span class="about-category">Langues:</span>
-                <span>{{ Profile.languages }}</span>
+                <span>{{ About.languages }}</span>
             </div>
         </div>
         <div class="right-content">
@@ -42,15 +42,15 @@
             </tr>
             <div class="about-row">
                 <span class="about-category">Fume:</span>
-                <span>{{ Profile.smoking }}</span>
+                <span>{{ About.smoking }}</span>
             </div>
             <div class="about-row">
                 <span class="about-category">Alcool:</span>
-                <span>{{ Profile.drinking }}</span>
+                <span>{{ About.drinking }}</span>
             </div>
             <div class="about-row">
                 <span class="about-category">Drogue:</span>
-                <span>{{ Profile.drugs }}</span>
+                <span>{{ About.drugs }}</span>
             </div>
         </div>
     </div>

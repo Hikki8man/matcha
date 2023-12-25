@@ -15,6 +15,10 @@ import { male_names } from './fake-user-data/male-names';
 import { last_names } from './fake-user-data/last-names';
 import { interestTags } from './interest-tags';
 import { locations } from './fake-user-data/locations';
+import { About } from '../types/about';
+import { jobs } from './fake-user-data/jobs';
+import { studies } from './fake-user-data/studies';
+import { spokenLanguages } from './fake-user-data/languages';
 
 const MAX_TAG_PER_USER = 5;
 const PHOTO_DATASET_NB = 3000;
@@ -54,6 +58,35 @@ class DbService {
     return locations[randomIndex];
   }
 
+  private getRandomJob() {
+    const randomIndex = Math.floor(Math.random() * jobs.length);
+    return jobs[randomIndex];
+  }
+
+  private getRandomStudie() {
+    const randomIndex = Math.floor(Math.random() * studies.length);
+    return studies[randomIndex];
+  }
+
+  private getRandomChoice() {
+    const choice = ['Oui', 'Occasionnellement', 'Souvent', 'Non'];
+    const randomIndex = Math.floor(Math.random() * choice.length);
+    return choice[randomIndex];
+  }
+
+  private getRandomLanguages() {
+    const randomNb = Math.floor(Math.random() * 3 + 1);
+    let languages = '';
+    for (let i = 0; i < randomNb; ++i) {
+      const randomIndex = Math.floor(Math.random() * spokenLanguages.length);
+      languages += spokenLanguages[randomIndex];
+      if (i !== randomNb - 1) {
+        languages += ', ';
+      }
+    }
+    return languages;
+  }
+
   async insertFakeUser(user: FakeUser) {
     try {
       const hash = await bcrypt.hash(user.password, this.saltRounds);
@@ -85,11 +118,32 @@ class DbService {
           bio: user.bio,
         })
         .returning('*');
-      await db('about').insert({ id: profile.id });
+      await this.insertAboutInfo(profile.id);
       await this.addRandomTagsToProfile(profile.id);
       await this.addProfileAvatar(profile.id, profile.gender);
       await this.addProfilePhotos(profile.id);
     } catch {}
+  }
+
+  private async insertAboutInfo(id: number) {
+    const from = this.getRandomLocation().city;
+    const job = this.getRandomJob();
+    const studies = this.getRandomStudie();
+    const languages = this.getRandomLanguages();
+    const smoking = this.getRandomChoice();
+    const drinking = this.getRandomChoice();
+    const drugs = this.getRandomChoice();
+
+    await db<About>('about').insert({
+      id,
+      from,
+      job,
+      studies,
+      languages,
+      smoking,
+      drinking,
+      drugs,
+    });
   }
 
   private getRandomNameAndGender() {
