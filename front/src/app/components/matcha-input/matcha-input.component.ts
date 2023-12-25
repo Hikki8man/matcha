@@ -8,7 +8,6 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
     styleUrls: ['./matcha-input.component.scss'],
 })
 export class MatchaInputComponent implements OnInit {
-
     @Input() public Placeholder: string = null;
     @Input() public Type: string;
     @Input()
@@ -27,7 +26,7 @@ export class MatchaInputComponent implements OnInit {
 
     @Output() public ValueChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() public OnFocusOut: EventEmitter<string> = new EventEmitter<string>();
-    
+
     public InputFormControl: FormControl = new FormControl();
     public IsPassword: boolean = false;
     public IconVisibilityUrl: string = IconUrlEnum.VisibilityOff;
@@ -46,12 +45,13 @@ export class MatchaInputComponent implements OnInit {
     }
 
     public handlePasswordVisibilityChange(): void {
-        this.IconVisibilityUrl = this.Type === 'password' ? IconUrlEnum.Visibility : IconUrlEnum.VisibilityOff;
+        this.IconVisibilityUrl =
+            this.Type === 'password' ? IconUrlEnum.Visibility : IconUrlEnum.VisibilityOff;
         this.Type = this.Type === 'password' ? 'text' : 'password';
     }
 
     public handleFocusOut(): void {
-        if (!this.FormGroup.get(this.Name)?.invalid) {
+        if (this.FormGroup && !this.FormGroup.get(this.Name)?.invalid) {
             this.OnFocusOut.emit(this.Value);
         }
     }

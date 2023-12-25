@@ -10,9 +10,6 @@ export const tagsValidation = (name: string) => {
         if (!tag.id) {
           return false;
         } else if (!Number.isInteger(tag.id)) {
-          console.log(
-            'aallo======================================================================',
-          );
           return false;
         }
       }

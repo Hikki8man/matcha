@@ -66,7 +66,7 @@ class AccountService {
   }
 
   async validate_login(username: string, password: string) {
-    const user = await this.accountRepo()
+    const account = await this.accountRepo()
       .select(
         'id',
         'username',
@@ -78,16 +78,13 @@ class AccountService {
       )
       .where(db.raw('LOWER(username) = ?', [username.toLowerCase()]))
       .first();
-    if (!user) {
-      throw new HttpError(404, 'User not found');
+    if (!account) {
+      throw new HttpError(404, "Nom d'utilisateur ou mot de passe incorrect");
     }
-    if (user.verified === false) {
-      throw new HttpError(401, 'Account not verified');
-    }
-    const res = await this.comparePassword(password, user.password!);
+    const res = await this.comparePassword(password, account.password!);
     if (res === true) {
-      delete user.password;
-      return user;
+      delete account.password;
+      return account;
     } else {
       return undefined;
     }

@@ -1,17 +1,17 @@
-import express, { Response, NextFunction } from 'express';
-import HttpError from '../../../utils/HttpError';
-import photoService from '../photos/photo.service';
+import express, { Response } from 'express';
 import jwtStrategy from '../../../auth/jwt.strategy';
-import photoStorage from '../photos/photoStorage';
-import asyncWrapper from '../../../utils/middleware/asyncWrapper';
-import { MyRequest } from '../../../types/request';
-import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
-import { Gender, SexualOrientation } from '../../../types/profile';
 import tagsService from '../../../tags/tags.service';
-import editProfileService from './editProfile.service';
-import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
-import { body } from '../../../utils/middleware/validator/check';
 import { PhotoType } from '../../../types/photo';
+import { Gender, SexualOrientation } from '../../../types/profile';
+import { MyRequest } from '../../../types/request';
+import HttpError from '../../../utils/HttpError';
+import { tagsValidation } from '../../../utils/custom-validations/tagsValidation';
+import asyncWrapper from '../../../utils/middleware/asyncWrapper';
+import { body } from '../../../utils/middleware/validator/check';
+import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
+import photoService from '../photos/photo.service';
+import photoStorage from '../photos/photoStorage';
+import editProfileService from './editProfile.service';
 
 class EditProfileController {
   public path = '/profile/edit';

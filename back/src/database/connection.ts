@@ -3,7 +3,6 @@ import { env } from '../config';
 
 const db = Knex({
   client: 'pg',
-  // debug: true,
   connection: {
     host: 'postgres',
     port: 5432,
