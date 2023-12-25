@@ -42,19 +42,24 @@ export class PublicProfileModel {
     photos: { path: string; type: string }[];
     avatar: string;
     fameRating: number;
-    from: string;
+}
+
+export interface About {
+    id: number;
     job: string;
     studies: string;
     languages: string;
     smoking: string;
-    drinking: string;
     drugs: string;
+    drinking: string;
+    from: string;
 }
 
 export interface ProfileCardModel {
     profile: PublicProfileModel;
     liked: boolean;
     likedYou: boolean;
+    about: About;
 }
 
 export interface SearchResultModel {
