@@ -51,7 +51,11 @@ class EditProfileController {
     this.router.post(
       this.path + '/bio',
       jwtStrategy,
-      body('bio').optional().isString(),
+      body('bio')
+        .optional()
+        .isString()
+        .isLength({ max: 500 })
+        .withMessage('La bio ne peut pas dépasser 500 caractères'),
       CheckValidation,
       asyncWrapper(this.bio),
     );

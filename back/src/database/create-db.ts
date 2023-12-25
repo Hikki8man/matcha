@@ -41,7 +41,7 @@ export const createDb = async () => {
       .inTable('account')
       .onDelete('CASCADE');
     table.string('name').notNullable();
-    table.string('bio');
+    table.text('bio');
     table.date('birth_date');
     table.enum('gender', ['male', 'female', 'other']).defaultTo('male');
     table.integer('completed_steps').defaultTo(0);
