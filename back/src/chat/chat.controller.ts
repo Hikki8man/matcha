@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Response } from 'express';
 import { MyRequest } from '../types/request';
 import jwtStrategy from '../auth/jwt.strategy';
 import convService from './conversation.service';

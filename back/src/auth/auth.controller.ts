@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import profileService from '../user/profile/profile.service';
 import { MyRequest } from '../types/request';
 import accountService from '../user/account/account.service';

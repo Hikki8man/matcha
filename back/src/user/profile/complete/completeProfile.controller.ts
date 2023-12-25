@@ -1,11 +1,11 @@
-import express, { Response, NextFunction } from 'express';
-import asyncWrapper from '../../../utils/middleware/asyncWrapper';
+import express, { Response } from 'express';
+import jwtStrategy from '../../../auth/jwt.strategy';
+import { CompletedSteps } from '../../../types/profile';
 import { MyRequest } from '../../../types/request';
+import HttpError from '../../../utils/HttpError';
+import asyncWrapper from '../../../utils/middleware/asyncWrapper';
 import editProfileService from '../edit/editProfile.service';
 import profileService from '../profile.service';
-import HttpError from '../../../utils/HttpError';
-import { CompletedSteps } from '../../../types/profile';
-import jwtStrategy from '../../../auth/jwt.strategy';
 
 class CompleteProfileController {
   public path = '/profile/complete';

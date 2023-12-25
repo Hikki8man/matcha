@@ -1,14 +1,14 @@
 import http from 'http';
 import { Server } from 'socket.io';
-import { env } from './config';
 import authService from './auth/auth.service';
+import { env } from './config';
 import db from './database/connection';
+import { AuthenticatedSocket } from './types/authenticatedSocket';
 import { Conversation, ConversationLoaded, Message } from './types/chat';
 import { MyJwtPayload } from './types/jwtPayload';
-import { AuthenticatedSocket } from './types/authenticatedSocket';
-import profileService from './user/profile/profile.service';
-import { Notification, NotificationEvent } from './types/notification';
+import { NotificationEvent } from './types/notification';
 import { LikeEvent, ProfileViewEvent } from './types/profile';
+import profileService from './user/profile/profile.service';
 
 class SocketService {
   private static server: Server;

@@ -1,12 +1,10 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Response } from 'express';
 import jwtStrategy from '../../../auth/jwt.strategy';
-import { param } from '../../../utils/middleware/validator/check';
 import { MyRequest } from '../../../types/request';
 import asyncWrapper from '../../../utils/middleware/asyncWrapper';
-import blockService from './block.service';
+import { param } from '../../../utils/middleware/validator/check';
 import CheckValidation from '../../../utils/middleware/validator/checkValidationResult';
-import conversationService from '../../../chat/conversation.service';
-import profileService from '../profile.service';
+import blockService from './block.service';
 
 class BlockController {
   public path = '/profile/block';

@@ -1,16 +1,16 @@
-import express, { Request, Response, NextFunction } from 'express';
-import accountService from './account.service';
+import express, { Response } from 'express';
 import jwtStrategy from '../../auth/jwt.strategy';
-import { MyRequest } from '../../types/request';
-import { body, param } from '../../utils/middleware/validator/check';
-import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
-import asyncWrapper from '../../utils/middleware/asyncWrapper';
-import editAccountService from './edit-account.service';
 import SocketService from '../../socket.service';
+import { MyRequest } from '../../types/request';
 import {
   emailNotTaken,
   usernameNotTaken,
 } from '../../utils/custom-validations/signupValidation';
+import asyncWrapper from '../../utils/middleware/asyncWrapper';
+import { body } from '../../utils/middleware/validator/check';
+import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
+import accountService from './account.service';
+import editAccountService from './edit-account.service';
 
 class AccountController {
   public path = '/account';
