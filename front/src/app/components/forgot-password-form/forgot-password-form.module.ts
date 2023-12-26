@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatchaButtonModule } from '../matcha-button/matcha-button.module';
 import { MatchaInputModule } from '../matcha-input/matcha-input.module';
 import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [ForgotPasswordFormComponent],
@@ -14,6 +15,7 @@ import { SvgIconComponentModule } from '../svg-icon/svg-icon.module';
         SvgIconComponentModule,
         MatchaButtonModule,
         MatchaInputModule,
+        RouterModule,
     ],
     exports: [ForgotPasswordFormComponent],
 })
