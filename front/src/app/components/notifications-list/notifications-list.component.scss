@@ -1,6 +1,11 @@
 .notifications-list {
     background-color: var(--background-color-accent);
     border-radius: 15px;
+    .notifications-container {
+        max-height: 75vh;
+        overflow-y: auto;
+    }
+    
 
     .title-container {
         padding: 20px;

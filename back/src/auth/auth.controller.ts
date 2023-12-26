@@ -11,6 +11,8 @@ import jwtRefreshStrategy from './jwtRefresh.strategy';
 import { body } from '../utils/middleware/validator/check';
 import editAccountService from '../user/account/edit-account.service';
 import { Account } from '../types/account';
+import SocketService from '../socket.service';
+import jwtStrategy from './jwt.strategy';
 
 class AuthController {
   public path = '/auth';
@@ -63,7 +65,7 @@ class AuthController {
       CheckValidation,
       asyncWrapper(this.resetPassword),
     );
-    this.router.post(this.path + '/logout', this.logout);
+    this.router.post(this.path + '/logout', jwtStrategy, this.logout);
   }
 
   register = async (req: Request, res: Response) => {
@@ -151,8 +153,9 @@ class AuthController {
     res.end();
   };
 
-  logout = (_req: Request, res: Response) => {
+  logout = (req: MyRequest, res: Response) => {
     res.clearCookie('refresh_token');
+    SocketService.sendLogout(req.user_id!);
     res.end();
   };
 }
