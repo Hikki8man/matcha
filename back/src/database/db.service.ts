@@ -19,6 +19,7 @@ import { About } from '../types/about';
 import { jobs } from './fake-user-data/jobs';
 import { studies } from './fake-user-data/studies';
 import { spokenLanguages } from './fake-user-data/languages';
+import { bioFemale, bioMale } from './fake-user-data/bio';
 
 const MAX_TAG_PER_USER = 5;
 const PHOTO_DATASET_NB = 3000;
@@ -72,6 +73,16 @@ class DbService {
     const choice = ['Oui', 'Occasionnellement', 'Souvent', 'Non'];
     const randomIndex = Math.floor(Math.random() * choice.length);
     return choice[randomIndex];
+  }
+
+  private getRandomBio(gender: Gender) {
+    if (gender === Gender.Female) {
+      const randomIndex = Math.floor(Math.random() * bioFemale.length);
+      return bioFemale[randomIndex];
+    } else {
+      const randomIndex = Math.floor(Math.random() * bioMale.length);
+      return bioMale[randomIndex];
+    }
   }
 
   private getRandomLanguages() {
@@ -191,8 +202,7 @@ class DbService {
       const { username, email } = this.getUsernameAndEmail(firstname, lastname);
       const birth_date = this.getRandomDate();
       const password = 'password';
-      const bio =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+      const bio = this.getRandomBio(gender);
       await this.insertFakeUser({
         username,
         firstname,
