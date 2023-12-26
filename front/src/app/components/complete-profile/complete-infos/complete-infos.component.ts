@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GenderEnum } from 'src/app/enums/gender-enum';
 import { SexualOrientation } from 'src/app/enums/sexual-orientation-enum';
@@ -27,6 +28,7 @@ export class CompleteInfosComponent {
         new ChoiceItem('Homosexuel', SexualOrientation.Homosexual),
         new ChoiceItem('Bisexuel', SexualOrientation.Bisexual),
     ];
+    public FormGroup: FormGroup;
 
     @Output() public OnComplete: EventEmitter<void> = new EventEmitter<void>();
 
@@ -34,12 +36,17 @@ export class CompleteInfosComponent {
         private readonly _authenticationService: IAuthenticationService,
         private readonly _profileService: IProfileService,
         private readonly _toastService: HotToastService,
+        private readonly _formBuilder: FormBuilder,
     ) {
         const profile = this._authenticationService.profileValue;
         this.Name = profile.name;
         this.Bio = profile.bio;
         this.Gender = profile.gender;
         this.Orientation = profile.sexual_orientation;
+        this.FormGroup = this._formBuilder.group({
+            name: [this.Name, [Validators.required]],
+            bio: [this.Bio, [Validators.required, Validators.maxLength(200)]],
+        });
     }
 
     public submitName(): void {

@@ -24,8 +24,10 @@
             <div class="error-message" *ngIf="HasErrors && loginForm.get('password')?.invalid">
                 {{getErrorMessage('password')}}
             </div>
+            <div class="forgot-password-container">
+                <a class="forgot-password" routerLink="/forgot-password">Mot de passe oublié ?</a>
+            </div>
         </div>
-
 
         <div *ngIf="Errors.length > 0" class="error-message invalid-credentials">
             <span *ngFor="let error of Errors">{{error}}</span>
@@ -37,8 +39,5 @@
     </form>
     <div class="register-button-container">
         <span>Pas encore de compte ? <a class="register-button" routerLink="/register">inscription</a></span>
-    </div>
-    <div class="register-button-container">
-        <span>Mot de passe oublie ? <a class="register-button" routerLink="/forgot-password">réinitialiser son mot de passe</a></span>
     </div>
 </div>

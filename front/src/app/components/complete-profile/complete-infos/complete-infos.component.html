@@ -6,7 +6,7 @@
             </div>
             <div class="validation-input-container">
                 <div class="input-container">
-                    <matcha-input [(Value)]="Name" Placeholder="Choisis un nom"></matcha-input>
+                    <matcha-input [(Value)]="Name" Placeholder="Choisis un nom" Name="name" [FormGroup]="FormGroup"></matcha-input>
                 </div>
                 <validate-button [Disabled]="!Name" (OnClick)="submitName()"></validate-button>
             </div>
@@ -17,7 +17,7 @@
             </div>
             <div class="validation-input-container">
                 <div class="input-container">
-                    <matcha-textarea [(Value)]="Bio" Placeholder="Ta bio (facultatif)"></matcha-textarea>
+                    <matcha-textarea [(Value)]="Bio" Placeholder="Ta bio (facultatif)" Name="bio" [FormGroup]="FormGroup"></matcha-textarea>
                 </div>
                 <validate-button (OnClick)="submitBio()"></validate-button>
             </div>
