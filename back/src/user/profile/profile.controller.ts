@@ -121,7 +121,6 @@ class ProfileController {
 
   report = async (req: MyRequest, res: Response) => {
     const { id, reason } = req.body;
-    console.log('id', id, 'reason', reason);
     await profileService.report(req.user_id!, id, reason);
     res.end();
   };

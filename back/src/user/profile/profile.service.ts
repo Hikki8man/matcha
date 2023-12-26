@@ -339,11 +339,26 @@ class ProfileService {
   }
 
   async report(user_id: number, reported_id: number, reason: string) {
+    const reported_profile = await this.profileNameAndAvatar(reported_id);
+    if (!reported_profile) {
+      throw new Error('User not found');
+    }
+    const user_profile = await this.profileNameAndAvatar(user_id);
+    if (!user_profile) {
+      throw new Error('User not found');
+    }
+    const user_link = `${env.FRONT_URL}/profile/${user_id}`;
+    const reported_link = `${env.FRONT_URL}/profile/${reported_id}`;
+    const message = `
+      <p>User <a href="${user_link}">${user_profile.name}</a> reported user <a href="${reported_link}">${reported_profile.name}</a></p>
+      <p>Reason: ${reason}</p>
+    `;
+
     await emailerService.sendMail({
       from: env.EMAIL,
       to: env.EMAIL,
       subject: 'Matcha: Report',
-      text: `User ${env.FRONT_URL}/profile/${user_id} reported user ${env.FRONT_URL}/profile/${reported_id} for reason: ${reason}`,
+      html: message,
     });
   }
 }

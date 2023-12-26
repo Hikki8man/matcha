@@ -39,12 +39,19 @@ class EmailerService {
 
   async sendValidationMail(user: Account) {
     try {
-      const message = `${env.FRONT_URL}/verify-account/${user.token_validation}`;
+      const verificationLink = `${env.FRONT_URL}/verify-account/${user.token_validation}`;
+      const message = `
+        <p>Bonjour ${user.firstname},</p>
+        <p>Merci de vous être inscrit sur Matcha ! Veuillez cliquer sur le lien ci-dessous pour vérifier votre compte :</p>
+        <a href="${verificationLink}">Vérifier votre compte</a>
+        <p>Si vous n'avez pas créé de compte Matcha, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        <p>Cordialement,<br/>L'équipe Matcha</p>
+      `;
       const info = await this.transporter.sendMail({
         from: env.EMAIL,
         to: user.email,
         subject: 'Matcha: Validation email',
-        text: message,
+        html: message,
       });
       console.log('Email sent:', info.response);
     } catch (error) {
@@ -54,12 +61,20 @@ class EmailerService {
 
   async sendForgotPasswordMail(email: string, token: string) {
     try {
-      const message = `clicker ici pour réinitialiser votre mot de passe: ${env.FRONT_URL}/reset-password/${token}`;
+      const resetPasswordLink = `${env.FRONT_URL}/reset-password/${token}`;
+      const message = `
+        <p>Bonjour,</p>
+        <p>Vous avez demandé à réinitialiser votre mot de passe sur Matcha. Veuillez cliquer sur le lien ci-dessous pour effectuer la réinitialisation :</p>
+        <a href="${resetPasswordLink}">Réinitialiser votre mot de passe</a>
+        <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        <p>Cordialement,<br/>L'équipe Matcha</p>
+      `;
+
       await this.transporter.sendMail({
         from: env.EMAIL,
         to: email,
         subject: 'Matcha: Mot de passe oublié',
-        text: message,
+        html: message,
       });
     } catch (error) {
       console.error('Error sending email:', error);
