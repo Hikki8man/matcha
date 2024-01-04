@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { Account } from '../types/account';
+import Mail from 'nodemailer/lib/mailer';
+import { env } from '../config';
 
 class EmailerService {
   private transporter;
@@ -26,7 +28,7 @@ class EmailerService {
     }
   }
 
-  async sendMail(mailOptions: any) {
+  async sendMail(mailOptions: Mail.Options) {
     try {
       const info = await this.transporter.sendMail(mailOptions);
       console.log('Email sent:', info.response);
@@ -36,16 +38,44 @@ class EmailerService {
   }
 
   async sendValidationMail(user: Account) {
-    console.log('user in send valid', user);
     try {
-      const message = `http://localhost:3000/verify-account/${user.id}/?token=${user.token_validation}`;
+      const verificationLink = `${env.FRONT_URL}/verify-account/${user.token_validation}`;
+      const message = `
+        <p>Bonjour ${user.firstname},</p>
+        <p>Merci de vous être inscrit sur Matcha ! Veuillez cliquer sur le lien ci-dessous pour vérifier votre compte :</p>
+        <a href="${verificationLink}">Vérifier votre compte</a>
+        <p>Si vous n'avez pas créé de compte Matcha, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        <p>Cordialement,<br/>L'équipe Matcha</p>
+      `;
       const info = await this.transporter.sendMail({
-        from: process.env.EMAIL,
+        from: env.EMAIL,
         to: user.email,
         subject: 'Matcha: Validation email',
-        text: message,
+        html: message,
       });
       console.log('Email sent:', info.response);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
+
+  async sendForgotPasswordMail(email: string, token: string) {
+    try {
+      const resetPasswordLink = `${env.FRONT_URL}/reset-password/${token}`;
+      const message = `
+        <p>Bonjour,</p>
+        <p>Vous avez demandé à réinitialiser votre mot de passe sur Matcha. Veuillez cliquer sur le lien ci-dessous pour effectuer la réinitialisation :</p>
+        <a href="${resetPasswordLink}">Réinitialiser votre mot de passe</a>
+        <p>Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail en toute sécurité.</p>
+        <p>Cordialement,<br/>L'équipe Matcha</p>
+      `;
+
+      await this.transporter.sendMail({
+        from: env.EMAIL,
+        to: email,
+        subject: 'Matcha: Mot de passe oublié',
+        html: message,
+      });
     } catch (error) {
       console.error('Error sending email:', error);
     }

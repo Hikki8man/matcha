@@ -34,6 +34,8 @@ import { UserModule } from './pages/user/user.module';
 import { NotificationsModule } from './pages/notifications/notifications.module';
 import { ILocationService } from './services/location/ilocation.service';
 import { LocationService } from './services/location/location.service';
+import { ForgotPasswordModule } from './pages/forgot-password/forgot-password.module';
+import { ResetPasswordModule } from './pages/reset-password/reset-password.module';
 
 const config: SocketIoConfig = {
     url: '',
@@ -59,6 +61,8 @@ const config: SocketIoConfig = {
         UserModule,
         NotificationsModule,
         CompleteProfileModule,
+        ForgotPasswordModule,
+        ResetPasswordModule,
     ],
     providers: [
         {

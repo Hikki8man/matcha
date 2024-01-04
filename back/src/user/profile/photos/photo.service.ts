@@ -9,7 +9,7 @@ class PhotoService {
     user_id: number,
     photo_type: PhotoType,
     file: Express.Multer.File | undefined,
-  ) {
+  ): Promise<string | undefined> {
     if (!file) {
       throw new HttpError(400, 'Please upload a file');
     }
@@ -27,17 +27,19 @@ class PhotoService {
     await this.removeOldPhoto(user_id, photo_type);
 
     try {
-      await db<Photo>('photo').insert({
-        user_id: user_id,
-        filename: filename,
-        path: path,
-        size: size,
-        content_type: mimetype,
-        photo_type: photo_type,
-      });
+      const [photo] = await db<Photo>('photo')
+        .insert({
+          user_id: user_id,
+          filename: filename,
+          path: path,
+          size: size,
+          content_type: mimetype,
+          photo_type: photo_type,
+        })
+        .returning('*');
+      return photo.path;
     } catch (err) {
       await fs.unlink(file.path);
-      console.log('err', err);
     }
   }
 
@@ -62,7 +64,6 @@ class PhotoService {
       .andWhere('photo_type', photo_type)
       .del()
       .returning('*');
-    console.log('toremove: ', toRemove);
     if (toRemove && !toRemove.path.startsWith('public/')) {
       await fs.unlink(toRemove.path);
     }

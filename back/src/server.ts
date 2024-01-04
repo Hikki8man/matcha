@@ -36,9 +36,7 @@ const main = async () => {
       if (!db_exist) {
         await initDb();
       }
-    } catch (err) {
-      // console.error('Database init error: ', err);
-    }
+    } catch (err) {}
     const app = new App(
       [
         new AccountController(),

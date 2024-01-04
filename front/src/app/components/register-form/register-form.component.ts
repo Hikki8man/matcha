@@ -12,7 +12,6 @@ import { IAuthenticationService } from 'src/app/services/authentication/iauthent
     styleUrls: ['./register-form.component.scss'],
 })
 export class RegisterFormComponent {
-
     public HasErrors: boolean = false;
     public IsLoading: boolean = false;
     public Errors: string[] = [];
@@ -29,7 +28,7 @@ export class RegisterFormComponent {
         private readonly _router: Router,
         private readonly _formBuilder: FormBuilder,
         private readonly _toasterService: HotToastService,
-    ) { }
+    ) {}
 
     public registerForm: FormGroup = this._formBuilder.group({
         username: ['', [Validators.required]],
@@ -57,13 +56,13 @@ export class RegisterFormComponent {
             this._authService.register(this.registerForm.value).subscribe({
                 error: (err) => {
                     this.Errors = err.error.map((x: any) => x.msg);
-                    console.log('errors', this.Errors);
-                    
                     this.IsLoading = false;
                 },
                 complete: () => {
                     this._router.navigate([AppPathEnum.Login]);
-                    this._toasterService.success('Ton compte a bien été créé, on t\'a envoyé un mail pour le valider !');
+                    this._toasterService.success(
+                        "Ton compte a bien été créé, on t'a envoyé un mail pour le valider !",
+                    );
                     this.IsLoading = false;
                 },
             });

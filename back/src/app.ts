@@ -1,11 +1,10 @@
-import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import errorHandler from './utils/middleware/errorHandler';
+import express from 'express';
 import http from 'http';
 import { env } from './config';
 import SocketService from './socket.service';
-import fs from 'fs';
+import errorHandler from './utils/middleware/errorHandler';
 
 class App {
   public app: express.Application;

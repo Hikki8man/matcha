@@ -23,10 +23,16 @@ class AccountService {
     }
   }
 
-  async get_with_token(id: number) {
+  async get_with_tokens(id: number) {
     try {
       return await this.accountRepo()
-        .select('id', 'email', 'verified', 'token_validation')
+        .select(
+          'id',
+          'email',
+          'verified',
+          'token_validation',
+          'forgot_password_token',
+        )
         .where('id', id)
         .first();
     } catch (e: any) {
@@ -60,7 +66,7 @@ class AccountService {
   }
 
   async validate_login(username: string, password: string) {
-    const user = await this.accountRepo()
+    const account = await this.accountRepo()
       .select(
         'id',
         'username',
@@ -72,25 +78,30 @@ class AccountService {
       )
       .where(db.raw('LOWER(username) = ?', [username.toLowerCase()]))
       .first();
-    if (!user) {
-      throw new HttpError(404, 'User not found');
+    if (!account) {
+      throw new HttpError(404, "Nom d'utilisateur ou mot de passe incorrect");
     }
-    if (user.verified === false) {
-      throw new HttpError(401, 'Account not verified');
-    }
-    const res = await bcrypt.compare(password, user.password!);
+    const res = await this.comparePassword(password, account.password!);
     if (res === true) {
-      delete user.password;
-      return user;
+      delete account.password;
+      return account;
     } else {
       return undefined;
     }
   }
 
+  public async hashPassword(password: string) {
+    return await bcrypt.hash(password, this.saltRounds);
+  }
+
+  public async comparePassword(password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
+  }
+
   //TODO validator
   async create(body: RegisterBody) {
-    const hash = await bcrypt.hash(body.password, this.saltRounds);
     try {
+      const hash = await this.hashPassword(body.password);
       const [account] = await this.accountRepo().insert(
         {
           username: body.username,
@@ -101,7 +112,6 @@ class AccountService {
         },
         ['*'],
       );
-      // Insert user's profile information into the 'PROFILE' table
       await db<Profile>('profile').insert({
         id: account.id,
         name: body.firstname,
@@ -112,18 +122,18 @@ class AccountService {
       delete account.password;
       return account;
     } catch (e: any) {
-      console.log(e.message);
+      console.error(e.message);
       return undefined;
     }
   }
 
   async insert_validation_token(user: Account) {
     try {
-      this.accountRepo()
+      await this.accountRepo()
         .where({ id: user.id })
         .update({ token_validation: user.token_validation });
     } catch (e: any) {
-      console.log('error in update: ', e.message);
+      console.error('error in update: ', e.message);
     }
   }
 
@@ -131,12 +141,21 @@ class AccountService {
     try {
       const [account] = await this.accountRepo()
         .where({ id: user_id })
-        .update({ token_validation: undefined, verified: true })
+        .update({ token_validation: null, verified: true })
         .returning(['id', 'email', 'verified']);
-      //TODO why?
       return account;
     } catch (e: any) {
-      console.log('error in update: ', e.message);
+      console.error('error in update: ', e.message);
+    }
+  }
+
+  async set_forgot_password_token(user_id: number, token: string | null) {
+    try {
+      await this.accountRepo()
+        .where({ id: user_id })
+        .update({ forgot_password_token: token });
+    } catch (e: any) {
+      console.error('error in update: ', e.message);
     }
   }
 }

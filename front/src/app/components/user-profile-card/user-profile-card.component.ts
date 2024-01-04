@@ -29,20 +29,25 @@ export class UserProfileCardComponent {
     public LikedYou: boolean = false;
     public LastOnline: string = '';
     public Album: any[] = [];
+    public Status: boolean = false;
 
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
         private readonly _lightbox: Lightbox,
-    ) { }
+    ) {}
 
     private init(): void {
         this.Profile = this.ProfileCard.profile;
         this.IsOtherUser = this.Profile.id !== this._authenticationService.profileValue.id;
         this.Liked = this.ProfileCard.liked;
         this.LikedYou = this.ProfileCard.likedYou;
+        this.Status = this.ProfileCard.profile.online;
+        if (!this.IsOtherUser) {
+            this.Status = true;
+        }
         this.LastOnline = timeAgo(this.Profile.last_online);
-        this.Album.push({ src: this.Profile.avatar })
+        this.Album.push({ src: this.Profile.avatar });
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;

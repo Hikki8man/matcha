@@ -29,7 +29,7 @@ export const initDb = async () => {
     sexual_orientation: SexualOrientation.Bisexual,
     bio: 'Oe c moi',
   });
-  await dbService.createFakeUsers(30);
+  await dbService.createFakeUsers(50);
   await likeService.like(1, 3);
   await likeService.like(3, 1);
   await likeService.like(1, 6);

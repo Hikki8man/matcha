@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import profileService from '../user/profile/profile.service';
 import { MyRequest } from '../types/request';
 import accountService from '../user/account/account.service';
@@ -9,6 +9,10 @@ import registerValidation from '../utils/custom-validations/signupValidation';
 import authService from './auth.service';
 import jwtRefreshStrategy from './jwtRefresh.strategy';
 import { body } from '../utils/middleware/validator/check';
+import editAccountService from '../user/account/edit-account.service';
+import { Account } from '../types/account';
+import SocketService from '../socket.service';
+import jwtStrategy from './jwt.strategy';
 
 class AuthController {
   public path = '/auth';
@@ -32,7 +36,12 @@ class AuthController {
       CheckValidation,
       asyncWrapper(this.login),
     );
-    this.router.post(this.path + '/validate-account', this.validateAccount);
+    this.router.post(
+      this.path + '/verify-account',
+      body('token').isString(),
+      CheckValidation,
+      asyncWrapper(this.verifyAccount),
+    );
     this.router.get(
       this.path + '/refresh-token',
       jwtRefreshStrategy,
@@ -43,30 +52,43 @@ class AuthController {
       jwtRefreshStrategy,
       asyncWrapper(this.refreshPage),
     );
-    this.router.post(this.path + '/logout', this.logout);
-    this.router.get(this.path + '/me', this.checkToken);
+    this.router.post(
+      this.path + '/forgot-password',
+      body('email').isEmail().withMessage('Adresse email invalide'),
+      CheckValidation,
+      asyncWrapper(this.forgotPassword),
+    );
+    this.router.post(
+      this.path + '/reset-password',
+      body('password').isString(),
+      body('token').isString(),
+      CheckValidation,
+      asyncWrapper(this.resetPassword),
+    );
+    this.router.post(this.path + '/logout', jwtStrategy, this.logout);
   }
 
   register = async (req: Request, res: Response) => {
     const user = await accountService.create(req.body);
-    console.log('user', user);
-    // if (user) {
-    //   await authService.sendValidationMail(user);
-    // }
-    res.status(201).send(user);
+    if (user) {
+      await authService.sendValidationMail(user);
+    }
+    res.status(201).end();
   };
 
-  login = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('body', req.body);
-    const account = await accountService.validate_login(
+  login = async (req: Request, res: Response) => {
+    const account: Account | undefined = (await accountService.validate_login(
       req.body.username,
       req.body.password,
-    );
+    )) as Account;
     if (!account) {
-      throw new HttpError(403, 'Nom d\'utilisateur ou mot de passe incorrect');
+      throw new HttpError(404, "Nom d'utilisateur ou mot de passe incorrect");
+    }
+    if (account.verified === false) {
+      await authService.sendValidationMail(account);
+      throw new HttpError(403, 'Compte non verifié');
     }
     const profile = await profileService.get_by_id(account.id);
-    console.log('profile', account);
     if (!profile) {
       throw new HttpError(404, 'Profil introuvable');
     }
@@ -74,34 +96,17 @@ class AuthController {
       authService.generateAccessAndRefreshToken(account.id);
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      // sameSite: 'none',
-      // secure: true,
     });
-    //TODO remove acc
-    res.send({ account, profile, access_token });
+    res.send({ profile, access_token });
   };
 
-  validateAccount = async (req: Request, res: Response, next: NextFunction) => {
-    const { id, token } = req.body;
-    try {
-      const account = await authService.validateAccount(id, token);
-      if (!account) {
-        throw new HttpError(404, 'Ce compte n\'existe pas');
-      }
-
-      console.log('user validated', account);
-      res.send(account);
-    } catch (err) {
-      next(err);
+  verifyAccount = async (req: Request, res: Response) => {
+    const { token } = req.body;
+    const account = await authService.verifyAccount(token);
+    if (!account) {
+      throw new HttpError(404, "Ce compte n'existe pas");
     }
-  };
-
-  checkToken = async (req: MyRequest, res: Response, next: NextFunction) => {
-    const user = await profileService.get_by_id(req.user_id!);
-    if (!user) {
-      return next(new HttpError(400, 'user not found'));
-    }
-    res.send(user);
+    res.end();
   };
 
   refreshToken = async (req: MyRequest, res: Response) => {
@@ -116,22 +121,41 @@ class AuthController {
   };
 
   refreshPage = async (req: MyRequest, res: Response) => {
-    const account = await accountService.get_by_id(req.user_id!);
     const profile = await profileService.get_by_id(req.user_id!);
 
-    if (!account || !profile) {
+    if (!profile) {
       throw new HttpError(400, 'User not found');
     }
-
-    console.log('ip: ', req.ip);
-
-    const access_token = authService.signAccessToken(account.id);
-    res.send({ account, profile, access_token });
+    const access_token = authService.signAccessToken(profile.id);
+    res.send({ profile, access_token });
   };
 
-  logout = (_req: Request, res: Response) => {
-    console.log('logged out');
+  forgotPassword = async (req: Request, res: Response) => {
+    await authService.forgotPassword(req.body.email);
+    res.end();
+  };
+
+  resetPassword = async (req: Request, res: Response) => {
+    const { token, password } = req.body;
+    const payload = authService.verifyToken(token);
+    if (!payload) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    const account = await accountService.get_with_tokens(payload.id);
+    if (!account) {
+      throw new HttpError(404, 'User not found');
+    }
+    if (token !== account.forgot_password_token) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    await accountService.set_forgot_password_token(account.id, null);
+    await editAccountService.updatePassword(account.id, password);
+    res.end();
+  };
+
+  logout = (req: MyRequest, res: Response) => {
     res.clearCookie('refresh_token');
+    SocketService.sendLogout(req.user_id!);
     res.end();
   };
 }

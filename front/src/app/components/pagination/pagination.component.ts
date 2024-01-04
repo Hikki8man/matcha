@@ -12,9 +12,6 @@ export class PaginationComponent {
     @Input() public ItemCount: number;
     private _filters: FiltersModel;
 
-    // last_page = offset >= ItemCount - ItemsPerPage;
-    // 380 >= 390 - 10 = 380
-
     constructor(private readonly _filterService: ISearchFilterService) {
         this._filterService.filters.subscribe((filter) => (this._filters = filter));
     }
@@ -28,7 +25,6 @@ export class PaginationComponent {
 
     public nextPage(): void {
         if (!this.isLastPage()) {
-            console.log('off');
             this._filters.Offset += this.ItemsPerPage;
             this._filterService.updateFilters(this._filters);
         }

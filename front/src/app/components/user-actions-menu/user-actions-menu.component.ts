@@ -4,6 +4,7 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { ReportModalComponent } from '../report-modal/report-modal.component';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
     selector: 'user-actions-menu',
@@ -23,7 +24,8 @@ export class UserActionsMenuComponent {
         private readonly _apiService: IApiService,
         private readonly _dialog: MatDialog,
         private readonly _profileService: IProfileService,
-    ) { }
+        private readonly _toast: HotToastService,
+    ) {}
 
     public onBlock(): void {
         this._apiService.callApi(`profile/block/${this.UserId}`, 'GET').subscribe();
@@ -36,7 +38,13 @@ export class UserActionsMenuComponent {
         });
         dialogRef.afterClosed().subscribe((reason: string) => {
             if (!reason) return;
-            console.log(reason);
+            this._apiService
+                .callApi(`profile/report`, 'POST', { id: +this.UserId, reason })
+                .subscribe((_) => {
+                    this._toast.success('Ton signalement a bien été pris en compte', {
+                        position: 'bottom-center',
+                    });
+                });
         });
     }
 

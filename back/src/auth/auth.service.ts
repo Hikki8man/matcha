@@ -8,7 +8,7 @@ import { Account } from '../types/account';
 
 class AuthService {
   public signAccessToken(id: number) {
-    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: '20h' });
+    return jwt.sign({ id }, env.TOKEN_SECRET, { expiresIn: '15m' });
   }
 
   public signRefreshToken(id: number) {
@@ -47,8 +47,12 @@ class AuthService {
     await emailerService.sendValidationMail(user);
   }
 
-  public async validateAccount(id: number, token: string) {
-    const account = await accountService.get_with_token(id);
+  public async verifyAccount(token: string) {
+    const payload = this.verifyToken(token);
+    if (!payload) {
+      throw new HttpError(400, 'Invalid token');
+    }
+    const account = await accountService.get_with_tokens(payload.id);
     if (!account) {
       console.log('User not found in validate account');
       throw new HttpError(404, 'User not found');
@@ -59,13 +63,25 @@ class AuthService {
     } else if (token !== account.token_validation) {
       throw new HttpError(400, 'Invalid token');
     }
-    return await accountService.set_verified(id);
+    return await accountService.set_verified(account.id);
   }
 
   public generateAccessAndRefreshToken(id: number) {
     const access_token = this.signAccessToken(id);
     const refresh_token = this.signRefreshToken(id);
     return { access_token, refresh_token };
+  }
+
+  public async forgotPassword(email: string) {
+    const account = await accountService.get_by_email(email);
+    if (!account) {
+      throw new HttpError(404, 'Incorrect. Veuillez réessayer.');
+    }
+    const token = jwt.sign({ id: account.id }, env.TOKEN_SECRET, {
+      expiresIn: '6h',
+    });
+    await accountService.set_forgot_password_token(account.id, token);
+    await emailerService.sendForgotPasswordMail(email, token);
   }
 }
 

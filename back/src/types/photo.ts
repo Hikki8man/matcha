@@ -15,5 +15,4 @@ export enum PhotoType {
   Photo_2 = 'photo_2',
   Photo_3 = 'photo_3',
   Photo_4 = 'photo_4',
-  Photo_5 = 'photo_5',
 }

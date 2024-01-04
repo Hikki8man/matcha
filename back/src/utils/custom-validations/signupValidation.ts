@@ -1,3 +1,4 @@
+import moment from 'moment';
 import userService from '../../user/account/account.service';
 import { body } from '../middleware/validator/check';
 
@@ -12,10 +13,9 @@ export const usernameNotTaken = async (username: string) => {
 };
 
 const isOverEighteen = (birth_date: Date) => {
-  const birthDate = new Date(birth_date);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-
+  const today = moment();
+  const birthDate = moment(birth_date, 'YYYY-MM-DD');
+  const age = today.diff(birthDate, 'years');
   if (age < 18) {
     return false;
   }

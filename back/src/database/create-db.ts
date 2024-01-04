@@ -28,6 +28,7 @@ export const createDb = async () => {
     table.string('email').unique();
     table.string('password');
     table.string('token_validation');
+    table.string('forgot_password_token');
     table.boolean('verified').defaultTo(false);
   });
 
@@ -40,7 +41,7 @@ export const createDb = async () => {
       .inTable('account')
       .onDelete('CASCADE');
     table.string('name').notNullable();
-    table.string('bio');
+    table.text('bio');
     table.date('birth_date');
     table.enum('gender', ['male', 'female', 'other']).defaultTo('male');
     table.integer('completed_steps').defaultTo(0);
@@ -107,7 +108,6 @@ export const createDb = async () => {
       'photo_2',
       'photo_3',
       'photo_4',
-      'photo_5',
     ]);
     table.timestamp('created_at').defaultTo(db.fn.now());
   });

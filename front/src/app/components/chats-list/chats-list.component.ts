@@ -14,7 +14,7 @@ import { timeAgo } from 'src/app/utils/timeAgo';
     styleUrls: ['./chats-list.component.scss'],
 })
 export class ChatsListComponent implements OnInit, OnDestroy {
-    public Chats: ConversationModel[];
+    public Chats: ConversationModel[] = [];
     public CurrentUser: ProfileModel;
     private _destroyed$: Subject<boolean> = new Subject();
 

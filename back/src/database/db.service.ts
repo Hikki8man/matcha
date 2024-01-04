@@ -14,9 +14,15 @@ import { female_names } from './fake-user-data/female-names';
 import { male_names } from './fake-user-data/male-names';
 import { last_names } from './fake-user-data/last-names';
 import { interestTags } from './interest-tags';
-import { locations } from './fake-user-data/locatation';
+import { locations } from './fake-user-data/locations';
+import { About } from '../types/about';
+import { jobs } from './fake-user-data/jobs';
+import { studies } from './fake-user-data/studies';
+import { spokenLanguages } from './fake-user-data/languages';
+import { bioFemale, bioMale } from './fake-user-data/bio';
 
 const MAX_TAG_PER_USER = 5;
+const PHOTO_DATASET_NB = 3000;
 
 interface FakeUser {
   email: string;
@@ -53,6 +59,45 @@ class DbService {
     return locations[randomIndex];
   }
 
+  private getRandomJob() {
+    const randomIndex = Math.floor(Math.random() * jobs.length);
+    return jobs[randomIndex];
+  }
+
+  private getRandomStudie() {
+    const randomIndex = Math.floor(Math.random() * studies.length);
+    return studies[randomIndex];
+  }
+
+  private getRandomChoice() {
+    const choice = ['Oui', 'Occasionnellement', 'Souvent', 'Non'];
+    const randomIndex = Math.floor(Math.random() * choice.length);
+    return choice[randomIndex];
+  }
+
+  private getRandomBio(gender: Gender) {
+    if (gender === Gender.Female) {
+      const randomIndex = Math.floor(Math.random() * bioFemale.length);
+      return bioFemale[randomIndex];
+    } else {
+      const randomIndex = Math.floor(Math.random() * bioMale.length);
+      return bioMale[randomIndex];
+    }
+  }
+
+  private getRandomLanguages() {
+    const randomNb = Math.floor(Math.random() * 3 + 1);
+    let languages = '';
+    for (let i = 0; i < randomNb; ++i) {
+      const randomIndex = Math.floor(Math.random() * spokenLanguages.length);
+      languages += spokenLanguages[randomIndex];
+      if (i !== randomNb - 1) {
+        languages += ', ';
+      }
+    }
+    return languages;
+  }
+
   async insertFakeUser(user: FakeUser) {
     try {
       const hash = await bcrypt.hash(user.password, this.saltRounds);
@@ -84,10 +129,32 @@ class DbService {
           bio: user.bio,
         })
         .returning('*');
-      await db('about').insert({ id: profile.id });
+      await this.insertAboutInfo(profile.id);
       await this.addRandomTagsToProfile(profile.id);
       await this.addProfileAvatar(profile.id, profile.gender);
+      await this.addProfilePhotos(profile.id);
     } catch {}
+  }
+
+  private async insertAboutInfo(id: number) {
+    const from = this.getRandomLocation().city;
+    const job = this.getRandomJob();
+    const studies = this.getRandomStudie();
+    const languages = this.getRandomLanguages();
+    const smoking = this.getRandomChoice();
+    const drinking = this.getRandomChoice();
+    const drugs = this.getRandomChoice();
+
+    await db<About>('about').insert({
+      id,
+      from,
+      job,
+      studies,
+      languages,
+      smoking,
+      drinking,
+      drugs,
+    });
   }
 
   private getRandomNameAndGender() {
@@ -135,8 +202,7 @@ class DbService {
       const { username, email } = this.getUsernameAndEmail(firstname, lastname);
       const birth_date = this.getRandomDate();
       const password = 'password';
-      const bio =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+      const bio = this.getRandomBio(gender);
       await this.insertFakeUser({
         username,
         firstname,
@@ -182,6 +248,23 @@ class DbService {
       content_type: 'image/png',
       photo_type: PhotoType.Avatar,
     });
+  }
+
+  private async addProfilePhotos(id: number) {
+    const filePath = 'public/';
+    const nb_of_photos = Math.floor(Math.random() * 4 + 1);
+    for (let i = 0; i < nb_of_photos; ++i) {
+      const random_index = Math.floor(Math.random() * PHOTO_DATASET_NB + 1);
+      const filename = `photo_${random_index}.jpg`;
+      const type = `photo_${i + 1}`;
+      await db<Photo>('photo').insert({
+        user_id: id,
+        filename: filename,
+        path: filePath + filename,
+        content_type: 'image/jpg',
+        photo_type: type as PhotoType,
+      });
+    }
   }
 }
 

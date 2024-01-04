@@ -16,7 +16,6 @@ export class SocketService implements ISocketService {
     private _socket: Socket;
 
     constructor() {
-        console.log('socket in Socket Service');
         const config: SocketIoConfig = {
             url: environment.apiBaseUrl,
             options: { autoConnect: false },

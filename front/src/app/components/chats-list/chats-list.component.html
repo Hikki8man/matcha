@@ -18,5 +18,8 @@
                 <span class="chat-date">{{ chat.send_at }}</span>
             </div>
         </div>
+        <div *ngIf="Chats.length === 0" class="no-chats">
+            <span class="text">Aucun message</span>
+        </div>
     </div>
 </div>

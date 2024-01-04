@@ -9,6 +9,8 @@ import { Tag } from '../../types/tag';
 import { Filter, OrderBy } from '../../types/filter';
 import blockService from './block/block.service';
 import { PhotoType } from '../../types/photo';
+import emailerService from '../../emailer/emailer.service';
+import { env } from 'process';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
@@ -175,6 +177,7 @@ class ProfileService {
     try {
       const my_profile = await this.get_by_id(id);
       const blocked_list = await blockService.getBlockedList(id);
+      const blocked_ids = blocked_list.map((item) => item.blocked_id);
       const my_tags = my_profile.tags.map((tag: Tag) => tag.id);
       const { orientation, gender_to_match } =
         this.getOrientationAndGenderToMatch(
@@ -193,7 +196,7 @@ class ProfileService {
         .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
         .whereIn('profile.gender', gender_to_match)
         .whereIn('profile.sexual_orientation', orientation)
-        .whereNotIn('profile.id', blocked_list)
+        .whereNotIn('profile.id', blocked_ids)
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
         .andWhere('profile.completed_steps', CompletedSteps.Completed)
@@ -333,6 +336,30 @@ class ProfileService {
     } catch (e) {
       return false;
     }
+  }
+
+  async report(user_id: number, reported_id: number, reason: string) {
+    const reported_profile = await this.profileNameAndAvatar(reported_id);
+    if (!reported_profile) {
+      throw new Error('User not found');
+    }
+    const user_profile = await this.profileNameAndAvatar(user_id);
+    if (!user_profile) {
+      throw new Error('User not found');
+    }
+    const user_link = `${env.FRONT_URL}/profile/${user_id}`;
+    const reported_link = `${env.FRONT_URL}/profile/${reported_id}`;
+    const message = `
+      <p>User <a href="${user_link}">${user_profile.name}</a> reported user <a href="${reported_link}">${reported_profile.name}</a></p>
+      <p>Reason: ${reason}</p>
+    `;
+
+    await emailerService.sendMail({
+      from: env.EMAIL,
+      to: env.EMAIL,
+      subject: 'Matcha: Report',
+      html: message,
+    });
   }
 }
 

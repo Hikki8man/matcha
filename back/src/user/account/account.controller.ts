@@ -1,16 +1,16 @@
-import express, { Request, Response, NextFunction } from 'express';
-import accountService from './account.service';
+import express, { Response } from 'express';
 import jwtStrategy from '../../auth/jwt.strategy';
-import { MyRequest } from '../../types/request';
-import { body, param } from '../../utils/middleware/validator/check';
-import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
-import asyncWrapper from '../../utils/middleware/asyncWrapper';
-import editAccountService from './edit-account.service';
 import SocketService from '../../socket.service';
+import { MyRequest } from '../../types/request';
 import {
   emailNotTaken,
   usernameNotTaken,
 } from '../../utils/custom-validations/signupValidation';
+import asyncWrapper from '../../utils/middleware/asyncWrapper';
+import { body } from '../../utils/middleware/validator/check';
+import CheckValidation from '../../utils/middleware/validator/checkValidationResult';
+import accountService from './account.service';
+import editAccountService from './edit-account.service';
 
 class AccountController {
   public path = '/account';
@@ -62,6 +62,15 @@ class AccountController {
       CheckValidation,
       asyncWrapper(this.editEmail),
     );
+
+    this.router.post(
+      this.path + '/edit/password',
+      jwtStrategy,
+      body('old_password').isString(),
+      body('new_password').isString(), //TODO: add password validation
+      CheckValidation,
+      asyncWrapper(this.editPassword),
+    );
   }
 
   getUserById = async (req: MyRequest, res: Response) => {
@@ -87,6 +96,15 @@ class AccountController {
 
   editUsername = async (req: MyRequest, res: Response) => {
     await editAccountService.editUsername(req.user_id!, req.body.username);
+    res.end();
+  };
+
+  editPassword = async (req: MyRequest, res: Response) => {
+    await editAccountService.editPassword(
+      req.user_id!,
+      req.body.old_password,
+      req.body.new_password,
+    );
     res.end();
   };
 }

@@ -1,5 +1,4 @@
 import { Conversation, ConversationLoaded, Message } from '../types/chat';
-import HttpError from '../utils/HttpError';
 import db from '../database/connection';
 import SocketService from '../socket.service';
 import { PhotoType } from '../types/photo';
@@ -19,19 +18,12 @@ class ConversationService {
 
   async createConv(user_1: number, user_2: number) {
     try {
-      //check user 2 exist?
-      // const conv_exist = await this.conversationExist(user_1, user_2);
-      // console.log('conv_exiist:', conv_exist);
-      // if (conv_exist) {
-      //   return conv_exist;
-      // }
       const [conv] = await db<Conversation>('conversation')
         .insert({
           user_1,
           user_2,
         })
         .returning('*');
-      // return this.getBydIdWithUsers(conv.id);
       return conv;
     } catch (err: any) {
       return undefined;
@@ -205,7 +197,6 @@ class ConversationService {
         updatedConv.user_2,
         msg,
       );
-      console.log('updated conv', updatedConv);
     } catch (e) {}
   }
 }

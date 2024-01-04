@@ -65,9 +65,17 @@ class ProfileController {
       profileCompleteGuard,
       this.liker_list,
     );
+    this.router.post(
+      this.path + '/report',
+      jwtStrategy,
+      profileCompleteGuard,
+      body('id').isInt(),
+      body('reason').isString(),
+      CheckValidation,
+      asyncWrapper(this.report),
+    );
   }
 
-  // TODO separate route for myProfile and Other profiles?
   getProfileCardAndIsLikedById = async (req: MyRequest, res: Response) => {
     const id = +req.params.id!;
     const profile = await profileService.profileCardById(id);
@@ -109,6 +117,12 @@ class ProfileController {
   profile_view_list = async (req: MyRequest, res: Response) => {
     const profile_views = await viewService.getProfileViews(req.user_id!);
     res.send(profile_views);
+  };
+
+  report = async (req: MyRequest, res: Response) => {
+    const { id, reason } = req.body;
+    await profileService.report(req.user_id!, id, reason);
+    res.end();
   };
 }
 
