@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { AccountModel } from 'src/app/models/account.model';
-import { PublicProfileModel, Tag } from 'src/app/models/profile.model';
+import { About, PublicProfileModel, Tag } from 'src/app/models/profile.model';
 import { IApiService } from 'src/app/services/api/iapi.service';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
@@ -26,6 +26,7 @@ export class SettingsFormComponent {
     public Orientation: SexualOrientation;
     public Gender: GenderEnum;
     public FormGroup: FormGroup;
+    public About: About;
 
     public IconEditUrl: string = IconUrlEnum.Edit;
     public IconStyle: Record<string, string> = { display: 'flex', width: '16px', height: '16px' };
@@ -42,20 +43,21 @@ export class SettingsFormComponent {
     ];
 
     constructor(
-        private readonly _apiServive: IApiService,
+        private readonly _apiService: IApiService,
         private readonly _authenticationService: IAuthenticationService,
         private readonly _profileService: IProfileService,
         private readonly _toast: HotToastService,
         private readonly _dialog: MatDialog,
         private readonly _formBuilder: FormBuilder,
     ) {
-        this._apiServive.callApi<AccountModel>(`account`, 'GET').subscribe((res: AccountModel) => {
+        this._apiService.callApi<AccountModel>(`account`, 'GET').subscribe((res: AccountModel) => {
             this.Account = res;
             this._profileService.getById(this._authenticationService.profileValue.id).subscribe({
                 next: (card) => {
                     this.Profile = card.profile;
                     this.Gender = this.Profile.gender;
                     this.Orientation = this.Profile.sexual_orientation;
+                    this.About = card.about;
                     this.FormGroup = this._formBuilder.group({
                         firstName: [this.Account.firstname, [Validators.required]],
                         lastName: [this.Account.lastname, [Validators.required]],
@@ -63,12 +65,124 @@ export class SettingsFormComponent {
                         displayName: [this.Profile.name, [Validators.required]],
                         bio: [this.Profile.bio, []],
                         userName: [this.Profile.name, [Validators.required]],
+                        from: [this.About.from, []],
+                        job: [this.About.job, []],
+                        studies: [this.About.studies, []],
+                        languages: [this.About.languages, []],
+                        smoking: [this.About.smoking, []],
+                        drugs: [this.About.drugs, []],
+                        drinking: [this.About.drinking, []],
                     });
                 },
                 complete: () => {
                     this.Loading = false;
                 },
             });
+        });
+    }
+
+    public handleFromChanged(from: string): void {
+        if (from === this.About.from) return;
+        this._apiService.callApi('about/from', 'POST', { from }).subscribe({
+            complete: () => {
+                this.About.from = from;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour de la ville d\'origine', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleJobChanged(job: string): void {
+        if (job === this.About.job) return;
+        this._apiService.callApi('about/job', 'POST', { job }).subscribe({
+            complete: () => {
+                this.About.job = job;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour du travail', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleStudiesChanged(studies: string): void {
+        if (studies === this.About.studies) return;
+        this._apiService.callApi('about/studies', 'POST', { studies }).subscribe({
+            complete: () => {
+                this.About.studies = studies;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour des études', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleLanguagesChanged(languages: string): void {
+        if (languages === this.About.languages) return;
+        this._apiService.callApi('about/languages', 'POST', { languages }).subscribe({
+            complete: () => {
+                this.About.languages = languages;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour des langues', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleSmokingChanged(smoking: string): void {
+        if (smoking === this.About.smoking) return;
+        this._apiService.callApi('about/smoking', 'POST', { smoking }).subscribe({
+            complete: () => {
+                this.About.smoking = smoking;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour du tabagisme', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleDrugsChanged(drugs: string): void {
+        if (drugs === this.About.drugs) return;
+        this._apiService.callApi('about/drugs', 'POST', { drugs }).subscribe({
+            complete: () => {
+                this.About.drugs = drugs;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour des drogues', {
+                    position: 'bottom-center',
+                });
+            },
+        });
+    }
+
+    public handleDrinkingChanged(drinking: string): void {
+        if (drinking === this.About.drinking) return;
+        this._apiService.callApi('about/drinking', 'POST', { drinking }).subscribe({
+            complete: () => {
+                this.About.drinking = drinking;
+                this._toast.success('Détail mis à jour', { position: 'bottom-center' });
+            },
+            error: (_) => {
+                this._toast.error('Erreur lors de la mise à jour du détail', {
+                    position: 'bottom-center',
+                });
+            },
         });
     }
 
@@ -132,7 +246,7 @@ export class SettingsFormComponent {
 
     public handleUserNameChanged(username: string): void {
         if (username === this.Account.username) return;
-        this._apiServive.callApi('account/edit/username', 'POST', { username }).subscribe({
+        this._apiService.callApi('account/edit/username', 'POST', { username }).subscribe({
             complete: () => {
                 this.Account.username = username;
                 this._toast.success("Nom d'utilisateur mis à jour", { position: 'bottom-center' });
@@ -151,7 +265,7 @@ export class SettingsFormComponent {
 
         if (email === this.Account.email) return;
         if (confirm('En changeant ton email, tu vas être déconnecté. Continuer ?')) {
-            this._apiServive.callApi('account/edit/email', 'POST', { email }).subscribe({
+            this._apiService.callApi('account/edit/email', 'POST', { email }).subscribe({
                 complete: () => {
                     this.Account.email = email;
                     this._toast.success('Email mis à jour', { position: 'bottom-center' });
@@ -170,7 +284,7 @@ export class SettingsFormComponent {
 
     public handleFirstNameChanged(firstname: string): void {
         if (firstname === this.Account.firstname) return;
-        this._apiServive.callApi('account/edit/firstname', 'POST', { firstname }).subscribe({
+        this._apiService.callApi('account/edit/firstname', 'POST', { firstname }).subscribe({
             complete: () => {
                 this.Account.firstname = firstname;
                 this._toast.success('Prénom mis à jour', { position: 'bottom-center' });
@@ -186,7 +300,7 @@ export class SettingsFormComponent {
 
     public handleLastNameChanged(lastname: string): void {
         if (lastname === this.Account.lastname) return;
-        this._apiServive.callApi('account/edit/lastname', 'POST', { lastname }).subscribe({
+        this._apiService.callApi('account/edit/lastname', 'POST', { lastname }).subscribe({
             complete: () => {
                 this.Account.lastname = lastname;
                 this._toast.success('Nom mis à jour', { position: 'bottom-center' });

@@ -46,13 +46,13 @@ export class PublicProfileModel {
 
 export interface About {
     id: number;
+    from: string;
     job: string;
     studies: string;
     languages: string;
     smoking: string;
     drugs: string;
     drinking: string;
-    from: string;
 }
 
 export interface ProfileCardModel {
