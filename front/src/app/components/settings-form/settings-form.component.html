@@ -30,6 +30,49 @@
         <matcha-textarea Title="Bio" [FormGroup]="FormGroup" [HasError]="true" Name="bio" [Value]="Profile.bio"
             (OnFocusOut)="handleBioChanged($event)"></matcha-textarea>
     </div>
+
+    <ng-container *ngIf="About">
+        <div class="form-section">
+            <span class="title">Détails</span>
+        </div>
+        <div class="settings-row settings-line">
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="from" Title="D'ou viens tu ?"
+                    [Value]="About.from" (OnFocusOut)="handleFromChanged($event)"></matcha-input>
+            </div>
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="job" Title="Quel est ton métier ?"
+                    [Value]="About.job" (OnFocusOut)="handleJobChanged($event)"></matcha-input>
+            </div>
+        </div>
+        <div class="settings-row settings-line">
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="studies" Title="Quelles études as tu faites ?"
+                    [Value]="About.studies" (OnFocusOut)="handleStudiesChanged($event)"></matcha-input>
+            </div>
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="languages" Title="Quelles langues parle tu ?"
+                    [Value]="About.languages" (OnFocusOut)="handleLanguagesChanged($event)"></matcha-input>
+            </div>
+        </div>
+        <div class="settings-row settings-line">
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="smoking" Title="Tu fumes batard ?"
+                    [Value]="About.smoking" (OnFocusOut)="handleSmokingChanged($event)"></matcha-input>
+            </div>
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="drugs" Title="Consomme tu de la drogue ?"
+                    [Value]="About.drugs" (OnFocusOut)="handleDrugsChanged($event)"></matcha-input>
+            </div>
+        </div>
+        <div class="settings-row settings-line">
+            <div class="settings-column">
+                <matcha-input [FormGroup]="FormGroup" [HasError]="true" Name="drinking" Title="Bois tu de l'alcool ?"
+                    [Value]="About.drinking" (OnFocusOut)="handleDrinkingChanged($event)"></matcha-input>
+            </div>
+        </div>
+    </ng-container>
+
     <div class="form-section">
         <span class="title">Avatar</span>
     </div>
