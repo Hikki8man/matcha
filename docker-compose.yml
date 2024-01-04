@@ -5,15 +5,16 @@ services:
     image: postgis/postgis:16-3.4
     ports:
       - 5432:5432
-    # volumes:
-    #   - ~/apps/postgres:/var/lib/postgresql/data
-    # volumes:
-    #   - ./init-scripts:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - matcha_net
 
@@ -22,7 +23,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      postgres:
+          condition: service_healthy
     environment:
       - TOKEN_SECRET=${TOKEN_SECRET}
       - EMAIL=${EMAIL}
@@ -32,7 +34,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ./back:/usr/app/back
+      - ./back/uploads:/usr/app/back/uploads
     networks:
       - matcha_net
     restart: always
@@ -45,19 +47,9 @@ services:
       - express
     environment:
       - API_URL=${API_URL}
-    volumes:
-      - ./front/src:/usr/app/front/src
     networks:
       - matcha_net
     restart: always
-
-  # cloudbeaver:
-  #   image: dbeaver/cloudbeaver:latest
-  #   restart: always
-  #   ports:
-  #     - "8978:8978"
-  #   networks:
-  #     - matcha_net
 
 networks:
   matcha_net:
