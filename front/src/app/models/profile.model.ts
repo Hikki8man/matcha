@@ -1,5 +1,6 @@
 import { GenderEnum } from '../enums/gender-enum';
 import { SexualOrientation } from '../enums/sexual-orientation-enum';
+import { AboutModel } from './about.model';
 
 export enum CompletedSteps {
     First,
@@ -53,6 +54,7 @@ export class PublicProfileModel {
 
 export interface ProfileCardModel {
     profile: PublicProfileModel;
+    about: AboutModel;
     liked: boolean;
     likedYou: boolean;
 }
