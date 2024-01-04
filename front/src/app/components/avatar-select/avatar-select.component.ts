@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { HotToastService } from '@ngneat/hot-toast';
 import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
-import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { IApiService } from 'src/app/services/api/iapi.service';
+import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 
 @Component({
     selector: 'avatar-select',
@@ -17,7 +19,11 @@ export class AvatarSelectComponent {
         display: 'flex',
     };
 
-    constructor(private readonly _profileService: IProfileService) {}
+    constructor(
+        private readonly _apiService: IApiService,
+        private readonly _authenticationService: IAuthenticationService,
+        private readonly _toast: HotToastService,
+    ) {}
 
     public handleSubmit(event: any): void {
         if (event.target.files.length === 0) {
@@ -30,16 +36,26 @@ export class AvatarSelectComponent {
 
         reader.onload = (e: any) => {
             src = e.target.result;
+            console.log(src);
+            
         };
         reader.readAsDataURL(file);
 
-        this._profileService.editAvatar(file).subscribe({
-            complete: () => {
-                this.OnPhotoAdded.emit(src);
-            },
-            error: (error) => {
-                console.error('Error:', error);
-            },
-        });
+        const formData: FormData = new FormData();
+        formData.append('photo', file, file.name);
+        formData.append('photo_type', `avatar`);
+        this._apiService
+            .callApi<{ path: string } | undefined>('profile/edit/photo', 'POST', formData)
+            .subscribe({
+                next: (res) => {
+                    this._authenticationService.profileValue!.avatar = res.path;
+                    this.OnPhotoAdded.emit(res.path);
+                },
+                error: () => {
+                    this._toast.error("Erreur lors de l'envoi de la photo", {
+                        position: 'bottom-center',
+                    });
+                },
+            });
     }
 }
