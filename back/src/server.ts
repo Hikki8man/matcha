@@ -7,7 +7,6 @@ import AuthController from './auth/auth.controller';
 import ChatController from './chat/chat.controller';
 import { createDb } from './database/create-db';
 import { initDb } from './database/init-db';
-import { dropTable } from './database/drop-tables';
 import EditProfileController from './user/profile/edit/editProfile.controller';
 import TagsController from './tags/tags.controller';
 import CompleteProfileController from './user/profile/complete/completeProfile.controller';
@@ -27,35 +26,32 @@ async function checkDatabaseConnection(): Promise<boolean> {
 }
 
 const main = async () => {
-  const connected = await checkDatabaseConnection();
-  await dropTable();
-  if (connected) {
-    console.log('Connected to database');
-    try {
-      const db_exist = await createDb();
-      if (!db_exist) {
-        await initDb();
-      }
-    } catch (err) {}
-    const app = new App(
-      [
-        new AccountController(),
-        new ProfileController(),
-        new EditProfileController(),
-        new CompleteProfileController(),
-        new AuthController(),
-        new ChatController(),
-        new TagsController(),
-        new NotificationController(),
-        new BlockController(),
-        new AboutController(),
-      ],
-      8080,
-    );
-    app.listen();
-  } else {
-    console.error('Unable to connect to the database');
+  while ((await checkDatabaseConnection()) === false) {
+    setTimeout(() => {}, 1000);
   }
+  console.log('Connected to database');
+  try {
+    const db_exist = await createDb();
+    if (!db_exist) {
+      await initDb();
+    }
+  } catch (err) {}
+  const app = new App(
+    [
+      new AccountController(),
+      new ProfileController(),
+      new EditProfileController(),
+      new CompleteProfileController(),
+      new AuthController(),
+      new ChatController(),
+      new TagsController(),
+      new NotificationController(),
+      new BlockController(),
+      new AboutController(),
+    ],
+    8080,
+  );
+  app.listen();
 };
 
 main();
