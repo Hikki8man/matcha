@@ -87,4 +87,10 @@ export class Validators<Chain> implements IValidators<Chain> {
   isArray() {
     return this.custom((value) => Array.isArray(value));
   }
+
+  isStrongPassword() {
+    const passRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+    return this.custom((value) => passRegex.test(value));
+  }
 }

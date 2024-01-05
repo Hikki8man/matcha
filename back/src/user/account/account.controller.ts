@@ -67,7 +67,12 @@ class AccountController {
       this.path + '/edit/password',
       jwtStrategy,
       body('old_password').isString(),
-      body('new_password').isString(), //TODO: add password validation
+      body('new_password')
+        .isString()
+        .isStrongPassword()
+        .withMessage(
+          'Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule et un caractère spécial.',
+        ),
       CheckValidation,
       asyncWrapper(this.editPassword),
     );
