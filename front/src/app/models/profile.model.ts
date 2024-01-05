@@ -41,7 +41,7 @@ export class PublicProfileModel {
     last_online?: Date;
     photos: { path: string; type: string }[];
     avatar: string;
-    fameRating: number;
+    fame_rating: number;
 }
 
 export interface About {
