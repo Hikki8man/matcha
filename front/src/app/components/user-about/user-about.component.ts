@@ -40,6 +40,10 @@ export class UserAboutComponent implements OnInit, OnChanges {
         }
     }
 
+    public getFameRating(): string {
+        return this.Profile.fame_rating.toFixed(2);
+    }
+
     public getOrientation(): string {
         return this._orientations[this.Profile.sexual_orientation];
     }
