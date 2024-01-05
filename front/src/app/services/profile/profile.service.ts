@@ -77,6 +77,8 @@ export class ProfileService implements IProfileService {
             max_dist: filterModel.DistanceRange,
             min_age: filterModel.MinAge,
             max_age: filterModel.MaxAge,
+            min_fame: filterModel.MinFameRating,
+            max_fame: filterModel.MaxFameRating,
             common_tags: filterModel.Tags,
             order_by: filterModel.OrderBy,
             offset: filterModel.Offset,
