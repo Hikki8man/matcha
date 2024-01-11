@@ -13,4 +13,5 @@ export interface IValidators<Return> {
   exists(): Return;
   isArray(): Return;
   optional(): Return;
+  isStrongPassword(): Return;
 }

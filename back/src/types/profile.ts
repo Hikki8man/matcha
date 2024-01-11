@@ -31,6 +31,7 @@ export interface Profile {
   city: string;
   latitude: number;
   longitude: number;
+  fame_rating: number;
 }
 
 export interface ProfileMinimum {

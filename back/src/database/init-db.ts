@@ -1,6 +1,5 @@
 import { Gender, SexualOrientation } from '../types/profile';
 import DbService from './db.service';
-import likeService from '../user/profile/like/like.service';
 
 export const initDb = async () => {
   const dbService = new DbService();
@@ -29,9 +28,5 @@ export const initDb = async () => {
     sexual_orientation: SexualOrientation.Bisexual,
     bio: 'Oe c moi',
   });
-  await dbService.createFakeUsers(50);
-  await likeService.like(1, 3);
-  await likeService.like(3, 1);
-  await likeService.like(1, 6);
-  await likeService.like(6, 1);
+  await dbService.createFakeUsers(100);
 };
