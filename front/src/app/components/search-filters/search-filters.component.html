@@ -43,6 +43,8 @@
                 (click)="setOrderBy(OrderByEnum.Oldest)">Oldest</button>
             <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.CommonTags}"
                 (click)="setOrderBy(OrderByEnum.CommonTags)">Common tags</button>
+            <button [ngClass]="{'selected': Filters.OrderBy === OrderByEnum.FameRating}"
+                (click)="setOrderBy(OrderByEnum.FameRating)">Common tags</button>
         </div>
     </div>
 </div>
