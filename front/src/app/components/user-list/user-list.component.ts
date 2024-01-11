@@ -17,6 +17,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     public ItemCount: number;
     public ItemsPerPage: number;
     public LocationIconUrl: string = IconUrlEnum.Location;
+    public FameIconUrl: string = IconUrlEnum.Star;
     public LocationIconStyle: Record<string, string> = { display: 'flex', height: '16px' };
     public Filters: FiltersModel;
 
