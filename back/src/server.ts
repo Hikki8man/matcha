@@ -13,6 +13,7 @@ import CompleteProfileController from './user/profile/complete/completeProfile.c
 import NotificationController from './notification/notification.controller';
 import BlockController from './user/profile/block/block.controller';
 import { AboutController } from './user/about/about.controller';
+import { dropTable } from './database/drop-tables';
 
 dotenv.config({ path: './env' });
 
@@ -31,6 +32,7 @@ const main = async () => {
   }
   console.log('Connected to database');
   try {
+    await dropTable();
     const db_exist = await createDb();
     if (!db_exist) {
       await initDb();

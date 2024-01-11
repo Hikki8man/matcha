@@ -29,6 +29,8 @@ class ProfileController {
       body('max_dist').isInt(),
       body('min_age').isInt(),
       body('max_age').isInt(),
+      body('min_fame').isInt(),
+      body('max_fame').isInt(),
       body('offset').isInt(),
       body('order_by').custom((order) =>
         Object.values(OrderBy).includes(order),
@@ -105,6 +107,8 @@ class ProfileController {
     if (likeEvent) {
       SocketService.sendLikeEvent(req.body.id, likeEvent);
     }
+    await profileService.updateFameRating(req.user_id!);
+    await profileService.updateFameRating(req.body.id);
     res.end();
   };
 

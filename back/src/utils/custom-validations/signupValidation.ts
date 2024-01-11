@@ -38,8 +38,10 @@ const registerValidation = [
     .withMessage('Cet email est déjà utilisé'),
   body('password')
     .isString()
-    .isLength({ min: 3 })
-    .withMessage('Le mot de passe doit contenir au moins 3 caractères'),
+    .isStrongPassword()
+    .withMessage(
+      'Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule et un caractère spécial.',
+    ),
   body('birth_date')
     .isDate()
     .withMessage('Date de naissance invalide')

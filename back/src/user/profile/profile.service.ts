@@ -72,6 +72,7 @@ class ProfileService {
           'profile.city',
           'profile.online',
           'profile.last_online',
+          'profile.fame_rating',
           'avatar.path as avatar',
           db.raw(`
             CASE
@@ -204,7 +205,8 @@ class ProfileService {
           db.raw('EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date)) >= ?', [
             filter.min_age,
           ]),
-        );
+        )
+        .andHaving('profile.fame_rating', '>=', filter.min_fame);
       if (filter.max_dist < 1000) {
         profilesQuery.andWhereRaw(
           `
@@ -224,6 +226,12 @@ class ProfileService {
           db.raw('EXTRACT(YEAR FROM AGE(NOW(), profile.birth_date)) <= ?', [
             filter.max_age,
           ]),
+        );
+      }
+
+      if (filter.max_fame < 10) {
+        profilesQuery.andHaving(
+          db.raw('profile.fame_rating <= ?', [filter.max_fame]),
         );
       }
 
@@ -261,6 +269,7 @@ class ProfileService {
           'profile.city',
           'profile.online',
           'profile.last_online',
+          'profile.fame_rating',
         )
         .select('avatar.path as avatar')
         .select(
@@ -360,6 +369,23 @@ class ProfileService {
       subject: 'Matcha: Report',
       html: message,
     });
+  }
+
+  async updateFameRating(user_id: number) {
+    const [liker] = await this.profileRepo()
+      .leftJoin('likes', 'profile.id', 'likes.liker_id')
+      .where('likes.liked_id', user_id)
+      .count();
+    const [liked] = await this.profileRepo()
+      .leftJoin('likes', 'profile.id', 'likes.liked_id')
+      .where('likes.liker_id', user_id)
+      .count();
+
+    const liker_count = liker['count'] as number;
+    const liked_count = Math.max(1, liked['count'] as number);
+    const ratio = liker_count / liked_count;
+    const fame_rating = Math.min(10, ratio * 10);
+    await this.profileRepo().update({ fame_rating }).where('id', user_id);
   }
 }
 

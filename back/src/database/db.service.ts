@@ -20,6 +20,9 @@ import { jobs } from './fake-user-data/jobs';
 import { studies } from './fake-user-data/studies';
 import { spokenLanguages } from './fake-user-data/languages';
 import { bioFemale, bioMale } from './fake-user-data/bio';
+import likeService from '../user/profile/like/like.service';
+import { profile } from 'console';
+import profileService from '../user/profile/profile.service';
 
 const MAX_TAG_PER_USER = 5;
 const PHOTO_DATASET_NB = 3000;
@@ -194,6 +197,14 @@ class DbService {
     return { username, email };
   }
 
+  private getRandomId(nb_of_users: number, user_id: number): number {
+    const randomId = Math.floor(Math.random() * nb_of_users) + 1;
+    if (randomId === user_id) {
+      return this.getRandomId(nb_of_users, user_id);
+    }
+    return randomId;
+  }
+
   async createFakeUsers(nb: number) {
     console.log(nb + ' FAKE USER ARE BEING CREATED...');
     for (let i = 0; i < nb; ++i) {
@@ -216,6 +227,18 @@ class DbService {
       });
     }
     console.log(nb + ' FAKE USER CREATED');
+    for (let i = 0; i < nb; ++i) {
+      const nb_to_like = Math.floor(Math.random() * (nb / 10));
+      for (let j = 0; j < nb_to_like; ++j) {
+        const random_id = this.getRandomId(nb, i + 1);
+        await likeService.like(i + 1, random_id);
+      }
+      console.log('FINISHED USER LIKES ', ((i + 1) * 100) / nb + '%');
+    }
+    console.log('FINISHED LIKING');
+    for (let i = 0; i < nb; ++i) {
+      await profileService.updateFameRating(i + 1);
+    }
   }
 
   private async addRandomTagsToProfile(id: number) {

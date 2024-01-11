@@ -52,6 +52,7 @@ export const createDb = async () => {
     table.string('city');
     table.double('latitude');
     table.double('longitude');
+    table.double('fame_rating').defaultTo(0.0);
     table.boolean('online').defaultTo(false);
     table.timestamp('last_online').defaultTo(db.fn.now());
   });

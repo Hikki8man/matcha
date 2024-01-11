@@ -60,7 +60,12 @@ class AuthController {
     );
     this.router.post(
       this.path + '/reset-password',
-      body('password').isString(),
+      body('password')
+        .isString()
+        .isStrongPassword()
+        .withMessage(
+          'Le mot de passe doit contenir au moins 8 caractères, dont au moins une lettre majuscule et un caractère spécial.',
+        ),
       body('token').isString(),
       CheckValidation,
       asyncWrapper(this.resetPassword),
