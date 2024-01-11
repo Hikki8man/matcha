@@ -5,6 +5,7 @@ export enum OrderBy {
   Oldest = 'oldest',
   Ditstance = 'distance',
   CommonTags = 'common_tags',
+  FameRating = 'fame_rating',
 }
 
 export interface Filter {

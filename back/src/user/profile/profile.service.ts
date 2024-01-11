@@ -141,8 +141,12 @@ class ProfileService {
     let gender_to_match: Gender[] = [];
 
     if (gender === Gender.Other) {
-      orientation.push(SexualOrientation.Bisexual);
-      gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
+      orientation.push(
+        SexualOrientation.Bisexual,
+        SexualOrientation.Heterosexual,
+        SexualOrientation.Homosexual,
+      );
+      gender_to_match.push(Gender.Other);
       return { orientation, gender_to_match };
     }
 
@@ -167,7 +171,7 @@ class ProfileService {
 
       default:
         orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
+        gender_to_match.push(Gender.Male, Gender.Female);
         break;
     }
     return { orientation, gender_to_match };
@@ -254,6 +258,8 @@ class ProfileService {
         case OrderBy.CommonTags:
           profilesQuery.orderBy('matching_tags_count', 'desc');
           break;
+        case OrderBy.FameRating:
+          profilesQuery.orderBy('fame_rating', 'asc');
         default:
           profilesQuery.orderBy('distance', 'asc');
       }
