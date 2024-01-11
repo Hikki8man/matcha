@@ -55,7 +55,7 @@ class ProfileService {
         .groupBy('profile.id', 'avatar')
         .first();
     } catch (e: any) {
-      console.log('Error', e.message);
+      console.error('Error', e.message);
       return undefined;
     }
   }
@@ -141,8 +141,12 @@ class ProfileService {
     let gender_to_match: Gender[] = [];
 
     if (gender === Gender.Other) {
-      orientation.push(SexualOrientation.Bisexual);
-      gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
+      orientation.push(
+        SexualOrientation.Bisexual,
+        SexualOrientation.Heterosexual,
+        SexualOrientation.Homosexual,
+      );
+      gender_to_match.push(Gender.Other);
       return { orientation, gender_to_match };
     }
 
@@ -167,7 +171,7 @@ class ProfileService {
 
       default:
         orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(Gender.Male, Gender.Female, Gender.Other);
+        gender_to_match.push(Gender.Male, Gender.Female);
         break;
     }
     return { orientation, gender_to_match };
@@ -254,6 +258,8 @@ class ProfileService {
         case OrderBy.CommonTags:
           profilesQuery.orderBy('matching_tags_count', 'desc');
           break;
+        case OrderBy.FameRating:
+          profilesQuery.orderBy('fame_rating', 'asc');
         default:
           profilesQuery.orderBy('distance', 'asc');
       }
@@ -309,7 +315,7 @@ class ProfileService {
         .limit(10, { skipBinding: true });
       return { profiles, count: count.length, limit: 10 };
     } catch (e: any) {
-      console.log('error in getting all profile', e.message);
+      console.error('error in getting all profile', e.message);
       return undefined;
     }
   }
@@ -318,7 +324,7 @@ class ProfileService {
     try {
       return await this.profileRepo().update({ online: true }).where('id', id);
     } catch (e: any) {
-      console.log('error updating steps', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -329,7 +335,7 @@ class ProfileService {
         .update({ online: false, last_online: db.fn.now() })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating steps', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }

@@ -14,7 +14,6 @@ class SocketService {
   private static server: Server;
 
   constructor(server: http.Server) {
-    console.log('Socket constructor');
     SocketService.server = new Server(server, {
       cors: { origin: env.FRONT_URL, credentials: true },
     });

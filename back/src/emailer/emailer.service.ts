@@ -22,7 +22,6 @@ class EmailerService {
   async verifyTransporter() {
     try {
       await this.transporter.verify();
-      console.log('Emailer ready');
     } catch (error) {
       console.error('Emailer verification failed:', error);
     }
@@ -31,7 +30,6 @@ class EmailerService {
   async sendMail(mailOptions: Mail.Options) {
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log('Email sent:', info.response);
     } catch (error) {
       console.error('Error sending email:', error);
     }
@@ -47,13 +45,12 @@ class EmailerService {
         <p>Si vous n'avez pas créé de compte Matcha, vous pouvez ignorer cet e-mail en toute sécurité.</p>
         <p>Cordialement,<br/>L'équipe Matcha</p>
       `;
-      const info = await this.transporter.sendMail({
+      await this.transporter.sendMail({
         from: env.EMAIL,
         to: user.email,
         subject: 'Matcha: Validation email',
         html: message,
       });
-      console.log('Email sent:', info.response);
     } catch (error) {
       console.error('Error sending email:', error);
     }

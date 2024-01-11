@@ -19,7 +19,7 @@ export class ResetPasswordFormComponent implements OnInit {
         width: '14px',
     };
     public resetPassForm: FormGroup = this._formBuilder.group({
-        password: ['', [Validators.required]], // TODO: add password validator
+        password: ['', [Validators.required]],
     });
     public IsLoading: boolean = false;
     public HasErrors: boolean = false;

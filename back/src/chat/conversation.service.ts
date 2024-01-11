@@ -39,7 +39,7 @@ class ConversationService {
         .returning('*');
       return conv;
     } catch (err: any) {
-      console.log(err.message);
+      console.error(err.message);
       return undefined;
     }
   }
@@ -96,7 +96,7 @@ class ConversationService {
         )
         .first();
     } catch (err) {
-      console.log('errror', err);
+      console.error('error', err);
       return undefined;
     }
   }
@@ -143,7 +143,7 @@ class ConversationService {
         )
         .first();
     } catch (err) {
-      console.log('errror', err);
+      console.error('error', err);
       return undefined;
     }
   }
