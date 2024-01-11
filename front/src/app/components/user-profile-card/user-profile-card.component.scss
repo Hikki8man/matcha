@@ -21,6 +21,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        overflow: auto;
 
         .header-content {
             display: flex;
@@ -76,6 +77,8 @@
                     color: #ffffac;
                     font-weight: 550;
                     margin-right: 10px;
+                    align-items: center;
+                    display: flex;
                 }
             }
         }
@@ -99,7 +102,9 @@
 
             .header-content {
                 .user-name-container {
-                    font-size: 18px;
+                    .user-name {
+                        font-size: 18px;
+                    }
                 }
 
                 .user-location-container {
@@ -117,6 +122,15 @@
                     }
                 }
 
+                .right-header-content {
+    
+                    .likes-you-badge {
+                        padding: 0px 7px;
+                        font-weight: 550;
+                        font-size: 14px;
+                        margin-right: 10px;
+                    }
+                }
             }
             .user-bio {
                 font-size: 12px;
