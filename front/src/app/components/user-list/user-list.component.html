@@ -17,7 +17,7 @@
                             [ContentStyle]="LocationIconStyle"></svg-icon>
                         <span class="user-location">{{ user.distance === 0 ? '<1' : user.distance }}km</span>
                         <svg-icon class="user-fame-icon" [Src]="FameIconUrl" [ContentStyle]="LocationIconStyle"></svg-icon>
-                        <span class="user-fame">{{ user.fame_rating }}</span>
+                        <span class="user-fame">{{ user.fame_rating.toFixed(2) }}</span>
                     </div>
                     <span class="user-bio">{{ trimBio(user.bio) }}</span>
                     <interest-tags-list [Tags]="user.tags"></interest-tags-list>
