@@ -17,7 +17,6 @@ export function check(field: string, location: Location): ValidationChain {
   return Object.assign(
     middleware,
     bindAll(new Validators(builder, middleware as any)),
-    // { builder },
   );
 }
 
