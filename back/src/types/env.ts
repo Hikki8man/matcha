@@ -11,11 +11,10 @@ export interface Env {
 }
 
 export function loadEnv(): Env {
-  console.log('loading env');
   for (const env of requiredEnv) {
     if (!process.env[env]) {
       console.error(`Error: Environment variable ${env} is not defined.`);
-      process.exit(1); //todo throw?
+      process.exit(1);
     }
   }
 

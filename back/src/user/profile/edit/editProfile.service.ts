@@ -14,7 +14,7 @@ class EditProfileService {
         .update({ name: name })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating name', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -26,7 +26,7 @@ class EditProfileService {
         .update({ bio: bio })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating bio', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -38,7 +38,7 @@ class EditProfileService {
         .update({ gender: gender })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating name', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -49,7 +49,7 @@ class EditProfileService {
         .update({ sexual_orientation: orientation })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating name', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -61,7 +61,7 @@ class EditProfileService {
         .update({ completed_steps: step })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating steps', e.message);
+      console.error('error updating steps', e.message);
       return undefined;
     }
   }
@@ -78,7 +78,7 @@ class EditProfileService {
         })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating name', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }

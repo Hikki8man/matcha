@@ -55,7 +55,7 @@ class ProfileService {
         .groupBy('profile.id', 'avatar')
         .first();
     } catch (e: any) {
-      console.log('Error', e.message);
+      console.error('Error', e.message);
       return undefined;
     }
   }
@@ -300,7 +300,7 @@ class ProfileService {
         .limit(10, { skipBinding: true });
       return { profiles, count: count.length, limit: 10 };
     } catch (e: any) {
-      console.log('error in getting all profile', e.message);
+      console.error('error in getting all profile', e.message);
       return undefined;
     }
   }
@@ -309,7 +309,7 @@ class ProfileService {
     try {
       return await this.profileRepo().update({ online: true }).where('id', id);
     } catch (e: any) {
-      console.log('error updating steps', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }
@@ -320,7 +320,7 @@ class ProfileService {
         .update({ online: false, last_online: db.fn.now() })
         .where('id', id);
     } catch (e: any) {
-      console.log('error updating steps', e.message);
+      console.error('error', e.message);
       return undefined;
     }
   }

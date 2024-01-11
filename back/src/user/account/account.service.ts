@@ -8,9 +8,7 @@ import { RegisterBody } from '../../types/registerBody';
 class AccountService {
   private saltRounds = 10;
   public accountRepo = () => db<Account>('account');
-  constructor() {
-    console.log('user acc construct');
-  }
+
   async get_by_id(id: number) {
     try {
       return await this.accountRepo()
@@ -18,7 +16,7 @@ class AccountService {
         .where('id', id)
         .first();
     } catch (e: any) {
-      console.log('Error', e.message);
+      console.error('Error', e.message);
       return undefined;
     }
   }
@@ -36,7 +34,7 @@ class AccountService {
         .where('id', id)
         .first();
     } catch (e: any) {
-      console.log('Error', e.message);
+      console.error('Error', e.message);
       return undefined;
     }
   }
@@ -48,7 +46,7 @@ class AccountService {
         .where('email', email)
         .first();
     } catch (e: any) {
-      console.log('Error in get by email', e.message);
+      console.error('Error in get by email', e.message);
       return undefined;
     }
   }
@@ -60,7 +58,7 @@ class AccountService {
         .where('username', username)
         .first();
     } catch (e: any) {
-      console.log('Error in get by email', e.message);
+      console.error('Error in get by email', e.message);
       return undefined;
     }
   }
