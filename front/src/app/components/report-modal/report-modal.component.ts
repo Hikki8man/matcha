@@ -25,7 +25,7 @@ export class ReportModalComponent {
         private readonly _formBuilder: FormBuilder,
     ) {
         this.FormGroup = this._formBuilder.group({
-            reason: ['', [Validators.required, Validators.minLength(10)]],
+            reason: ['', [Validators.required]],
         });
     }
 

@@ -225,15 +225,16 @@ class DbService {
         sexual_orientation,
         gender,
       });
+      console.log('CREATING FAKE USERS ', ((i + 1) * 100) / nb + '%');
     }
     console.log(nb + ' FAKE USER CREATED');
     for (let i = 0; i < nb; ++i) {
-      const nb_to_like = Math.floor(Math.random() * (nb / 10));
+      const nb_to_like = Math.floor(Math.random() * (nb / 25));
       for (let j = 0; j < nb_to_like; ++j) {
         const random_id = this.getRandomId(nb, i + 1);
         await likeService.like(i + 1, random_id);
       }
-      console.log('FINISHED USER LIKES ', ((i + 1) * 100) / nb + '%');
+      console.log('GENERATING RANDOM LIKES ', ((i + 1) * 100) / nb + '%');
     }
     console.log('FINISHED LIKING');
     for (let i = 0; i < nb; ++i) {
