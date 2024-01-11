@@ -6,5 +6,4 @@ export interface MyRequest extends Request {
   params: ParamsDictionary & { id?: number };
   user_id?: number;
   profile?: Profile;
-  // id_parsed?: number;
 }

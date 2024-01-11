@@ -19,7 +19,6 @@ export interface Credentials {
 export class AuthenticationService implements IAuthenticationService {
     private _userSubject: BehaviorSubject<UserModel | undefined>;
     private _refreshTokenTimeout?: NodeJS.Timeout;
-    // public user: Observable<UserModel | undefined>;
 
     constructor(
         private _router: Router,
@@ -27,7 +26,6 @@ export class AuthenticationService implements IAuthenticationService {
         private _socketService: ISocketService,
     ) {
         this._userSubject = new BehaviorSubject<UserModel | undefined>(undefined);
-        // this.user = this._userSubject.asObservable();
     }
 
     public get userValue(): UserModel | undefined {

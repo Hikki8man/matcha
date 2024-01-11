@@ -96,7 +96,6 @@ class AccountService {
     return await bcrypt.compare(password, hash);
   }
 
-  //TODO validator
   async create(body: RegisterBody) {
     try {
       const hash = await this.hashPassword(body.password);

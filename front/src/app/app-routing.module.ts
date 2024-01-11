@@ -92,7 +92,7 @@ const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: AppPathEnum.Login, // TODO 404 page
+        redirectTo: AppPathEnum.Login,
         pathMatch: 'full',
     },
 ];
