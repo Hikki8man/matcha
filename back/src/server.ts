@@ -51,7 +51,7 @@ const main = async () => {
       new BlockController(),
       new AboutController(),
     ],
-    8080,
+    8000,
   );
   app.listen();
 };

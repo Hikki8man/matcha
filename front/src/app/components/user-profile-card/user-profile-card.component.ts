@@ -4,14 +4,18 @@ import { IconUrlEnum } from 'src/app/enums/icon-url-enum';
 import { ProfileCardModel, PublicProfileModel } from 'src/app/models/profile.model';
 import { IAuthenticationService } from 'src/app/services/authentication/iauthentication.service';
 import { IProfileService } from 'src/app/services/profile/iprofile.service';
+import { ISocketService } from 'src/app/services/socket/isocket.service';
 import { timeAgo } from 'src/app/utils/timeAgo';
+import { OnDestroy } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { LikeEvent, LikeType } from 'src/app/enums/like-type-enum';
 
 @Component({
     selector: 'user-profile-card',
     templateUrl: './user-profile-card.component.html',
     styleUrls: ['./user-profile-card.component.scss'],
 })
-export class UserProfileCardComponent {
+export class UserProfileCardComponent implements OnDestroy {
     @Input()
     set ProfileCard(value: ProfileCardModel) {
         this._profileCard = value;
@@ -31,10 +35,13 @@ export class UserProfileCardComponent {
     public Album: any[] = [];
     public Status: boolean = false;
 
+    private _destroyed$ = new Subject<boolean>();
+
     constructor(
         private readonly _profileService: IProfileService,
         private readonly _authenticationService: IAuthenticationService,
         private readonly _lightbox: Lightbox,
+        private readonly _socketService: ISocketService,
     ) {}
 
     private init(): void {
@@ -48,6 +55,16 @@ export class UserProfileCardComponent {
         }
         this.LastOnline = timeAgo(this.Profile.last_online);
         this.Album.push({ src: this.Profile.avatar });
+        this._socketService
+            .onLikeEvent()
+            .pipe(
+                takeUntil(this._destroyed$),
+            )
+            .subscribe((like: LikeEvent) => {
+                if (like.user.id === this.Profile.id) {
+                    this.LikedYou = like.type === LikeType.Like;
+                }
+            });
     }
 
     public LocationIconUrl: string = IconUrlEnum.Location;
@@ -65,4 +82,12 @@ export class UserProfileCardComponent {
     protected close(): void {
         this._lightbox.close();
     }
+
+    ngOnDestroy(): void {
+        this._destroyed$.next(true);
+        this._destroyed$.complete();
+    }
 }
+
+
+

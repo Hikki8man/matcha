@@ -21,7 +21,7 @@ services:
   express:
     build: ./back
     ports:
-      - "8080:8080"
+      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,6 +47,14 @@ services:
       - express
     environment:
       - API_URL=${API_URL}
+    networks:
+      - matcha_net
+    restart: always
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
     networks:
       - matcha_net
     restart: always
