@@ -32,6 +32,13 @@ class LikeService {
     await this.likeRepo().where('id', id).del();
   }
 
+  async deleteLikeByUsersId(liker_id: number, liked_id: number) {
+    await this.likeRepo()
+      .where('liker_id', liker_id)
+      .andWhere('liked_id', liked_id)
+      .del();
+  }
+
   async getLikerList(id: number) {
     try {
       return await profileService

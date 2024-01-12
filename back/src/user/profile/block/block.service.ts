@@ -23,7 +23,7 @@ class BlockService {
       blocked_id,
     );
     if (isMatch) {
-      await likeService.deleteLike(blocker_id);
+      await likeService.deleteLikeByUsersId(blocker_id, blocked_id);
       const blocker: ProfileMinimum =
         await profileService.profileNameAndAvatar(blocker_id);
       await likeService.unMatch(blocker, blocked_id);
