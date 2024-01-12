@@ -11,6 +11,7 @@ import blockService from './block/block.service';
 import { PhotoType } from '../../types/photo';
 import emailerService from '../../emailer/emailer.service';
 import { env } from 'process';
+import { Knex } from 'knex';
 
 class ProfileService {
   public profileRepo = () => db<Profile>('profile');
@@ -136,6 +137,7 @@ class ProfileService {
   private getOrientationAndGenderToMatch(
     sexual_orientation: SexualOrientation,
     gender: Gender,
+    profilesQuery: Knex.QueryBuilder<any>,
   ) {
     let orientation: SexualOrientation[] = [];
     let gender_to_match: Gender[] = [];
@@ -147,7 +149,9 @@ class ProfileService {
         SexualOrientation.Homosexual,
       );
       gender_to_match.push(Gender.Other);
-      return { orientation, gender_to_match };
+      profilesQuery.whereIn('profile.gender', gender_to_match);
+      profilesQuery.whereIn('profile.sexual_orientation', orientation);
+      return;
     }
 
     switch (sexual_orientation) {
@@ -159,6 +163,8 @@ class ProfileService {
         gender_to_match.push(
           gender === Gender.Male ? Gender.Female : Gender.Male,
         );
+        profilesQuery.whereIn('profile.gender', gender_to_match);
+        profilesQuery.whereIn('profile.sexual_orientation', orientation);
         break;
 
       case SexualOrientation.Homosexual:
@@ -167,14 +173,39 @@ class ProfileService {
           SexualOrientation.Bisexual,
         );
         gender_to_match.push(gender);
+        profilesQuery.whereIn('profile.gender', gender_to_match);
+        profilesQuery.whereIn('profile.sexual_orientation', orientation);
         break;
 
       default:
-        orientation.push(SexualOrientation.Bisexual);
-        gender_to_match.push(Gender.Male, Gender.Female);
+        if (gender === Gender.Male) {
+          profilesQuery.where(function () {
+            this.where('gender', Gender.Female)
+              .andWhere('sexual_orientation', SexualOrientation.Heterosexual)
+              .orWhere(function () {
+                this.where('gender', Gender.Male).andWhere(
+                  'sexual_orientation',
+                  SexualOrientation.Homosexual,
+                );
+              })
+              .orWhere('sexual_orientation', SexualOrientation.Bisexual);
+          });
+        } else if (gender === Gender.Female) {
+          profilesQuery.where(function () {
+            this.where('gender', Gender.Male)
+              .andWhere('sexual_orientation', SexualOrientation.Heterosexual)
+              .orWhere(function () {
+                this.where('gender', Gender.Female).andWhere(
+                  'sexual_orientation',
+                  SexualOrientation.Homosexual,
+                );
+              })
+              .orWhere('sexual_orientation', SexualOrientation.Bisexual);
+          });
+        }
         break;
     }
-    return { orientation, gender_to_match };
+    return;
   }
 
   async get_all_filtered(id: number, filter: Filter) {
@@ -184,11 +215,6 @@ class ProfileService {
       const blocked_list = await blockService.getBlockedList(id);
       const blocked_ids = blocked_list.map((item) => item.blocked_id);
       const my_tags = my_profile.tags.map((tag: Tag) => tag.id);
-      const { orientation, gender_to_match } =
-        this.getOrientationAndGenderToMatch(
-          my_profile.sexual_orientation,
-          my_profile.gender,
-        );
 
       const profilesQuery = this.profileRepo()
         .leftJoin('photo as avatar', function () {
@@ -198,9 +224,13 @@ class ProfileService {
         })
         .leftJoin('account as acc', 'profile.id', 'acc.id')
         .leftJoin('profile_tags', 'profile.id', 'profile_tags.profile_id')
-        .leftJoin('tags', 'profile_tags.tag_id', 'tags.id')
-        .whereIn('profile.gender', gender_to_match)
-        .whereIn('profile.sexual_orientation', orientation)
+        .leftJoin('tags', 'profile_tags.tag_id', 'tags.id');
+      this.getOrientationAndGenderToMatch(
+        my_profile.sexual_orientation,
+        my_profile.gender,
+        profilesQuery,
+      );
+      profilesQuery
         .whereNotIn('profile.id', blocked_ids)
         .andWhereNot('profile.id', id)
         .andWhere('acc.verified', true)
