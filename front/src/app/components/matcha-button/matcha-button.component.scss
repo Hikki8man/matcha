@@ -14,6 +14,14 @@
         scale: 1.05;
     }
 
+    &:disabled {
+        background-color: var(--color-pink-background);
+
+        &:hover {
+            cursor: not-allowed;
+        }
+    }
+
     .button-label {
         color: white;
         font-weight: 550;
