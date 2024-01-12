@@ -12,6 +12,7 @@ import {
   ProfileMinimum,
 } from '../../../types/profile';
 import HttpError from '../../../utils/HttpError';
+import blockService from '../block/block.service';
 import profileService from '../profile.service';
 
 class LikeService {
@@ -76,6 +77,9 @@ class LikeService {
     );
 
     if (!hasLikedAlready) {
+      if (await blockService.isBlocked(liked_id, liker_id)) {
+        return;
+      }
       const like = await this.insertLike(liker_id, liked_id);
       // if liked then Match
       if (isLiked) {

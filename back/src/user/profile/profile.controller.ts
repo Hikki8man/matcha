@@ -106,9 +106,9 @@ class ProfileController {
     const likeEvent = await likeService.like(req.user_id!, req.body.id);
     if (likeEvent) {
       SocketService.sendLikeEvent(req.body.id, likeEvent);
+      await profileService.updateFameRating(req.user_id!);
+      await profileService.updateFameRating(req.body.id);
     }
-    await profileService.updateFameRating(req.user_id!);
-    await profileService.updateFameRating(req.body.id);
     res.end();
   };
 
